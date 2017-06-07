@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F79CDA7B-C8C1-4ED1-9825-BDE5711DC8A1}</ProjectGuid>
+    <RootNamespace>gtkiostream</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ExecutablePath>$(VCInstallDir)bin;$(WindowsSDK_ExecutablePath_x86);$(VSInstallDir)Common7\Tools\bin;$(VSInstallDir)Common7\tools;$(VSInstallDir)Common7\ide;$(ProgramFiles)\HTML Help Workshop;$(MSBuildToolsPath32);$(VSInstallDir);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
+    <IncludePath>..\..\include;$(IncludePath)</IncludePath>
+    <ReferencePath>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib</ReferencePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(VCInstallDir)atlmfc\src\mfc;$(VCInstallDir)atlmfc\src\mfcm;$(VCInstallDir)atlmfc\src\atl;$(VCInstallDir)crt\src;</SourcePath>
+    <ExcludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(MSBuildToolsPath32);$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib;</ExcludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>-Ic:/GTK+/include/gtk-2.0 -Ic:/GTK+/lib/gtk-2.0/include -Ic:/GTK+/include/atk-1.0 -Ic:/GTK+/include/cairo -Ic:/GTK+/include/gdk-pixbuf-2.0 -Ic:/GTK+/include/pango-1.0 -Ic:/GTK+/include/glib-2.0 -Ic:/GTK+/lib/glib-2.0/include -Ic:/GTK+/include -Ic:/GTK+/include/freetype2 -Ic:/GTK+/include/libpng14  %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/libpath:c:/GTK+/lib gtk-win32-2.0.lib gdk-win32-2.0.lib atk-1.0.lib gio-2.0.lib pangowin32-1.0.lib gdi32.lib pangocairo-1.0.lib gdk_pixbuf-2.0.lib pango-1.0.lib cairo.lib gobject-2.0.lib gmodule-2.0.lib gthread-2.0.lib glib-2.0.lib intl.lib  %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>-Ic:/GTK+/include/gtk-2.0 -Ic:/GTK+/lib/gtk-2.0/include -Ic:/GTK+/include/atk-1.0 -Ic:/GTK+/include/cairo -Ic:/GTK+/include/gdk-pixbuf-2.0 -Ic:/GTK+/include/pango-1.0 -Ic:/GTK+/include/glib-2.0 -Ic:/GTK+/lib/glib-2.0/include -Ic:/GTK+/include -Ic:/GTK+/include/freetype2 -Ic:/GTK+/include/libpng14 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalOptions>/libpath:c:/GTK+/lib gtk-win32-2.0.lib gdk-win32-2.0.lib atk-1.0.lib gio-2.0.lib pangowin32-1.0.lib gdi32.lib pangocairo-1.0.lib gdk_pixbuf-2.0.lib pango-1.0.lib cairo.lib gobject-2.0.lib gmodule-2.0.lib gthread-2.0.lib glib-2.0.lib intl.lib  %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PreBuildEvent>
+      <Command>echo using SDK $(WindowsSdkDir)</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\Alignment.H" />
+    <ClInclude Include="..\..\include\BlockBuffer.H" />
+    <ClInclude Include="..\..\include\Box.H" />
+    <ClInclude Include="..\..\include\Buttons.H" />
+    <ClInclude Include="..\..\include\CairoArc.H" />
+    <ClInclude Include="..\..\include\CairoArrow.H" />
+    <ClInclude Include="..\..\include\CairoBox.H" />
+    <ClInclude Include="..\..\include\CairoCircle.H" />
+    <ClInclude Include="..\..\include\ColourLineSpec.H" />
+    <ClInclude Include="..\..\include\colourWheel.H" />
+    <ClInclude Include="..\..\include\ComboBoxText.H" />
+    <ClInclude Include="..\..\include\commonTimeCodeX.H" />
+    <ClInclude Include="..\..\include\Container.H" />
+    <ClInclude Include="..\..\include\Debug.H" />
+    <ClInclude Include="..\..\include\DirectoryScanner.H" />
+    <ClInclude Include="..\..\include\DrawingArea.H" />
+    <ClInclude Include="..\..\include\EventBox.H" />
+    <ClInclude Include="..\..\include\Examples.H" />
+    <ClInclude Include="..\..\include\FileGtk.H" />
+    <ClInclude Include="..\..\include\Frame.H" />
+    <ClInclude Include="..\..\include\Dialog.H" />
+    <ClInclude Include="..\..\include\gtkInterface.H" />
+    <ClInclude Include="..\..\include\GtkUtils.H" />
+    <ClInclude Include="..\..\include\JackClient.H" />
+    <ClInclude Include="..\..\include\Labels.H" />
+    <ClInclude Include="..\..\include\MessageDialog.H" />
+    <ClInclude Include="..\..\include\NeuralNetwork.H" />
+    <ClInclude Include="..\..\include\Octave.H" />
+    <ClInclude Include="..\..\include\OptionParser.H" />
+    <ClInclude Include="..\..\include\ORB.H" />
+    <ClInclude Include="..\..\include\Pango.H" />
+    <ClInclude Include="..\..\include\Pixmap.H" />
+    <ClInclude Include="..\..\include\Plot.H" />
+    <ClInclude Include="..\..\include\ProgressBar.H" />
+    <ClInclude Include="..\..\include\Scales.H" />
+    <ClInclude Include="..\..\include\Scrolling.H" />
+    <ClInclude Include="..\..\include\Selection.H" />
+    <ClInclude Include="..\..\include\SelectionArea.H" />
+    <ClInclude Include="..\..\include\Separator.H" />
+    <ClInclude Include="..\..\include\Sox.H" />
+    <ClInclude Include="..\..\include\Surface.H" />
+    <ClInclude Include="..\..\include\Table.H" />
+    <ClInclude Include="..\..\include\TextView.H" />
+    <ClInclude Include="..\..\include\Thread.H" />
+    <ClInclude Include="..\..\include\TimeTools.H" />
+    <ClInclude Include="..\..\include\Widget.H" />
+    <ClInclude Include="..\..\include\WSOLA.H" />
+    <ClInclude Include="..\..\include\WSOLAJack.H" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\test\WidgetTest.C" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

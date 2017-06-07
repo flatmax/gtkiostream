@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DOCUMENT Type="Advanced Installer" CreateVersion="10.5.2" version="10.9.1" Modules="simple" RootPath="." Language="en" Id="{737D1EC5-DE6C-4530-8598-F44740DCC313}">
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
+    <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0"/>
+    <ROW Property="ALLUSERS" Value="1"/>
+    <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
+    <ROW Property="ARPURLINFOABOUT" Value="http://sourceforge.net/projects/gtkiostream/"/>
+    <ROW Property="CTRLS" Value="1"/>
+    <ROW Property="Manufacturer" Value="flatmax"/>
+    <ROW Property="ProductCode" Value="1033:{A6631B5F-9CB1-4639-B78D-E5E8C1547334} " Type="16"/>
+    <ROW Property="ProductLanguage" Value="1033"/>
+    <ROW Property="ProductName" Value="gtkIOStream"/>
+    <ROW Property="ProductVersion" Value="1.5.0" Type="32"/>
+    <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
+    <ROW Property="UpgradeCode" Value="{1CC05097-CA2C-47F9-82DC-CBD672E00867}"/>
+    <ROW Property="VIEWREADME" Value="1" Type="4"/>
+    <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsType9XDisplay" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40Display" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
+    <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
+    <ROW Directory="AudioMask_Dir" Directory_Parent="include_Dir" DefaultDir="AudioM~1|AudioMask"/>
+    <ROW Directory="ProgramFilesFolder" Directory_Parent="TARGETDIR" DefaultDir="Progra~1|ProgramFilesFolder" IsPseudoRoot="1"/>
+    <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
+    <ROW Directory="fft_Dir" Directory_Parent="include_Dir" DefaultDir="fft"/>
+    <ROW Directory="gtkIOStream_Dir" Directory_Parent="ProgramFilesFolder" DefaultDir="gtkIOS~1|gtkIOStream"/>
+    <ROW Directory="include_Dir" Directory_Parent="gtkIOStream_Dir" DefaultDir="include"/>
+    <ROW Directory="mffm_Dir" Directory_Parent="include_Dir" DefaultDir="mffm"/>
+    <ROW Directory="posixForMicrosoft_Dir" Directory_Parent="include_Dir" DefaultDir="POSIXF~1|posixForMicrosoft"/>
+    <ROW Directory="testVectors_Dir" Directory_Parent="test_Dir" DefaultDir="testVe~1|testVectors"/>
+    <ROW Directory="test_Dir" Directory_Parent="gtkIOStream_Dir" DefaultDir="test"/>
+    <ROW Directory="xpm_Dir" Directory_Parent="include_Dir" DefaultDir="xpm"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
+    <ROW Component="Alignment.H" ComponentId="{220B46C4-EA0B-4465-9468-5DE2BF3DE0B5}" Directory_="include_Dir" Attributes="0" KeyPath="Alignment.H" Type="0"/>
+    <ROW Component="AlignmentTest.C" ComponentId="{3200CF20-0AEF-4267-B5F4-D1724F8830A0}" Directory_="test_Dir" Attributes="0" KeyPath="AlignmentTest.C" Type="0"/>
+    <ROW Component="AudioMask.H" ComponentId="{657E8526-A9E6-43B5-AB66-010463AC8534}" Directory_="AudioMask_Dir" Attributes="0" KeyPath="AudioMask.H" Type="0"/>
+    <ROW Component="AudioMasker.exe" ComponentId="{7146C0D9-E310-4DD1-A7D1-AFC2083CEE76}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="AudioMasker.exe"/>
+    <ROW Component="BST.H" ComponentId="{1905B9F6-62DF-4925-B1B4-038BBD62E6C2}" Directory_="mffm_Dir" Attributes="0" KeyPath="BST.H" Type="0"/>
+    <ROW Component="ComplexFFT.H" ComponentId="{C38E6FB5-18F3-498F-B3A3-28F3A38927B7}" Directory_="fft_Dir" Attributes="0" KeyPath="ComplexFFT.H" Type="0"/>
+    <ROW Component="CrossoverTester.exe" ComponentId="{753789FE-95B3-4840-B8F6-86551477E2BD}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="CrossoverTester.exe"/>
+    <ROW Component="LibMad.dll" ComponentId="{AF7C5A4F-D58D-4549-A0AD-50A781A81A4F}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="LibMad.dll"/>
+    <ROW Component="LibMp3Lame.dll" ComponentId="{4ADFC273-A66B-49DF-80CB-3E4E584986E0}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="LibMp3Lame.dll"/>
+    <ROW Component="LibSndFile1.dll" ComponentId="{0FA11C3B-91CE-458C-89B4-4C2016BF3207}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="LibSndFile1.dll"/>
+    <ROW Component="ProductInformation" ComponentId="{A23F50D1-C79A-4234-817B-846D314A04BB}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="WSOLA.exe" ComponentId="{3C3731B9-D9DA-471D-9477-FDB745EE6218}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="WSOLA.exe"/>
+    <ROW Component="WSOLAJackGTK.exe" ComponentId="{0C6217D1-4A47-42A6-85A7-F4C65F51B801}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="WSOLAJackGTK.exe"/>
+    <ROW Component="audio.44100.txt" ComponentId="{30811B09-8EE6-4A03-A32F-8ED7BD45C171}" Directory_="testVectors_Dir" Attributes="0" KeyPath="audio.44100.txt" Type="0"/>
+    <ROW Component="dirent.h" ComponentId="{0256F5AC-E514-4311-8125-BCC6EA57FED6}" Directory_="posixForMicrosoft_Dir" Attributes="0" KeyPath="dirent.h" Type="0"/>
+    <ROW Component="freetype6.dll" ComponentId="{07F9BA6E-2BFA-48E3-B194-FB24274EDEAD}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="freetype6.dll"/>
+    <ROW Component="intl.dll" ComponentId="{27E5A0BA-6A51-4076-9C62-87D134DFFB75}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="intl.dll"/>
+    <ROW Component="libasprintf0.dll" ComponentId="{EF65B359-E23E-4ACC-B2CF-45ED14E8007D}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libasprintf0.dll"/>
+    <ROW Component="libatk1.00.dll" ComponentId="{9646B6F4-86C4-4373-B40E-D72E7D183132}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libatk1.00.dll"/>
+    <ROW Component="libcairo2.dll" ComponentId="{C31CBE0A-325B-4EA2-9CDF-04CC6E835A68}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libcairo2.dll"/>
+    <ROW Component="libcairogobject2.dll" ComponentId="{AD4D8BF1-02BB-41B3-B4DE-6311C92105E0}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libcairogobject2.dll"/>
+    <ROW Component="libcairoscriptinterpreter2.dll" ComponentId="{912C04D6-EEA2-49C3-AF4E-EA6D03E629F7}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libcairoscriptinterpreter2.dll"/>
+    <ROW Component="libexpat1.dll" ComponentId="{3B3A1D6E-2569-40E1-A24E-F26AEE47EB2A}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libexpat1.dll"/>
+    <ROW Component="libfftw33.dll" ComponentId="{6AB318CA-FC79-496B-882F-F896EAABBDEC}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libfftw33.dll"/>
+    <ROW Component="libfontconfig1.dll" ComponentId="{CC99DADE-0DFC-47BE-BFE1-C0CD8B951428}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libfontconfig1.dll"/>
+    <ROW Component="libgailutil18.dll" ComponentId="{7BE5D70B-6783-46B2-9A82-7E3630527C8E}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libgailutil18.dll"/>
+    <ROW Component="libgcc_s_dw21.dll" ComponentId="{6BC998E9-F9DF-4128-8F4A-45166C0F995A}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libgcc_s_dw21.dll"/>
+    <ROW Component="libgdk_pixbuf2.00.dll" ComponentId="{9939D193-DD3D-4672-9E73-CA51A17CCEB0}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libgdk_pixbuf2.00.dll"/>
+    <ROW Component="libgdkwin322.00.dll" ComponentId="{9DFC5035-9307-4F6D-9B92-1CDE4B9A9F49}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libgdkwin322.00.dll"/>
+    <ROW Component="libgio2.00.dll" ComponentId="{25571EC2-9AD2-4501-A06B-37AD0FFC92DE}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libgio2.00.dll"/>
+    <ROW Component="libglib2.00.dll" ComponentId="{6EFD8747-623D-4555-86B8-354D04D8555F}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libglib2.00.dll"/>
+    <ROW Component="libgmodule2.00.dll" ComponentId="{23234227-CE93-4046-BC7E-4C48D0A5338D}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libgmodule2.00.dll"/>
+    <ROW Component="libgobject2.00.dll" ComponentId="{1B5F887D-B4E6-436F-A556-18BA6012FF9D}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libgobject2.00.dll"/>
+    <ROW Component="libgthread2.00.dll" ComponentId="{492CF009-5889-4D43-BB93-7ECD15550B62}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libgthread2.00.dll"/>
+    <ROW Component="libgtkIOStream.lib" ComponentId="{317717F2-595B-4B04-AA25-C2CBD5928631}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="README.txt" Type="0"/>
+    <ROW Component="libgtkwin322.00.dll" ComponentId="{8E6048F9-9D94-4CC8-8BE9-DB3C6140A9E6}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libgtkwin322.00.dll"/>
+    <ROW Component="libpango1.00.dll" ComponentId="{76CDB437-7A8A-4D33-81FC-8767B613F37F}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libpango1.00.dll"/>
+    <ROW Component="libpangocairo1.00.dll" ComponentId="{DAC16F63-DF74-4FF5-8054-0148CCADAB6B}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libpangocairo1.00.dll"/>
+    <ROW Component="libpangoft21.00.dll" ComponentId="{9709CDDA-250F-4703-98E1-F0F9A53ABD95}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libpangoft21.00.dll"/>
+    <ROW Component="libpangowin321.00.dll" ComponentId="{66CB866F-A9FC-413E-9475-29748F282531}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libpangowin321.00.dll"/>
+    <ROW Component="libpng1414.dll" ComponentId="{68DF860F-3048-4AC9-B9BB-6829E7456AED}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="libpng1414.dll"/>
+    <ROW Component="play.xpm" ComponentId="{C4E56099-6BF7-4974-8AE6-4E7C4187BDFC}" Directory_="xpm_Dir" Attributes="0" KeyPath="play.xpm" Type="0"/>
+    <ROW Component="zlib1.dll" ComponentId="{52820475-9341-4F44-A94C-C3526C383EC2}" Directory_="gtkIOStream_Dir" Attributes="0" KeyPath="zlib1.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="Alignment.H AlignmentTest.C AudioMask.H AudioMasker.exe BST.H ComplexFFT.H CrossoverTester.exe LibMad.dll LibMp3Lame.dll LibSndFile1.dll ProductInformation WSOLA.exe WSOLAJackGTK.exe audio.44100.txt dirent.h freetype6.dll intl.dll libasprintf0.dll libatk1.00.dll libcairo2.dll libcairogobject2.dll libcairoscriptinterpreter2.dll libexpat1.dll libfftw33.dll libfontconfig1.dll libgailutil18.dll libgcc_s_dw21.dll libgdk_pixbuf2.00.dll libgdkwin322.00.dll libgio2.00.dll libglib2.00.dll libgmodule2.00.dll libgobject2.00.dll libgthread2.00.dll libgtkIOStream.lib libgtkwin322.00.dll libpango1.00.dll libpangocairo1.00.dll libpangoft21.00.dll libpangowin321.00.dll libpng1414.dll play.xpm zlib1.dll"/>
+    <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
+    <ROW File="Alignment.H" Component_="Alignment.H" FileName="Alignm~1.H|Alignment.H" Attributes="0" SourcePath="..\include\Alignment.H" SelfReg="false" NextFile="Box.H"/>
+    <ROW File="AlignmentTest.C" Component_="AlignmentTest.C" FileName="Alignm~1.C|AlignmentTest.C" Attributes="0" SourcePath="..\test\AlignmentTest.C" SelfReg="false" NextFile="AudioMaskerExample.C"/>
+    <ROW File="AudioMask.H" Component_="AudioMask.H" FileName="AudioM~1.H|AudioMask.H" Attributes="0" SourcePath="..\include\AudioMask\AudioMask.H" SelfReg="false" NextFile="AudioMaskCommon.H"/>
+    <ROW File="AudioMaskCommon.H" Component_="AudioMask.H" FileName="AudioM~2.H|AudioMaskCommon.H" Attributes="0" SourcePath="..\include\AudioMask\AudioMaskCommon.H" SelfReg="false" NextFile="AudioMasker.H"/>
+    <ROW File="AudioMasker.H" Component_="AudioMask.H" FileName="AudioM~3.H|AudioMasker.H" Attributes="0" SourcePath="..\include\AudioMask\AudioMasker.H" SelfReg="false" NextFile="depukfb.H"/>
+    <ROW File="AudioMasker.exe" Component_="AudioMasker.exe" FileName="AUDIOM~1.EXE|AudioMasker.exe" Attributes="0" SourcePath="gtkiostream\Release\AudioMasker.exe" SelfReg="false" NextFile="CrossoverTester.exe" DigSign="true"/>
+    <ROW File="AudioMaskerExample.C" Component_="AlignmentTest.C" FileName="AudioM~1.C|AudioMaskerExample.C" Attributes="0" SourcePath="..\test\AudioMaskerExample.C" SelfReg="false" NextFile="BSTTest.C"/>
+    <ROW File="BST.H" Component_="BST.H" FileName="BST.H" Attributes="0" SourcePath="..\include\mffm\BST.H" SelfReg="false" NextFile="HeapTree.H"/>
+    <ROW File="BSTTest.C" Component_="AlignmentTest.C" FileName="BSTTest.C" Attributes="0" SourcePath="..\test\BSTTest.C" SelfReg="false" NextFile="ButtonsFontTest.C"/>
+    <ROW File="BlockBuffer.H" Component_="Alignment.H" FileName="BLOCKB~1.H|BlockBuffer.H" Attributes="0" SourcePath="..\include\BlockBuffer.H" SelfReg="false" NextFile="CairoArc.H"/>
+    <ROW File="Box.H" Component_="Alignment.H" FileName="Box.H" Attributes="0" SourcePath="..\include\Box.H" SelfReg="false" NextFile="Buttons.H"/>
+    <ROW File="Buttons.H" Component_="Alignment.H" FileName="Buttons.H" Attributes="0" SourcePath="..\include\Buttons.H" SelfReg="false" NextFile="CairoArrow.H"/>
+    <ROW File="ButtonsFontTest.C" Component_="AlignmentTest.C" FileName="Button~1.C|ButtonsFontTest.C" Attributes="0" SourcePath="..\test\ButtonsFontTest.C" SelfReg="false" NextFile="ButtonsTest2.C"/>
+    <ROW File="ButtonsTest.C" Component_="AlignmentTest.C" FileName="Button~3.C|ButtonsTest.C" Attributes="0" SourcePath="..\test\ButtonsTest.C" SelfReg="false" NextFile="CairoArrowTest.C"/>
+    <ROW File="ButtonsTest2.C" Component_="AlignmentTest.C" FileName="Button~2.C|ButtonsTest2.C" Attributes="0" SourcePath="..\test\ButtonsTest2.C" SelfReg="false" NextFile="ButtonsTest.C"/>
+    <ROW File="CairoArc.H" Component_="Alignment.H" FileName="CairoArc.H" Attributes="0" SourcePath="..\include\CairoArc.H" SelfReg="false" NextFile="CairoCircle.H"/>
+    <ROW File="CairoArrow.H" Component_="Alignment.H" FileName="CairoA~1.H|CairoArrow.H" Attributes="0" SourcePath="..\include\CairoArrow.H" SelfReg="false" NextFile="CairoBox.H"/>
+    <ROW File="CairoArrowTest.C" Component_="AlignmentTest.C" FileName="CairoA~1.C|CairoArrowTest.C" Attributes="0" SourcePath="..\test\CairoArrowTest.C" SelfReg="false" NextFile="CairoBoxTest.C"/>
+    <ROW File="CairoBox.H" Component_="Alignment.H" FileName="CairoBox.H" Attributes="0" SourcePath="..\include\CairoBox.H" SelfReg="false" NextFile="ColourLineSpec.H"/>
+    <ROW File="CairoBoxTest.C" Component_="AlignmentTest.C" FileName="CairoB~1.C|CairoBoxTest.C" Attributes="0" SourcePath="..\test\CairoBoxTest.C" SelfReg="false" NextFile="colourWheelTest.C"/>
+    <ROW File="CairoCircle.H" Component_="Alignment.H" FileName="CAIROC~1.H|CairoCircle.H" Attributes="0" SourcePath="..\include\CairoCircle.H" SelfReg="false" NextFile="Dialog.H"/>
+    <ROW File="ColourLineSpec.H" Component_="Alignment.H" FileName="Colour~1.H|ColourLineSpec.H" Attributes="0" SourcePath="..\include\ColourLineSpec.H" SelfReg="false" NextFile="colourWheel.H"/>
+    <ROW File="ComboBoxText.H" Component_="Alignment.H" FileName="ComboB~1.H|ComboBoxText.H" Attributes="0" SourcePath="..\include\ComboBoxText.H" SelfReg="false" NextFile="commonTimeCodeX.H"/>
+    <ROW File="ComboBoxTextTest.C" Component_="AlignmentTest.C" FileName="ComboB~1.C|ComboBoxTextTest.C" Attributes="0" SourcePath="..\test\ComboBoxTextTest.C" SelfReg="false" NextFile="ComplexFFTExample.C"/>
+    <ROW File="ComplexFFT.H" Component_="ComplexFFT.H" FileName="Comple~1.H|ComplexFFT.H" Attributes="0" SourcePath="..\include\fft\ComplexFFT.H" SelfReg="false" NextFile="ComplexFFTData.H"/>
+    <ROW File="ComplexFFTData.H" Component_="ComplexFFT.H" FileName="Comple~2.H|ComplexFFTData.H" Attributes="0" SourcePath="..\include\fft\ComplexFFTData.H" SelfReg="false" NextFile="FFTCommon.H"/>
+    <ROW File="ComplexFFTExample.C" Component_="AlignmentTest.C" FileName="Comple~1.C|ComplexFFTExample.C" Attributes="0" SourcePath="..\test\ComplexFFTExample.C" SelfReg="false" NextFile="DrawingAreaTest.C"/>
+    <ROW File="Container.H" Component_="Alignment.H" FileName="Contai~1.H|Container.H" Attributes="0" SourcePath="..\include\Container.H" SelfReg="false" NextFile="Debug.H"/>
+    <ROW File="CrossoverTester.exe" Component_="CrossoverTester.exe" FileName="CROSSO~1.EXE|CrossoverTester.exe" Attributes="0" SourcePath="gtkiostream\Release\CrossoverTester.exe" SelfReg="false" NextFile="BlockBuffer.H" DigSign="true"/>
+    <ROW File="Debug.H" Component_="Alignment.H" FileName="Debug.H" Attributes="0" SourcePath="..\include\Debug.H" SelfReg="false" NextFile="DrawingArea.H"/>
+    <ROW File="DecompositionTest.C" Component_="AlignmentTest.C" FileName="Decomp~1.C|DecompositionTest.C" Attributes="0" SourcePath="..\test\DecompositionTest.C" SelfReg="false" NextFile="OverlapAddTest.C"/>
+    <ROW File="Dialog.H" Component_="Alignment.H" FileName="Dialog.H" Attributes="0" SourcePath="..\include\Dialog.H" SelfReg="false" NextFile="DirectoryScanner.H"/>
+    <ROW File="DirectoryScanner.H" Component_="Alignment.H" FileName="DIRECT~1.H|DirectoryScanner.H" Attributes="0" SourcePath="..\include\DirectoryScanner.H" SelfReg="false" NextFile="DragNDrop.H"/>
+    <ROW File="DragNDrop.H" Component_="Alignment.H" FileName="DRAGND~1.H|DragNDrop.H" Attributes="0" SourcePath="..\include\DragNDrop.H" SelfReg="false" NextFile="SoxWindows.H"/>
+    <ROW File="DrawingArea.H" Component_="Alignment.H" FileName="Drawin~1.H|DrawingArea.H" Attributes="0" SourcePath="..\include\DrawingArea.H" SelfReg="false" NextFile="EventBox.H"/>
+    <ROW File="DrawingAreaTest.C" Component_="AlignmentTest.C" FileName="Drawin~1.C|DrawingAreaTest.C" Attributes="0" SourcePath="..\test\DrawingAreaTest.C" SelfReg="false" NextFile="HeapTreeSort.C"/>
+    <ROW File="EventBox.H" Component_="Alignment.H" FileName="EventBox.H" Attributes="0" SourcePath="..\include\EventBox.H" SelfReg="false" NextFile="Examples.H"/>
+    <ROW File="Examples.H" Component_="Alignment.H" FileName="Examples.H" Attributes="0" SourcePath="..\include\Examples.H" SelfReg="false" NextFile="FileGtk.H"/>
+    <ROW File="FFTCommon.H" Component_="ComplexFFT.H" FileName="FFTCom~1.H|FFTCommon.H" Attributes="0" SourcePath="..\include\fft\FFTCommon.H" SelfReg="false" NextFile="Real2DFFT.H"/>
+    <ROW File="FileGtk.H" Component_="Alignment.H" FileName="FileGtk.H" Attributes="0" SourcePath="..\include\FileGtk.H" SelfReg="false" NextFile="Frame.H"/>
+    <ROW File="Frame.H" Component_="Alignment.H" FileName="Frame.H" Attributes="0" SourcePath="..\include\Frame.H" SelfReg="false" NextFile="gtkDialog.H"/>
+    <ROW File="GtkUtils.H" Component_="Alignment.H" FileName="GtkUtils.H" Attributes="0" SourcePath="..\include\GtkUtils.H" SelfReg="false" NextFile="JackClient.H"/>
+    <ROW File="HeapTree.H" Component_="BST.H" FileName="HeapTree.H" Attributes="0" SourcePath="..\include\mffm\HeapTree.H" SelfReg="false" NextFile="HeapTreeType.H"/>
+    <ROW File="HeapTreeSort.C" Component_="AlignmentTest.C" FileName="HeapTr~1.C|HeapTreeSort.C" Attributes="0" SourcePath="..\test\HeapTreeSort.C" SelfReg="false" NextFile="InlineTest.C"/>
+    <ROW File="HeapTreeType.H" Component_="BST.H" FileName="HeapTr~1.H|HeapTreeType.H" Attributes="0" SourcePath="..\include\mffm\HeapTreeType.H" SelfReg="false" NextFile="LinkList.H"/>
+    <ROW File="InlineTest.C" Component_="AlignmentTest.C" FileName="Inline~1.C|InlineTest.C" Attributes="0" SourcePath="..\test\InlineTest.C" SelfReg="false" NextFile="JackClientTest.C"/>
+    <ROW File="JackClient.H" Component_="Alignment.H" FileName="JackCl~1.H|JackClient.H" Attributes="0" SourcePath="..\include\JackClient.H" SelfReg="false" NextFile="Labels.H"/>
+    <ROW File="JackClientTest.C" Component_="AlignmentTest.C" FileName="JackCl~1.C|JackClientTest.C" Attributes="0" SourcePath="..\test\JackClientTest.C" SelfReg="false" NextFile="LabelsTest2.C"/>
+    <ROW File="Labels.H" Component_="Alignment.H" FileName="Labels.H" Attributes="0" SourcePath="..\include\Labels.H" SelfReg="false" NextFile="MessageDialog.H"/>
+    <ROW File="LabelsTest.C" Component_="AlignmentTest.C" FileName="Labels~3.C|LabelsTest.C" Attributes="0" SourcePath="..\test\LabelsTest.C" SelfReg="false" NextFile="MessageDialogTest.C"/>
+    <ROW File="LabelsTest2.C" Component_="AlignmentTest.C" FileName="Labels~1.C|LabelsTest2.C" Attributes="0" SourcePath="..\test\LabelsTest2.C" SelfReg="false" NextFile="LabelsTest3.C"/>
+    <ROW File="LabelsTest3.C" Component_="AlignmentTest.C" FileName="Labels~2.C|LabelsTest3.C" Attributes="0" SourcePath="..\test\LabelsTest3.C" SelfReg="false" NextFile="LabelsTest.C"/>
+    <ROW File="LibMad.dll" Component_="LibMad.dll" FileName="LibMad.dll" Attributes="0" SourcePath="..\..\sox\sox\msvc10\Release\LibMad.dll" SelfReg="false" NextFile="LibMp3Lame.dll"/>
+    <ROW File="LibMp3Lame.dll" Component_="LibMp3Lame.dll" FileName="LibMp3~1.dll|LibMp3Lame.dll" Attributes="0" SourcePath="..\..\sox\sox\msvc10\Release\LibMp3Lame.dll" SelfReg="false" NextFile="libfftw33.dll"/>
+    <ROW File="LibSndFile1.dll" Component_="LibSndFile1.dll" FileName="LibSnd~1.dll|LibSndFile-1.dll" Attributes="0" SourcePath="..\..\sox\sox\msvc10\Release\LibSndFile-1.dll" SelfReg="false" NextFile="LibMad.dll"/>
+    <ROW File="LinkList.H" Component_="BST.H" FileName="LinkList.H" Attributes="0" SourcePath="..\include\mffm\LinkList.H" SelfReg="false" NextFile="Makefile"/>
+    <ROW File="Makefile" Component_="BST.H" FileName="Makefile" Attributes="0" SourcePath="..\include\mffm\Makefile" SelfReg="false" NextFile="play.xpm"/>
+    <ROW File="MessageDialog.H" Component_="Alignment.H" FileName="Messag~1.H|MessageDialog.H" Attributes="0" SourcePath="..\include\MessageDialog.H" SelfReg="false" NextFile="NeuralNetwork.H"/>
+    <ROW File="MessageDialogTest.C" Component_="AlignmentTest.C" FileName="Messag~1.C|MessageDialogTest.C" Attributes="0" SourcePath="..\test\MessageDialogTest.C" SelfReg="false" NextFile="NeuralNetworkFnTest.C"/>
+    <ROW File="MooreSpread.H" Component_="AudioMask.H" FileName="MooreS~1.H|MooreSpread.H" Attributes="0" SourcePath="..\include\AudioMask\MooreSpread.H" SelfReg="false" NextFile="Alignment.H"/>
+    <ROW File="NeuralNetwork.H" Component_="Alignment.H" FileName="Neural~1.H|NeuralNetwork.H" Attributes="0" SourcePath="..\include\NeuralNetwork.H" SelfReg="false" NextFile="Octave.H"/>
+    <ROW File="NeuralNetworkFnTest.C" Component_="AlignmentTest.C" FileName="Neural~1.C|NeuralNetworkFnTest.C" Attributes="0" SourcePath="..\test\NeuralNetworkFnTest.C" SelfReg="false" NextFile="NeuralNetworkTest.C"/>
+    <ROW File="NeuralNetworkTest.C" Component_="AlignmentTest.C" FileName="Neural~2.C|NeuralNetworkTest.C" Attributes="0" SourcePath="..\test\NeuralNetworkTest.C" SelfReg="false" NextFile="OctaveOpenCVTest.C"/>
+    <ROW File="Neutral.44k.wav" Component_="audio.44100.txt" FileName="11Neut~1.wav|11.Neutral.44k.wav" Attributes="0" SourcePath="..\test\testVectors\11.Neutral.44k.wav" SelfReg="false" NextFile="ramp.wav.max"/>
+    <ROW File="ORB.H" Component_="Alignment.H" FileName="ORB.H" Attributes="0" SourcePath="..\include\ORB.H" SelfReg="false" NextFile="Pango.H"/>
+    <ROW File="ORB.lib" Component_="libgtkIOStream.lib" FileName="ORB.lib" Attributes="0" SourcePath="gtkiostream\Release\ORB.lib" SelfReg="false" NextFile="WSOLA.exe"/>
+    <ROW File="ORBTest.C" Component_="AlignmentTest.C" FileName="ORBTest.C" Attributes="0" SourcePath="..\test\ORBTest.C" SelfReg="false" NextFile="PangoTest2.C"/>
+    <ROW File="Octave.H" Component_="Alignment.H" FileName="Octave.H" Attributes="0" SourcePath="..\include\Octave.H" SelfReg="false" NextFile="OptionParser.H"/>
+    <ROW File="OctaveOpenCVTest.C" Component_="AlignmentTest.C" FileName="Octave~1.C|OctaveOpenCVTest.C" Attributes="0" SourcePath="..\test\OctaveOpenCVTest.C" SelfReg="false" NextFile="OctaveTest.C"/>
+    <ROW File="OctaveTest.C" Component_="AlignmentTest.C" FileName="Octave~2.C|OctaveTest.C" Attributes="0" SourcePath="..\test\OctaveTest.C" SelfReg="false" NextFile="OptionParserTest.C"/>
+    <ROW File="OptionParser.H" Component_="Alignment.H" FileName="Option~1.H|OptionParser.H" Attributes="0" SourcePath="..\include\OptionParser.H" SelfReg="false" NextFile="ORB.H"/>
+    <ROW File="OptionParserTest.C" Component_="AlignmentTest.C" FileName="Option~1.C|OptionParserTest.C" Attributes="0" SourcePath="..\test\OptionParserTest.C" SelfReg="false" NextFile="ORBTest.C"/>
+    <ROW File="OverlapAddTest.C" Component_="AlignmentTest.C" FileName="Overla~1.C|OverlapAddTest.C" Attributes="0" SourcePath="..\test\OverlapAddTest.C" SelfReg="false" NextFile="Neutral.44k.wav"/>
+    <ROW File="Pango.H" Component_="Alignment.H" FileName="Pango.H" Attributes="0" SourcePath="..\include\Pango.H" SelfReg="false" NextFile="Pixmap.H"/>
+    <ROW File="PangoTest.C" Component_="AlignmentTest.C" FileName="PangoT~2.C|PangoTest.C" Attributes="0" SourcePath="..\test\PangoTest.C" SelfReg="false" NextFile="PixmapTest.C"/>
+    <ROW File="PangoTest2.C" Component_="AlignmentTest.C" FileName="PangoT~1.C|PangoTest2.C" Attributes="0" SourcePath="..\test\PangoTest2.C" SelfReg="false" NextFile="PangoTest.C"/>
+    <ROW File="Pixmap.H" Component_="Alignment.H" FileName="Pixmap.H" Attributes="0" SourcePath="..\include\Pixmap.H" SelfReg="false" NextFile="Plot.H"/>
+    <ROW File="PixmapTest.C" Component_="AlignmentTest.C" FileName="Pixmap~1.C|PixmapTest.C" Attributes="0" SourcePath="..\test\PixmapTest.C" SelfReg="false" NextFile="PlotTest2.C"/>
+    <ROW File="Plot.H" Component_="Alignment.H" FileName="Plot.H" Attributes="0" SourcePath="..\include\Plot.H" SelfReg="false" NextFile="ProgressBar.H"/>
+    <ROW File="PlotTest.C" Component_="AlignmentTest.C" FileName="PlotTest.C" Attributes="0" SourcePath="..\test\PlotTest.C" SelfReg="false" NextFile="ProgressBarTest.C"/>
+    <ROW File="PlotTest2.C" Component_="AlignmentTest.C" FileName="PlotTe~1.C|PlotTest2.C" Attributes="0" SourcePath="..\test\PlotTest2.C" SelfReg="false" NextFile="PlotTest.C"/>
+    <ROW File="ProgressBar.H" Component_="Alignment.H" FileName="Progre~1.H|ProgressBar.H" Attributes="0" SourcePath="..\include\ProgressBar.H" SelfReg="false" NextFile="Scales.H"/>
+    <ROW File="ProgressBarTest.C" Component_="AlignmentTest.C" FileName="Progre~1.C|ProgressBarTest.C" Attributes="0" SourcePath="..\test\ProgressBarTest.C" SelfReg="false" NextFile="Real2DFFTExample.C"/>
+    <ROW File="README.txt" Component_="libgtkIOStream.lib" FileName="README.txt" Attributes="0" SourcePath="README.txt" SelfReg="false" NextFile="libgtkIOStream.lib"/>
+    <ROW File="Real2DFFT.H" Component_="ComplexFFT.H" FileName="Real2D~1.H|Real2DFFT.H" Attributes="0" SourcePath="..\include\fft\Real2DFFT.H" SelfReg="false" NextFile="Real2DFFTData.H"/>
+    <ROW File="Real2DFFTData.H" Component_="ComplexFFT.H" FileName="Real2D~2.H|Real2DFFTData.H" Attributes="0" SourcePath="..\include\fft\Real2DFFTData.H" SelfReg="false" NextFile="RealFFT.H"/>
+    <ROW File="Real2DFFTExample.C" Component_="AlignmentTest.C" FileName="Real2D~1.C|Real2DFFTExample.C" Attributes="0" SourcePath="..\test\Real2DFFTExample.C" SelfReg="false" NextFile="RealFFTExample.C"/>
+    <ROW File="RealFFT.H" Component_="ComplexFFT.H" FileName="RealFFT.H" Attributes="0" SourcePath="..\include\fft\RealFFT.H" SelfReg="false" NextFile="RealFFTData.H"/>
+    <ROW File="RealFFTData.H" Component_="ComplexFFT.H" FileName="RealFF~1.H|RealFFTData.H" Attributes="0" SourcePath="..\include\fft\RealFFTData.H" SelfReg="false" NextFile="BST.H"/>
+    <ROW File="RealFFTExample.C" Component_="AlignmentTest.C" FileName="RealFF~1.C|RealFFTExample.C" Attributes="0" SourcePath="..\test\RealFFTExample.C" SelfReg="false" NextFile="ScaleTest.C"/>
+    <ROW File="ScaleTest.C" Component_="AlignmentTest.C" FileName="ScaleT~1.C|ScaleTest.C" Attributes="0" SourcePath="..\test\ScaleTest.C" SelfReg="false" NextFile="SelectionAreaTest.C"/>
+    <ROW File="Scales.H" Component_="Alignment.H" FileName="Scales.H" Attributes="0" SourcePath="..\include\Scales.H" SelfReg="false" NextFile="Scrolling.H"/>
+    <ROW File="Scrolling.H" Component_="Alignment.H" FileName="Scroll~1.H|Scrolling.H" Attributes="0" SourcePath="..\include\Scrolling.H" SelfReg="false" NextFile="Selection.H"/>
+    <ROW File="Selection.H" Component_="Alignment.H" FileName="Select~1.H|Selection.H" Attributes="0" SourcePath="..\include\Selection.H" SelfReg="false" NextFile="SelectionArea.H"/>
+    <ROW File="SelectionArea.H" Component_="Alignment.H" FileName="Select~2.H|SelectionArea.H" Attributes="0" SourcePath="..\include\SelectionArea.H" SelfReg="false" NextFile="Separator.H"/>
+    <ROW File="SelectionAreaTest.C" Component_="AlignmentTest.C" FileName="Select~1.C|SelectionAreaTest.C" Attributes="0" SourcePath="..\test\SelectionAreaTest.C" SelfReg="false" NextFile="SelectionTest2.C"/>
+    <ROW File="SelectionTest.C" Component_="AlignmentTest.C" FileName="Select~4.C|SelectionTest.C" Attributes="0" SourcePath="..\test\SelectionTest.C" SelfReg="false" NextFile="SeparatorTest.C"/>
+    <ROW File="SelectionTest2.C" Component_="AlignmentTest.C" FileName="Select~2.C|SelectionTest2.C" Attributes="0" SourcePath="..\test\SelectionTest2.C" SelfReg="false" NextFile="SelectionTest3.C"/>
+    <ROW File="SelectionTest3.C" Component_="AlignmentTest.C" FileName="Select~3.C|SelectionTest3.C" Attributes="0" SourcePath="..\test\SelectionTest3.C" SelfReg="false" NextFile="SelectionTest.C"/>
+    <ROW File="Separator.H" Component_="Alignment.H" FileName="Separa~1.H|Separator.H" Attributes="0" SourcePath="..\include\Separator.H" SelfReg="false" NextFile="Surface.H"/>
+    <ROW File="SeparatorTest.C" Component_="AlignmentTest.C" FileName="Separa~1.C|SeparatorTest.C" Attributes="0" SourcePath="..\test\SeparatorTest.C" SelfReg="false" NextFile="TableTest.C"/>
+    <ROW File="SoxWindows.H" Component_="Alignment.H" FileName="SOXWIN~1.H|SoxWindows.H" Attributes="0" SourcePath="..\include\SoxWindows.H" SelfReg="false" NextFile="TimeTools.H"/>
+    <ROW File="Surface.H" Component_="Alignment.H" FileName="Surface.H" Attributes="0" SourcePath="..\include\Surface.H" SelfReg="false" NextFile="Table.H"/>
+    <ROW File="Table.H" Component_="Alignment.H" FileName="Table.H" Attributes="0" SourcePath="..\include\Table.H" SelfReg="false" NextFile="TextView.H"/>
+    <ROW File="TableTest.C" Component_="AlignmentTest.C" FileName="TableT~1.C|TableTest.C" Attributes="0" SourcePath="..\test\TableTest.C" SelfReg="false" NextFile="TextViewTest.C"/>
+    <ROW File="TextView.H" Component_="Alignment.H" FileName="TextView.H" Attributes="0" SourcePath="..\include\TextView.H" SelfReg="false" NextFile="Thread.H"/>
+    <ROW File="TextViewTest.C" Component_="AlignmentTest.C" FileName="TextVi~1.C|TextViewTest.C" Attributes="0" SourcePath="..\test\TextViewTest.C" SelfReg="false" NextFile="ThreadTest.C"/>
+    <ROW File="Thread.H" Component_="Alignment.H" FileName="Thread.H" Attributes="0" SourcePath="..\include\Thread.H" SelfReg="false" NextFile="Widget.H"/>
+    <ROW File="ThreadTest.C" Component_="AlignmentTest.C" FileName="Thread~1.C|ThreadTest.C" Attributes="0" SourcePath="..\test\ThreadTest.C" SelfReg="false" NextFile="ComplexFFT.H"/>
+    <ROW File="TimeTools.H" Component_="Alignment.H" FileName="TIMETO~1.H|TimeTools.H" Attributes="0" SourcePath="..\include\TimeTools.H" SelfReg="false" NextFile="dirent.h"/>
+    <ROW File="WSOLA.H" Component_="Alignment.H" FileName="WSOLA.H" Attributes="0" SourcePath="..\include\WSOLA.H" SelfReg="false" NextFile="WSOLAJack.H"/>
+    <ROW File="WSOLA.exe" Component_="WSOLA.exe" FileName="WSOLA.exe" Attributes="0" SourcePath="gtkiostream\Release\WSOLA.exe" SelfReg="false" NextFile="WSOLAJackGTK.exe" DigSign="true"/>
+    <ROW File="WSOLAJack.H" Component_="Alignment.H" FileName="WSOLAJ~1.H|WSOLAJack.H" Attributes="0" SourcePath="..\include\WSOLAJack.H" SelfReg="false" NextFile="audio.44100.txt"/>
+    <ROW File="WSOLAJackGTK.exe" Component_="WSOLAJackGTK.exe" FileName="WSOLAJ~1.exe|WSOLAJackGTK.exe" Attributes="0" SourcePath="gtkiostream\Release\WSOLAJackGTK.exe" SelfReg="false" NextFile="libfft.lib" DigSign="true"/>
+    <ROW File="Widget.H" Component_="Alignment.H" FileName="Widget.H" Attributes="0" SourcePath="..\include\Widget.H" SelfReg="false" NextFile="WSOLA.H"/>
+    <ROW File="audio.44100.txt" Component_="audio.44100.txt" FileName="audio4~1.txt|audio.44100.txt" Attributes="0" SourcePath="..\test\testVectors\audio.44100.txt" SelfReg="false" NextFile="hiddenBias.dat"/>
+    <ROW File="colourWheel.H" Component_="Alignment.H" FileName="colour~2.H|colourWheel.H" Attributes="0" SourcePath="..\include\colourWheel.H" SelfReg="false" NextFile="ComboBoxText.H"/>
+    <ROW File="colourWheelTest.C" Component_="AlignmentTest.C" FileName="colour~1.C|colourWheelTest.C" Attributes="0" SourcePath="..\test\colourWheelTest.C" SelfReg="false" NextFile="ComboBoxTextTest.C"/>
+    <ROW File="commonTimeCodeX.H" Component_="Alignment.H" FileName="common~1.H|commonTimeCodeX.H" Attributes="0" SourcePath="..\include\commonTimeCodeX.H" SelfReg="false" NextFile="Container.H"/>
+    <ROW File="depukfb.H" Component_="AudioMask.H" FileName="depukfb.H" Attributes="0" SourcePath="..\include\AudioMask\depukfb.H" SelfReg="false" NextFile="fastDepukfb.H"/>
+    <ROW File="dirent.h" Component_="dirent.h" FileName="dirent.h" Attributes="0" SourcePath="..\include\posixForMicrosoft\dirent.h" SelfReg="false"/>
+    <ROW File="fastDepukfb.H" Component_="AudioMask.H" FileName="fastDe~1.H|fastDepukfb.H" Attributes="0" SourcePath="..\include\AudioMask\fastDepukfb.H" SelfReg="false" NextFile="MooreSpread.H"/>
+    <ROW File="freetype6.dll" Component_="freetype6.dll" FileName="FREETY~1.DLL|freetype6.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\freetype6.dll" SelfReg="false" NextFile="AudioMasker.exe"/>
+    <ROW File="gtkDialog.H" Component_="Alignment.H" FileName="gtkDia~1.H|gtkDialog.H" Attributes="0" SourcePath="..\include\gtkDialog.H" SelfReg="false" NextFile="gtkInterface.H"/>
+    <ROW File="gtkInterface.H" Component_="Alignment.H" FileName="gtkInt~1.H|gtkInterface.H" Attributes="0" SourcePath="..\include\gtkInterface.H" SelfReg="false" NextFile="GtkUtils.H"/>
+    <ROW File="hiddenBias.dat" Component_="audio.44100.txt" FileName="hidden~1.dat|hiddenBias.dat" Attributes="0" SourcePath="..\test\testVectors\hiddenBias.dat" SelfReg="false" NextFile="hiddenWeights.dat"/>
+    <ROW File="hiddenWeights.dat" Component_="audio.44100.txt" FileName="hidden~2.dat|hiddenWeights.dat" Attributes="0" SourcePath="..\test\testVectors\hiddenWeights.dat" SelfReg="false" NextFile="inputBias.dat"/>
+    <ROW File="inputBias.dat" Component_="audio.44100.txt" FileName="inputB~1.dat|inputBias.dat" Attributes="0" SourcePath="..\test\testVectors\inputBias.dat" SelfReg="false" NextFile="inputWeights.dat"/>
+    <ROW File="inputWeights.dat" Component_="audio.44100.txt" FileName="inputW~1.dat|inputWeights.dat" Attributes="0" SourcePath="..\test\testVectors\inputWeights.dat" SelfReg="false" NextFile="outputBias.dat"/>
+    <ROW File="intl.dll" Component_="intl.dll" FileName="intl.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\intl.dll" SelfReg="false" NextFile="libasprintf0.dll"/>
+    <ROW File="libAudioMask.lib" Component_="libgtkIOStream.lib" FileName="libAud~1.lib|libAudioMask.lib" Attributes="0" SourcePath="gtkiostream\Release\libAudioMask.lib" SelfReg="false" NextFile="LibSndFile1.dll"/>
+    <ROW File="libasprintf0.dll" Component_="libasprintf0.dll" FileName="LIBASP~1.DLL|libasprintf-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libasprintf-0.dll" SelfReg="false" NextFile="libatk1.00.dll"/>
+    <ROW File="libatk1.00.dll" Component_="libatk1.00.dll" FileName="LIBATK~1.DLL|libatk-1.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libatk-1.0-0.dll" SelfReg="false" NextFile="libcairo2.dll"/>
+    <ROW File="libcairo2.dll" Component_="libcairo2.dll" FileName="LIBCAI~1.DLL|libcairo-2.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libcairo-2.dll" SelfReg="false" NextFile="libcairogobject2.dll"/>
+    <ROW File="libcairogobject2.dll" Component_="libcairogobject2.dll" FileName="LIBCAI~2.DLL|libcairo-gobject-2.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libcairo-gobject-2.dll" SelfReg="false" NextFile="libcairoscriptinterpreter2.dll"/>
+    <ROW File="libcairoscriptinterpreter2.dll" Component_="libcairoscriptinterpreter2.dll" FileName="LIBCAI~3.DLL|libcairo-script-interpreter-2.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libcairo-script-interpreter-2.dll" SelfReg="false" NextFile="libexpat1.dll"/>
+    <ROW File="libexpat1.dll" Component_="libexpat1.dll" FileName="LIBEXP~1.DLL|libexpat-1.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libexpat-1.dll" SelfReg="false" NextFile="libfontconfig1.dll"/>
+    <ROW File="libfft.lib" Component_="libgtkIOStream.lib" FileName="libfft.lib" Attributes="0" SourcePath="gtkiostream\Release\libfft.lib" SelfReg="false" NextFile="libAudioMask.lib"/>
+    <ROW File="libfftw33.dll" Component_="libfftw33.dll" FileName="libfft~1.dll|libfftw3-3.dll" Attributes="0" SourcePath="..\..\fftw3\libfftw3-3.dll" SelfReg="false" NextFile="AudioMask.H"/>
+    <ROW File="libfontconfig1.dll" Component_="libfontconfig1.dll" FileName="LIBFON~1.DLL|libfontconfig-1.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libfontconfig-1.dll" SelfReg="false" NextFile="libgailutil18.dll"/>
+    <ROW File="libgailutil18.dll" Component_="libgailutil18.dll" FileName="LIBGAI~1.DLL|libgailutil-18.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libgailutil-18.dll" SelfReg="false" NextFile="libgcc_s_dw21.dll"/>
+    <ROW File="libgcc_s_dw21.dll" Component_="libgcc_s_dw21.dll" FileName="LIBGCC~1.DLL|libgcc_s_dw2-1.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libgcc_s_dw2-1.dll" SelfReg="false" NextFile="libgdk_pixbuf2.00.dll"/>
+    <ROW File="libgdk_pixbuf2.00.dll" Component_="libgdk_pixbuf2.00.dll" FileName="LIBGDK~1.DLL|libgdk_pixbuf-2.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libgdk_pixbuf-2.0-0.dll" SelfReg="false" NextFile="libgdkwin322.00.dll"/>
+    <ROW File="libgdkwin322.00.dll" Component_="libgdkwin322.00.dll" FileName="LIBGDK~2.DLL|libgdk-win32-2.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libgdk-win32-2.0-0.dll" SelfReg="false" NextFile="libgio2.00.dll"/>
+    <ROW File="libgio2.00.dll" Component_="libgio2.00.dll" FileName="LIBGIO~1.DLL|libgio-2.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libgio-2.0-0.dll" SelfReg="false" NextFile="libglib2.00.dll"/>
+    <ROW File="libglib2.00.dll" Component_="libglib2.00.dll" FileName="LIBGLI~1.DLL|libglib-2.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libglib-2.0-0.dll" SelfReg="false" NextFile="libgmodule2.00.dll"/>
+    <ROW File="libgmodule2.00.dll" Component_="libgmodule2.00.dll" FileName="LIBGMO~1.DLL|libgmodule-2.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libgmodule-2.0-0.dll" SelfReg="false" NextFile="libgobject2.00.dll"/>
+    <ROW File="libgobject2.00.dll" Component_="libgobject2.00.dll" FileName="LIBGOB~1.DLL|libgobject-2.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libgobject-2.0-0.dll" SelfReg="false" NextFile="libgthread2.00.dll"/>
+    <ROW File="libgthread2.00.dll" Component_="libgthread2.00.dll" FileName="LIBGTH~1.DLL|libgthread-2.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libgthread-2.0-0.dll" SelfReg="false" NextFile="libgtkwin322.00.dll"/>
+    <ROW File="libgtkIOStream.lib" Component_="libgtkIOStream.lib" FileName="libgtk~1.lib|libgtkIOStream.lib" Attributes="0" SourcePath="gtkiostream\Release\libgtkIOStream.lib" SelfReg="false" NextFile="ORB.lib"/>
+    <ROW File="libgtkwin322.00.dll" Component_="libgtkwin322.00.dll" FileName="LIBGTK~1.DLL|libgtk-win32-2.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libgtk-win32-2.0-0.dll" SelfReg="false" NextFile="libpango1.00.dll"/>
+    <ROW File="libpango1.00.dll" Component_="libpango1.00.dll" FileName="LIBPAN~1.DLL|libpango-1.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libpango-1.0-0.dll" SelfReg="false" NextFile="libpangocairo1.00.dll"/>
+    <ROW File="libpangocairo1.00.dll" Component_="libpangocairo1.00.dll" FileName="LIBPAN~2.DLL|libpangocairo-1.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libpangocairo-1.0-0.dll" SelfReg="false" NextFile="libpangoft21.00.dll"/>
+    <ROW File="libpangoft21.00.dll" Component_="libpangoft21.00.dll" FileName="LIBPAN~3.DLL|libpangoft2-1.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libpangoft2-1.0-0.dll" SelfReg="false" NextFile="libpangowin321.00.dll"/>
+    <ROW File="libpangowin321.00.dll" Component_="libpangowin321.00.dll" FileName="LIBPAN~4.DLL|libpangowin32-1.0-0.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libpangowin32-1.0-0.dll" SelfReg="false" NextFile="libpng1414.dll"/>
+    <ROW File="libpng1414.dll" Component_="libpng1414.dll" FileName="LIBPNG~1.DLL|libpng14-14.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\libpng14-14.dll" SelfReg="false" NextFile="zlib1.dll"/>
+    <ROW File="outputBias.dat" Component_="audio.44100.txt" FileName="output~1.dat|outputBias.dat" Attributes="0" SourcePath="..\test\testVectors\outputBias.dat" SelfReg="false" NextFile="outputWeights.dat"/>
+    <ROW File="outputWeights.dat" Component_="audio.44100.txt" FileName="output~2.dat|outputWeights.dat" Attributes="0" SourcePath="..\test\testVectors\outputWeights.dat" SelfReg="false" NextFile="AlignmentTest.C"/>
+    <ROW File="play.xpm" Component_="play.xpm" FileName="play.xpm" Attributes="0" SourcePath="..\include\xpm\play.xpm" SelfReg="false" NextFile="DecompositionTest.C"/>
+    <ROW File="ramp.wav" Component_="audio.44100.txt" FileName="ramp.wav" Attributes="0" SourcePath="..\test\testVectors\ramp.wav" SelfReg="false" NextFile="intl.dll"/>
+    <ROW File="ramp.wav.max" Component_="audio.44100.txt" FileName="rampwa~1.max|ramp.wav.max" Attributes="0" SourcePath="..\test\testVectors\ramp.wav.max" SelfReg="false" NextFile="ramp.wav"/>
+    <ROW File="zlib1.dll" Component_="zlib1.dll" FileName="zlib1.dll" Attributes="0" SourcePath="..\..\..\..\..\GTK+\bin\zlib1.dll" SelfReg="false" NextFile="freetype6.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" Languages="en" InstallationType="4" UseLargeSchema="true"/>
+    <ATTRIBUTE name="CurrentBuild" value="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
+    <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
+    <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.FragmentComponent">
+    <ROW Fragment="CommonUI.aip" Path="&lt;AI_FRAGS&gt;CommonUI.aip"/>
+    <ROW Fragment="FolderDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\FolderDlg.aip"/>
+    <ROW Fragment="MaintenanceTypeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceTypeDlg.aip"/>
+    <ROW Fragment="MaintenanceWelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceWelcomeDlg.aip"/>
+    <ROW Fragment="SequenceDialogs.aip" Path="&lt;AI_THEMES&gt;classic\fragments\SequenceDialogs.aip"/>
+    <ROW Fragment="Sequences.aip" Path="&lt;AI_FRAGS&gt;Sequences.aip"/>
+    <ROW Fragment="StaticUIStrings.aip" Path="&lt;AI_FRAGS&gt;StaticUIStrings.aip"/>
+    <ROW Fragment="UI.aip" Path="&lt;AI_THEMES&gt;classic\fragments\UI.aip"/>
+    <ROW Fragment="Validation.aip" Path="&lt;AI_FRAGS&gt;Validation.aip"/>
+    <ROW Fragment="VerifyRemoveDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRemoveDlg.aip"/>
+    <ROW Fragment="VerifyRepairDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRepairDlg.aip"/>
+    <ROW Fragment="WelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\WelcomeDlg.aip"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiBinaryComponent">
+    <ROW Name="aicustact.dll" SourcePath="&lt;AI_CUSTACTS&gt;aicustact.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
+    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="FolderDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="FolderDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="MaintenanceWelcomeDlg" Control_="Next" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="99"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_MAINT" Ordering="198"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="202"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_INSTALL" Ordering="197"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_MAINT" Ordering="101"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="ChangeButton" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="501"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceWelcomeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RemoveButton" Event="NewDialog" Argument="VerifyRemoveDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RepairButton" Event="NewDialog" Argument="VerifyRepairDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="1"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Repair" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="399" Options="1"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Remove" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="299" Options="1"/>
+    <ROW Dialog_="PatchWelcomeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_PATCH" Ordering="201"/>
+    <ROW Dialog_="ResumeDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_RESUME" Ordering="299"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_PATCH" Ordering="199"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="PatchWelcomeDlg" Condition="AI_PATCH" Ordering="203"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
+    <ROW Action="AI_DOWNGRADE" Type="19" Target="4010"/>
+    <ROW Action="AI_DpiContentScale" Type="1" Source="aicustact.dll" Target="DpiContentScale"/>
+    <ROW Action="AI_InstallModeCheck" Type="1" Source="aicustact.dll" Target="UpdateInstallMode" WithoutSeq="true"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Type="65" Source="aicustact.dll" Target="PrepareUpgrade"/>
+    <ROW Action="AI_RESTORE_LOCATION" Type="65" Source="aicustact.dll" Target="RestoreLocation"/>
+    <ROW Action="AI_ResolveKnownFolders" Type="1" Source="aicustact.dll" Target="AI_ResolveKnownFolders"/>
+    <ROW Action="AI_ResolveLocalizedCredentials" Type="1" Source="aicustact.dll" Target="GetLocalizedCredentials"/>
+    <ROW Action="AI_SHOW_LOG" Type="65" Source="aicustact.dll" Target="LaunchLogFile" WithoutSeq="true"/>
+    <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
+    <ROW Action="AI_ViewReadme" Type="1" Source="aicustact.dll" Target="[#README.txt]"/>
+    <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]" MultiBuildTarget="DefaultBuild:[ProgramFilesFolder][ProductName]"/>
+    <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
+    <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiEnvComponent">
+    <ROW Environment="Path" Name="=-Path" Value="[~];[ProgramFilesFolder][ProductName]" Component_="ProductInformation"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
+    <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="749"/>
+    <ROW Action="AI_STORE_LOCATION" Condition="(Not Installed) OR REINSTALL" Sequence="1501"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Condition="AI_UPGRADE=&quot;No&quot; AND (Not Installed)" Sequence="1399"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="52"/>
+    <ROW Action="AI_ResolveLocalizedCredentials" Sequence="51"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstallUISequenceComponent">
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="749"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="53"/>
+    <ROW Action="AI_ResolveLocalizedCredentials" Sequence="52"/>
+    <ROW Action="AI_DpiContentScale" Sequence="51"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiLaunchConditionsComponent">
+    <ROW Condition="(VersionNT &lt;&gt; 400)" Description="[ProductName] cannot be installed on the following Windows versions: [WindowsTypeNT40Display]" DescriptionLocId="AI.LaunchCondition.NoNT40" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="VersionNT" Description="[ProductName] cannot be installed on [WindowsType9XDisplay]" DescriptionLocId="AI.LaunchCondition.No9X" IsPredefined="true" Builds="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiRegsComponent">
+    <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>
+    <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
+    <ATTRIBUTE name="UsedTheme" value="classic"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiUpgradeComponent">
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMax="[|ProductVersion]" Attributes="1025" ActionProperty="OLDPRODUCTS"/>
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMin="[|ProductVersion]" Attributes="2" ActionProperty="AI_NEWERPRODUCTFOUND"/>
+  </COMPONENT>
+</DOCUMENT>

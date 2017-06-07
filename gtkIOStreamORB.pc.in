@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: gtkIOStream
+Description: Headers and library for GUI, ORBing, Octave and Jack audio interfacing.
+URL: http://sourceforge.net/projects/gtkiostream
+Version: @VERSION@
+Requires:
+Libs: -L${libdir} -lORB
+Cflags: -I${includedir}/gtkIOStream
+

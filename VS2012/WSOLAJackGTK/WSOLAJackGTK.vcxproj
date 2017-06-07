@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\applications\WSOLAJackGTK.C" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5EA7559A-2A83-4B45-83E3-6504F4A7E6CC}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>WSOLAJackGTK</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Jack\includes;C:\Program Files\Jack\includes;..\..\include;..\..\..\sox\sox\src;..\..\..\eigen;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Jack\lib;C:\Program Files\Jack\lib;$(SolutionDir)..\..\..\sox\sox\msvc10\Debug\lib;$(SolutionDir)Debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Jack\includes;C:\Program Files\Jack\includes;..\..\include;..\..\..\sox\sox\src;..\..\..\eigen;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Jack\lib;C:\Program Files\Jack\lib;$(SolutionDir)..\..\..\sox\sox\msvc10\Release\lib;$(SolutionDir)..\gtkiostream\Release;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>-Ic:/GTK+/include/gtk-2.0 -Ic:/GTK+/lib/gtk-2.0/include -Ic:/GTK+/include/atk-1.0 -Ic:/GTK+/include/cairo -Ic:/GTK+/include/gdk-pixbuf-2.0 -Ic:/GTK+/include/pango-1.0 -Ic:/GTK+/include/glib-2.0 -Ic:/GTK+/lib/glib-2.0/include -Ic:/GTK+/include -Ic:/GTK+/include/freetype2 -Ic:/GTK+/include/libpng14 %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/libpath:c:/GTK+/lib gtk-win32-2.0.lib gdk-win32-2.0.lib atk-1.0.lib gio-2.0.lib pangowin32-1.0.lib gdi32.lib pangocairo-1.0.lib gdk_pixbuf-2.0.lib pango-1.0.lib cairo.lib gobject-2.0.lib gmodule-2.0.lib gthread-2.0.lib glib-2.0.lib intl.lib libjack.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>libgtkIOStream.lib;LibSoX.lib;LibFlac.lib;LibGsm.lib;LibId3Tag.lib;LibLpc10.lib;LibMad.lib;LibMp3Lame.lib;LibOgg.lib;LibPng.lib;LibSndFile-1.lib;LibSndFileG72x.lib;LibSndFileGSM610.lib;LibSpeex.lib;LibVorbis.lib;LibWavPack.lib;LibZLib.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PreBuildEvent>
+      <Command>"$(SolutionDir)..\libgtkIOStream\moveSoxH.bat"</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>"$(SolutionDir)..\libgtkIOStream\moveSoxWindowsH.bat"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <AdditionalOptions>-Ic:/GTK+/include/gtk-2.0 -Ic:/GTK+/lib/gtk-2.0/include -Ic:/GTK+/include/atk-1.0 -Ic:/GTK+/include/cairo -Ic:/GTK+/include/gdk-pixbuf-2.0 -Ic:/GTK+/include/pango-1.0 -Ic:/GTK+/include/glib-2.0 -Ic:/GTK+/lib/glib-2.0/include -Ic:/GTK+/include -Ic:/GTK+/include/freetype2 -Ic:/GTK+/include/libpng14 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>libgtkIOStream.lib;LibSoX.lib;LibFlac.lib;LibGsm.lib;LibId3Tag.lib;LibLpc10.lib;LibMad.lib;LibMp3Lame.lib;LibOgg.lib;LibPng.lib;LibSndFile-1.lib;LibSndFileG72x.lib;LibSndFileGSM610.lib;LibSpeex.lib;LibVorbis.lib;LibWavPack.lib;LibZLib.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/libpath:c:/GTK+/lib gtk-win32-2.0.lib gdk-win32-2.0.lib atk-1.0.lib gio-2.0.lib pangowin32-1.0.lib gdi32.lib pangocairo-1.0.lib gdk_pixbuf-2.0.lib pango-1.0.lib cairo.lib gobject-2.0.lib gmodule-2.0.lib gthread-2.0.lib glib-2.0.lib intl.lib libjack.lib %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

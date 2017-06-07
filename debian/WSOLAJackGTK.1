@@ -1,0 +1,47 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH WSOLA 1 "September  12, 2013"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+WSOLAJackGTK \- program to stretch and compress (speed up/slow down) audio without altering its pitch. This version plays the audio using the Jack audio system and provides a GTK GUI with a slider for speeding up and slowing down the audio.
+.SH SYNOPSIS
+.B WSOLAJackGTK
+inputFile
+.br
+.SH DESCRIPTION
+
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
+.\" respectively.
+\fBwsola\fP speeds up or slows down audio, without pitch alteration. The two files input/output are accessed using the libsndfile library and thus may be in many formats supported by libsndfile.
+.br
+The input argument 'factor' specifies the output speed of the audio. Factors > 1 imply slowing of audio. Factors < 1 imply the speeding up of audio. For example a factor of 0.5 will double the speed of the audio. A factor of 2.0 will halve the speed of the audio. A factor = 1.0 will leave the audio unaltered.
+.br
+WSOLA operates using the Waveform Similarity overlap add method [1].
+.SH AUTHOR
+wsola was written by Matt Flax <flatmax@>.
+.SH REFERENCES
+[1] @InProceedings{Verhelst:1993,
+  author =       {Verhelst, W. and Roelands, M.},
+  title =        {An overlap-add technique based on waveform similarity (WSOLA) 
+for high quality time-scale modification of speech},
+  booktitle = {IEEE International Conference on Acoustics, Speech, and Signal Pr
+ocessing},
+  pages =        {554-557},
+  year =         {1993},
+  volume =       {2},
+  month =        {April}
+}

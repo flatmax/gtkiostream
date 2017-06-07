@@ -1,0 +1,75 @@
+/* Copyright 2000-2014 Matt Flax <flatmax@flatmax.org>
+   This file is part of GTK+ IOStream class set
+
+   GTK+ IOStream is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   GTK+ IOStream is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You have received a copy of the GNU General Public License
+   along with GTK+ IOStream
+ */
+/* XPM */
+static const char *playXPM[] = {
+/* width height ncolors chars_per_pixel */
+"68 47 5 1",
+/* colors */
+"` c #FFD600",
+"a c #7F3000",
+"b c #FFFFFF",
+"c c #FFFF00",
+"d c #008E00",
+/* pixels */
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+"bbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+"bbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaa``````````````cc```````````````````````````````````````````aaab",
+"bbaaa``````````````cccc`````````````````````````````````````````aaab",
+"bbaaa``````````````cdccccc``````````````````````````````````````aaab",
+"bbaaa``````````````cddddcccc````````````````````````````````````aaab",
+"bbaaa``````````````cddddddccccc`````````````````````````````````aaab",
+"bbaaa``````````````cdddddddddcccc```````````````````````````````aaab",
+"bbaaa``````````````cdddddddddddccccc````````````````````````````aaab",
+"bbaaa``````````````cddddddddddddddcccc``````````````````````````aaab",
+"bbaaa``````````````cddddddddddddddddccccc```````````````````````aaab",
+"bbaaa``````````````cdddddddddddddddddddcccc`````````````````````aaab",
+"bbaaa``````````````cdddddddddddddddddddddccccc``````````````````aaab",
+"bbaaa``````````````cddddddddddddddddddddddddcccc````````````````aaab",
+"bbaaa``````````````cddddddddddddddddddddddddddccccc`````````````aaab",
+"bbaaa``````````````cdddddddddddddddddddddddddddddcccc```````````aaab",
+"bbaaa``````````````cddddddddddddddddddddddddddddddcccc``````````aaab",
+"bbaaa``````````````cdddddddddddddddddddddddddddccccc````````````aaab",
+"bbaaa``````````````cdddddddddddddddddddddddddcccc```````````````aaab",
+"bbaaa``````````````cddddddddddddddddddddddccccc`````````````````aaab",
+"bbaaa``````````````cddddddddddddddddddddcccc````````````````````aaab",
+"bbaaa``````````````cdddddddddddddddddccccc``````````````````````aaab",
+"bbaaa``````````````cdddddddddddddddcccc`````````````````````````aaab",
+"bbaaa``````````````cddddddddddddccccc```````````````````````````aaab",
+"bbaaa``````````````cddddddddddcccc``````````````````````````````aaab",
+"bbaaa``````````````cdddddddccccc````````````````````````````````aaab",
+"bbaaa``````````````cdddddcccc```````````````````````````````````aaab",
+"bbaaa``````````````cddccccc`````````````````````````````````````aaab",
+"bbaaa``````````````ccccc````````````````````````````````````````aaab",
+"bbaaa``````````````ccc``````````````````````````````````````````aaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaa```````````````````````````````````````````````````````````aaab",
+"bbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+"bbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+"bbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+};

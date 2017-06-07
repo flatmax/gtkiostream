@@ -1,0 +1,14 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: gtkIOStream
+Description: Headers and library for GUI, ORBing, Octave and Jack audio interfacing.
+URL: http://sourceforge.net/projects/gtkiostream
+Version: @VERSION@
+Requires:
+Libs: -L${libdir} -lgtkIOStream @GTK_LIBS@ @EIGEN_LIBS@ @SOX_LIBS@ @MKOCTFILE_LIBPATH@ @MKOCTFILE_PCLIBPATH@ @MKOCTFILE_LIBS@ @JACK_LIBS@ @FFTW3_LIBS@ @OPENCV_LIBS@
+Cflags: -I${includedir}/gtkIOStream @GTK_CFLAGS@ @EIGEN_CFLAGS@ @SOX_CFLAGS@ @MKOCTFILE_CFLAGS@ @JACK_CFLAGS@ @FFTW3_CFLAGS@ @OPENCV_CFLAGS@
+Libs.private:
+

@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="GtkIOStream" />
+		<Option makefile_is_custom="1" />
+		<Option execution_dir=".." />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="mFiles/;ORB/;" />
+		<MakeCommands>
+			<Build command="cd $(PROJECT_DIR).. &amp;&amp; pwd &amp;&amp; $make -f $makefile" />
+			<CompileFile command="cd $(PROJECT_DIR).. &amp;&amp; $make -f $makefile $file" />
+			<Clean command="./tools/autotoolsClean.sh" />
+			<DistClean command="$make -f $makefile distclean$target" />
+			<AskRebuildNeeded command="cd $(PROJECT_DIR).. &amp;&amp; $make -q -f $makefile" />
+			<SilentBuild command="cd $(PROJECT_DIR).. &amp;&amp; pwd &amp;&amp; $make -f $makefile &gt; $(CMD_NULL)" />
+		</MakeCommands>
+		<Build>
+			<Target title="autotools">
+				<Option output="../test/.libs/BitStreamTest3" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="include" />
+					<Add directory="include/DSP" />
+				</Compiler>
+				<MakeCommands>
+					<Build command="cd $(PROJECT_DIR).. &amp;&amp; pwd &amp;&amp; $make -f $makefile -j 8" />
+					<CompileFile command="cd $(PROJECT_DIR).. &amp;&amp; $make -f $makefile $file" />
+					<Clean command="./tools/autotoolsClean.sh" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="cd $(PROJECT_DIR).. &amp;&amp; $make -q -f $makefile" />
+					<SilentBuild command="cd $(PROJECT_DIR).. &amp;&amp; pwd &amp;&amp; $make -f $makefile -j 8 &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<ExtraCommands>
+			<Add before="if [ -f $(PROJECT_DIR)../$makefile ]; then echo not running autotools; else echo running autotools  &amp;&amp; cd $(PROJECT_DIR).. &amp;&amp; pwd &amp;&amp;( ./tools/autotools.sh; ./configure); fi" />
+		</ExtraCommands>
+		<Unit filename="../.gitignore" />
+		<Unit filename="../Makefile.am" />
+		<Unit filename="../README" />
+		<Unit filename="../api/Doxyfile.in" />
+		<Unit filename="../api/Makefile.am" />
+		<Unit filename="../api/filterORB.sh" />
+		<Unit filename="../applications/CrossoverTester.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../applications/I2SEndianTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../applications/IIOSox.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../applications/JackPortMonitor.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../applications/JackPortMonitorGui.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../applications/Makefile.am" />
+		<Unit filename="../applications/MixerTester.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../applications/WSOLA.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../applications/WSOLAJackGTK.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../applications/audioMasker.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../applications/old/IIOSox.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../changeLog.txt" />
+		<Unit filename="../configure.ac" />
+		<Unit filename="../futureInclusions/cubicInterp/chfev.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../futureInclusions/cubicInterp/chfev.f" />
+		<Unit filename="../futureInclusions/cubicInterp/pchfe.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../futureInclusions/cubicInterp/pchfe.f" />
+		<Unit filename="../futureInclusions/cubicInterp/pchim.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../futureInclusions/cubicInterp/pchim.f" />
+		<Unit filename="../futureInclusions/cubicInterp/pchst.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../futureInclusions/cubicInterp/pchst.f" />
+		<Unit filename="../futureInclusions/cubicInterp/testMat.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../futureInclusions/cubicInterp/xermsg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../futureInclusions/cubicInterp/xermsg.f" />
+		<Unit filename="../gtkIOStream.pc.in" />
+		<Unit filename="../gtkIOStreamORB.pc.in" />
+		<Unit filename="../include/ALSA.H" />
+		<Unit filename="../include/Alignment.H" />
+		<Unit filename="../include/AudioMask/AudioMask.H" />
+		<Unit filename="../include/AudioMask/AudioMaskCommon.H" />
+		<Unit filename="../include/AudioMask/AudioMasker.H" />
+		<Unit filename="../include/AudioMask/MooreSpread.H" />
+		<Unit filename="../include/AudioMask/depukfb.H" />
+		<Unit filename="../include/AudioMask/fastDepukfb.H" />
+		<Unit filename="../include/BitStream.H" />
+		<Unit filename="../include/BlockBuffer.H" />
+		<Unit filename="../include/Box.H" />
+		<Unit filename="../include/Buttons.H" />
+		<Unit filename="../include/CairoArc.H" />
+		<Unit filename="../include/CairoArrow.H" />
+		<Unit filename="../include/CairoBox.H" />
+		<Unit filename="../include/CairoCircle.H" />
+		<Unit filename="../include/ColourLineSpec.H" />
+		<Unit filename="../include/ComboBoxText.H" />
+		<Unit filename="../include/Container.H" />
+		<Unit filename="../include/DSP/CrossoverAudio.H" />
+		<Unit filename="../include/DSP/Decomposition.H" />
+		<Unit filename="../include/DSP/MixerTestAudio.H" />
+		<Unit filename="../include/DSP/OverlapAdd.H" />
+		<Unit filename="../include/DSP/STFourierSpectrum.H" />
+		<Unit filename="../include/DeBoor.H" />
+		<Unit filename="../include/DeBoorInstance.H" />
+		<Unit filename="../include/Debug.H" />
+		<Unit filename="../include/DirectoryScanner.H" />
+		<Unit filename="../include/DragNDrop.H" />
+		<Unit filename="../include/DrawingArea.H" />
+		<Unit filename="../include/EventBox.H" />
+		<Unit filename="../include/Examples.H" />
+		<Unit filename="../include/FileDialog.H" />
+		<Unit filename="../include/FileGtk.H" />
+		<Unit filename="../include/Frame.H" />
+		<Unit filename="../include/GtkUtils.H" />
+		<Unit filename="../include/IIO/IIO.H" />
+		<Unit filename="../include/IIO/IIOChannel.H" />
+		<Unit filename="../include/IIO/IIODevice.H" />
+		<Unit filename="../include/IIO/IIOMMap.H" />
+		<Unit filename="../include/IIO/IIOThreaded.H" />
+		<Unit filename="../include/IIO/IIOThreadedQ.H" />
+		<Unit filename="../include/IIO/visualise.m" />
+		<Unit filename="../include/JackBase.H" />
+		<Unit filename="../include/JackClient.H" />
+		<Unit filename="../include/JackPortMonitor.H" />
+		<Unit filename="../include/JackPortMonitorGui.H" />
+		<Unit filename="../include/Labels.H" />
+		<Unit filename="../include/Makefile.am" />
+		<Unit filename="../include/MessageDialog.H" />
+		<Unit filename="../include/NeuralNetwork.H" />
+		<Unit filename="../include/ORB.H" />
+		<Unit filename="../include/Octave.H" />
+		<Unit filename="../include/OptionParser.H" />
+		<Unit filename="../include/Pango.H" />
+		<Unit filename="../include/Pixmap.H" />
+		<Unit filename="../include/Plot.H" />
+		<Unit filename="../include/ProgressBar.H" />
+		<Unit filename="../include/Scales.H" />
+		<Unit filename="../include/Scrolling.H" />
+		<Unit filename="../include/Selection.H" />
+		<Unit filename="../include/SelectionArea.H" />
+		<Unit filename="../include/Separator.H" />
+		<Unit filename="../include/Sox.H" />
+		<Unit filename="../include/Surface.H" />
+		<Unit filename="../include/Table.H" />
+		<Unit filename="../include/TextView.H" />
+		<Unit filename="../include/Thread.H" />
+		<Unit filename="../include/Time.H" />
+		<Unit filename="../include/WSOLA.H" />
+		<Unit filename="../include/WSOLAJack.H" />
+		<Unit filename="../include/Widget.H" />
+		<Unit filename="../include/Window.H" />
+		<Unit filename="../include/colourWheel.H" />
+		<Unit filename="../include/commonTimeCodeX.H" />
+		<Unit filename="../include/fft/ComplexFFT.H" />
+		<Unit filename="../include/fft/ComplexFFTData.H" />
+		<Unit filename="../include/fft/FFTCommon.H" />
+		<Unit filename="../include/fft/Real2DFFT.H" />
+		<Unit filename="../include/fft/Real2DFFTData.H" />
+		<Unit filename="../include/fft/RealFFT.H" />
+		<Unit filename="../include/fft/RealFFTData.H" />
+		<Unit filename="../include/gtkDialog.H" />
+		<Unit filename="../include/gtkInterface.H" />
+		<Unit filename="../include/mffm/BST.H" />
+		<Unit filename="../include/mffm/HeapTree.H" />
+		<Unit filename="../include/mffm/HeapTreeType.H" />
+		<Unit filename="../include/mffm/LinkList.H" />
+		<Unit filename="../include/mffm/possible.future.additions/Dijkstra/dijkstra.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../include/mffm/possible.future.additions/Dijkstra/dijkstra.H" />
+		<Unit filename="../include/mffm/possible.future.additions/examples/intMult/Tree.H" />
+		<Unit filename="../include/mffm/possible.future.additions/examples/intMult/intMult.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../include/mffm/possible.future.additions/hash/Array.H" />
+		<Unit filename="../include/mffm/possible.future.additions/hash/hash.H" />
+		<Unit filename="../include/mffm/possible.future.additions/hash/hashSort.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../include/xpm/play.xpm">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="../mFiles/Makefile.am" />
+		<Unit filename="../mFiles/findSubSpace.m">
+			<Option virtualFolder="mFiles/" />
+		</Unit>
+		<Unit filename="../mFiles/findSubSpaceCorrMatrix.m" />
+		<Unit filename="../src/ALSA.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/AudioMask/AudioMask.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/AudioMask/AudioMaskExample.cc" />
+		<Unit filename="../src/AudioMask/AudioMasker.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/AudioMask/MooreSpread.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/AudioMask/MooreSpreadExample.cc" />
+		<Unit filename="../src/AudioMask/depukfbExample.cc" />
+		<Unit filename="../src/BitStream.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/ComplexFFTData.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/DSP/CrossoverAudio.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/DSP/MixerTestAudio.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/Decomposition.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/JackPortMonitor.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/JackPortMonitorGui.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/Makefile.am" />
+		<Unit filename="../src/ORBICE.ice">
+			<Option virtualFolder="ORB/" />
+		</Unit>
+		<Unit filename="../src/Octave.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/Real2DFFTData.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/RealFFTData.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/Sox.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/WSOLA.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/deBoor/DeBoor.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/deBoor/Makefile.am" />
+		<Unit filename="../test/ALSATest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/AlignmentTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/AudioMaskerExample.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/BSTTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/BitStreamTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/BitStreamTest2.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/BitStreamTest3.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/BitStreamTest4.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/BitStreamTest5.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/BitStreamTest6.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/BlockBufferTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ButtonsFontTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ButtonsTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ButtonsTest2.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/CairoArrowTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/CairoBoxTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/CairoCircleTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ComboBoxTextTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ComplexFFTExample.C">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../test/DeBoorTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/DecompositionTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/DirectoryScannerTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/DragNDropNowindowTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/DragNDropSimpleTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/DragNDropTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/DrawingAreaTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/FileDialogTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/HeapTreeSort.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/IIOMMapTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/IIOQueueTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/IIOTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/InlineTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/JackClientTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/JackOverRailTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/JackPortMonitorGuiTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/JackPortMonitorTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/LabelsTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/LabelsTest2.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/LabelsTest3.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/Makefile.am" />
+		<Unit filename="../test/MessageDialogTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/NeuralNetworkFnTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/NeuralNetworkTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ORBTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ORBTestICE.ice" />
+		<Unit filename="../test/OctaveOpenCVTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/OctaveTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/OptionParserTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/OverlapAddTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/PangoTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/PangoTest2.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/PixmapTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/PlotTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/PlotTest2.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/PlotTest3.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ProgressBarTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/Real2DFFTExample.C">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../test/RealFFTExample.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ScaleTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ScrollingTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/SelectionAreaTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/SelectionTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/SelectionTest2.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/SelectionTest3.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/SeparatorTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/TableTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/TextViewTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/ThreadTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/TimeTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/WidgetTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/colourWheelTest.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../tools/autotools.sh" />
+		<Unit filename="../tools/autotoolsClean.sh" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger>
+				<search_path add="$(PROJECT_DIR)../src" />
+				<search_path add="$(PROJECT_DIR)../test" />
+				<search_path add="$(PROJECT_DIR)../applications" />
+				<search_path add="$(PROJECT_DIR)../include" />
+				<search_path add="$(PROJECT_DIR)../include/AudioMask" />
+				<search_path add="$(PROJECT_DIR)../include/fft" />
+				<search_path add="$(PROJECT_DIR)../include/mffm" />
+				<search_path add="$(PROJECT_DIR)../include/DSP" />
+				<search_path add="$(PROJECT_DIR)../src/AudioMask" />
+				<remote_debugging>
+					<options conn_type="0" serial_baud="115200" ip_address="127.0.0.1" ip_port="2345" additional_cmds_before="shell pwd&#x0A;# add the following to your settings-&gt;debugger-&gt;commands&#x0A;# shell libtool --mode=execute gdbserver :2345 $(TARGET_OUTPUT_FILE) &amp;&#x0A;# or uncomment the following changing the executable name to match.&#x0A;#shell libtool --mode=execute gdbserver :2345 ../test/BitStreamTest &amp;&#x0A;shell LD_LIBRARY_PATH=LD_LIBRARY_PATH:../src/.libs gdbserver :2345 ../test/.libs/BitStreamTest3 &amp;&#x0A;" extended_remote="1" />
+				</remote_debugging>
+				<remote_debugging target="autotools">
+					<options conn_type="0" serial_baud="115200" ip_address="127.0.0.1" ip_port="2345" />
+				</remote_debugging>
+			</debugger>
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

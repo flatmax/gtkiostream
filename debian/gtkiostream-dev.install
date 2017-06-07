@@ -1,0 +1,4 @@
+debian/tmp/usr/include/gtkIOStream/*
+debian/tmp/usr/lib/pkgconfig/*.pc
+test/*.C usr/share/doc/gtkiostream
+debian/tmp/usr/lib/*.so

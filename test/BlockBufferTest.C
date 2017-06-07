@@ -1,0 +1,74 @@
+/* Copyright 2000-2014 Matt Flax <flatmax@flatmax.org>
+   This file is part of GTK+ IOStream class set
+
+   GTK+ IOStream is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   GTK+ IOStream is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You have received a copy of the GNU General Public License
+   along with GTK+ IOStream
+*/
+
+#include "BlockBuffer.H"
+
+int main(int argc, char *argv[]) {
+    BlockBuffer bb;
+    bb.resizeBuffers(3,5);
+
+    Eigen::Array<short unsigned, Eigen::Dynamic, Eigen::Dynamic> *b1=bb.getEmptyBuffer(); // get an full buffer
+    cout<<"get empty buffer "<<endl;
+    Eigen::Array<short unsigned, Eigen::Dynamic, Eigen::Dynamic> *b2=bb.getEmptyBuffer(); // get an full buffer
+    cout<<"get empty buffer "<<endl;
+    for (int i=0;i<b1->rows();i++){
+        for (int j=0;j<b1->cols();j++){
+                cout<<"i,j = "<<i<<','<<j<<'\t';
+            (*b1)(i,j)=1;
+            (*b2)(i,j)=2;
+        }
+        cout<<endl;
+    }
+    cout<<"set constants  "<<endl;
+
+    bb.putFullBuffer(b2);
+    bb.putFullBuffer(b1);
+    cout<<"put full buffers"<<endl;
+
+    b1=bb.getFullBuffer();
+    cout<<(*b1)<<endl;
+    bb.putEmptyBuffer(b1);
+
+    b1=bb.getFullBuffer();
+    cout<<*b1<<endl;
+    bb.putEmptyBuffer(b1);
+
+    b1=bb.getEmptyBuffer();
+    cout<<*b1<<endl;
+    bb.putEmptyBuffer(b1);
+
+    b1=bb.getEmptyBuffer();
+    cout<<*b1<<endl;
+    bb.putEmptyBuffer(b1);
+
+    b1=bb.getEmptyBuffer();
+    cout<<*b1<<endl;
+    bb.putEmptyBuffer(b1);
+
+    cout<<" resizing"<<endl;
+    bb.resize(4);
+    b1=bb.getEmptyBuffer();
+    cout<<*b1<<endl;
+    b1=bb.getEmptyBuffer();
+    cout<<*b1<<endl;
+    b1=bb.getEmptyBuffer();
+    cout<<*b1<<endl;
+    b1=bb.getEmptyBuffer();
+    cout<<*b1<<endl;
+    return 0;
+}
+
