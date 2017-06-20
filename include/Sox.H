@@ -128,19 +128,17 @@ public:
                 retVal=SOX_EOF_OR_ERROR;
                 audioData.resize(0,0);
             } else { // all requested audio has been read, now resize the readData and
-
                 // ensure the audioData matrix is the correct size
                 if (audioData.cols()!= in->signal.channels | audioData.rows()!=readCount/in->signal.channels)
                      audioData.derived().resize(readCount/in->signal.channels, in->signal.channels);
-                // this would be more efficient for conversion (but doesn't work) :
-                for (int i=0; i<readCount; i++) {
-                    audioData(i/in->signal.channels,i%in->signal.channels)=(double)readData(i)/(double)numeric_limits<sox_sample_t>::max();
+                if (!(maxVal != maxVal)) // if we know our desired maxval
+                  for (int i=0; i<readCount; i++)
+                      audioData(i/in->signal.channels,i%in->signal.channels)=(Scalar)(maxVal*(double)readData(i)/(double)numeric_limits<sox_sample_t>::max());
+                else  {// scale to fullscale for the type
+                  double scaleFact=(double)pow(2.,(double)sizeof(Scalar)*8.-1.);
+                  for (int i=0; i<readCount; i++)
+                      audioData(i/in->signal.channels,i%in->signal.channels)=(Scalar)(scaleFact*(double)readData(i)/(double)numeric_limits<sox_sample_t>::max());
                 }
-                double scaleFact=(double)numeric_limits<sox_sample_t>::max();
-                audioData.derived().operator*=(scaleFact);
-
-                if (!(maxVal != maxVal))
-                    audioData.derived().operator*=(maxVal/scaleFact);
             }
         } else
             retVal=SOX_READ_FILE_NOT_OPENED_ERROR;

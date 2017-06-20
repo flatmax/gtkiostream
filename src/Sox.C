@@ -203,6 +203,7 @@ vector<string> Sox<FP_TYPE_>::availableFormats(void) {
     return formatExts;
 }
 
+template class Sox<short int>;
 template class Sox<int>;
 template class Sox<float>;
 template class Sox<double>;
