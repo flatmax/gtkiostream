@@ -22,8 +22,7 @@ otherinclude_HEADERS = Alignment.H Container.H GtkUtils.H OptionParser.H Selecti
                        Buttons.H DrawingArea.H Labels.H Pango.H Sox.H CairoArrow.H EventBox.H Pixmap.H Table.H ColourLineSpec.H FileGtk.H MessageDialog.H Plot.H \
                        TextView.H colourWheel.H Frame.H ProgressBar.H Thread.H ComboBoxText.H gtkDialog.H NeuralNetwork.H Scales.H Widget.H \
                        commonTimeCodeX.H gtkInterface.H Octave.H Scrolling.H WSOLA.H WSOLAJack.H Surface.H SelectionArea.H CairoBox.H DirectoryScanner.H BlockBuffer.H \
-                       DragNDrop.H CairoArc.H CairoCircle.H JackBase.H JackPortMonitor.H BitStream.H FileDialog.H Window.H \
-                       ALSA.H ALSAExternalPlugin.H
+                       DragNDrop.H CairoArc.H CairoCircle.H JackBase.H JackPortMonitor.H BitStream.H FileDialog.H Window.H
 
 if CYGWIN
 otherinclude_HEADERS += TimeTools.H
@@ -39,7 +38,8 @@ oldincludedir = $(includedir)/gtkIOStream
 nobase_oldinclude_HEADERS = mffm/BST.H mffm/HeapTreeType.H mffm/HeapTree.H mffm/LinkList.H fft/ComplexFFTData.H fft/ComplexFFT.H fft/FFTCommon.H fft/Real2DFFTData.H \
                             fft/Real2DFFT.H fft/RealFFTData.H fft/RealFFT.H AudioMask/AudioMasker.H AudioMask/AudioMask.H AudioMask/depukfb.H AudioMask/fastDepukfb.H \
                             AudioMask/MooreSpread.H AudioMask/AudioMaskCommon.H DSP/Decomposition.H  DSP/OverlapAdd.H \
-                            IIO/IIO.H IIO/IIODevice.H IIO/IIOChannel.H IIO/IIOThreaded.H IIO/IIOThreadedQ.H IIO/IIOMMap.H posixForMicrosoft/dirent.h
+                            IIO/IIO.H IIO/IIODevice.H IIO/IIOChannel.H IIO/IIOThreaded.H IIO/IIOThreadedQ.H IIO/IIOMMap.H posixForMicrosoft/dirent.h \
+                            ALSA/ALSA.H ALSA/ALSAExternalPlugin.H
 
 nobase_oldinclude_HEADERS += xpm/play.xpm
 

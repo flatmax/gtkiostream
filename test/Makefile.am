@@ -84,7 +84,7 @@ FrameTest_SOURCES = FrameTest.C
 
 if HAVE_OCTAVE
 noinst_PROGRAMS += RealFFTExample Real2DFFTExample ComplexFFTExample OctaveTest
-noinst_PROGRAMS += AudioMaskerExample 
+noinst_PROGRAMS += AudioMaskerExample
 
 EXTRA_LIBS += $(MKOCTFILE_LIBPATH) $(MKOCTFILE_LIBS)
 EXTRA_CFLAGS += $(MKOCTFILE_CFLAGS)
@@ -158,7 +158,7 @@ ${MG}/%.C : %.ice
 clean-local:
 	-rm -rf ${MG}
 
-EXTRA_DIST = AlignmentTest.C BSTTest.C ButtonsFontTest.C ButtonsTest2.C ButtonsTest.C CairoArrowTest.C colourWheelTest.C ComboBoxTextTest.C DrawingAreaTest.C HeapTreeSort.C InlineTest.C JackClientTest.C LabelsTest2.C LabelsTest3.C LabelsTest.C MessageDialogTest.C NeuralNetworkFnTest.C NeuralNetworkTest.C OctaveTest.C OptionParserTest.C PangoTest2.C PangoTest.C PlotTest2.C PlotTest3.C PlotTest.C ProgressBarTest.C ScaleTest.C SelectionTest2.C SelectionTest3.C SelectionTest.C SeparatorTest.C TableTest.C TextViewTest.C ThreadTest.C CairoBoxTest.C SelectionAreaTest.C RealFFTExample.C Real2DFFTExample.C ComplexFFTExample.C ComplexFFTExample.C AudioMaskerExample.C OverlapAddTest.C DirectoryScannerTest.C IIOTest.C ScrollingTest.C #DecompositionTest.C 
+EXTRA_DIST = AlignmentTest.C BSTTest.C ButtonsFontTest.C ButtonsTest2.C ButtonsTest.C CairoArrowTest.C colourWheelTest.C ComboBoxTextTest.C DrawingAreaTest.C HeapTreeSort.C InlineTest.C JackClientTest.C LabelsTest2.C LabelsTest3.C LabelsTest.C MessageDialogTest.C NeuralNetworkFnTest.C NeuralNetworkTest.C OctaveTest.C OptionParserTest.C PangoTest2.C PangoTest.C PlotTest2.C PlotTest3.C PlotTest.C ProgressBarTest.C ScaleTest.C SelectionTest2.C SelectionTest3.C SelectionTest.C SeparatorTest.C TableTest.C TextViewTest.C ThreadTest.C CairoBoxTest.C SelectionAreaTest.C RealFFTExample.C Real2DFFTExample.C ComplexFFTExample.C ComplexFFTExample.C AudioMaskerExample.C OverlapAddTest.C DirectoryScannerTest.C IIOTest.C ScrollingTest.C #DecompositionTest.C
 
 if HAVE_ZEROC_ICE
 #noinst_PROGRAMS += ORBTest
@@ -265,14 +265,20 @@ DeBoorTest_LDADD = $(top_builddir)/src/deBoor/libSpline.la $(LDADD)
 # $(FFTW3_LIBS)
 
 if HAVE_ALSA
-noinst_PROGRAMS += ALSATest
+noinst_PROGRAMS += ALSATest ALSAPlaybackTest
 ALSATest_SOURCES = ALSATest.C
-ALSATest_CPPFLAGS = -I$(top_srcdir)/include $(ALSA_CFLAGS)
+ALSATest_CPPFLAGS = -I$(top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
 ALSATest_LDADD = $(ALSA_LIBS)
+
+ALSAPlaybackTest_SOURCES = ALSAPlaybackTest.C
+ALSAPlaybackTest_CPPFLAGS = -I$(top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
+ALSAPlaybackTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  $(LDADD)
 
 pkglib_LTLIBRARIES = libasound_module_pcm_ALSAPluginTest.la libasound_module_pcm_ALSAExternalPluginTest.la
 libasound_module_pcm_ALSAPluginTest_la_SOURCES = ALSAPluginTest.C
+libasound_module_pcm_ALSAPluginTest_la_CPPFLAGS = $(EIGEN_CFLAGS)
 libasound_module_pcm_ALSAPluginTest_la_LDFLAGS = -module -avoid-version -export-dynamic -no-undefined
 libasound_module_pcm_ALSAExternalPluginTest_la_SOURCES = ALSAExternalPluginTest.C
+libasound_module_pcm_ALSAExternalPluginTest_la_CPPFLAGS = $(EIGEN_CFLAGS)
 libasound_module_pcm_ALSAExternalPluginTest_la_LDFLAGS = -module -avoid-version -export-dynamic -no-undefined
 endif

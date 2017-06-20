@@ -15,7 +15,7 @@
    along with GTK+ IOStream
 */
 
-#include "ALSAExternalPlugin.H"
+#include "ALSA/ALSAExternalPlugin.H"
 using namespace std;
 using namespace ALSA;
 

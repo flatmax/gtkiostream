@@ -15,7 +15,7 @@
    along with GTK+ IOStream
 */
 
-#include "ALSAPlugin.H"
+#include "ALSA/ALSAPlugin.H"
 using namespace std;
 using namespace ALSA;
 
@@ -172,7 +172,7 @@ public:
 
 	virtual int HWParams(snd_pcm_hw_params_t *params){
     	std::cout<<__func__<<std::endl;
-		return 0;		
+		return 0;
 	}
 
 	// virtual int setupHWParams(){

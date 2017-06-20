@@ -1,0 +1,54 @@
+#ifndef ALSA_H
+#define ALSA_H
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <Eigen/Dense>
+#pragma GCC diagnostic pop
+#include <alsa/asoundlib.h>
+#include <iostream>
+#include <Debug.H>
+
+namespace ALSA {
+  #define ALSA_PCM_NOT_OPEN_ERROR -1+ALSA_ERROR_OFFSET ///< error when pcm pointer is null
+
+  class ALSADebug : public Debug {
+  public:
+      ALSADebug(void) {
+  #ifndef NDEBUG
+        errors[ALSA_PCM_NOT_OPEN_ERROR]=std::string("The pcm device isn't open, open first.");
+  #endif
+      }
+
+      virtual int evaluateError(int errorNum) {
+        std::cout<<errorNum<<std::endl;
+        if (errorNum>MAX_ERROR_OFFSET || errorNum<MIN_ERROR_OFFSET){
+          fprintf(stderr, "%s ", snd_strerror(errorNum));
+          return errorNum;
+        }
+        return Debug::evaluateError(errorNum);
+      }
+
+      virtual int evaluateError(int errorNum, std::string append) {
+        return Debug::evaluateError(errorNum, append);
+      }
+  };
+
+  #define PCM_NOT_OPEN_CHECK_NO_PRINT(pcm, type) {if (!pcm) return (type)ALSADebug().evaluateError(ALSA_PCM_NOT_OPEN_ERROR);}
+  #define PCM_NOT_OPEN_CHECK_TYPED(pcm, type) {std::cout<<"\t\tfunc: "<<__func__<<'\n'; PCM_NOT_OPEN_CHECK_NO_PRINT(pcm, type)}
+  #define PCM_NOT_OPEN_CHECK(pcm) PCM_NOT_OPEN_CHECK_TYPED(pcm, int)
+  #define PCM_NOT_OPEN_CHECK_STRING(pcm) {std::cout<<"\t\tfunc: "<<__func__<<'\n'; if (!pcm) return "PCM not open error";}
+
+  #define ALSA_DEFAULT_START_FS 48000
+  #define ALSA_DEFAULT_FORMAT SND_PCM_FORMAT_S16_LE
+  #define ALSA_DEFAULT_CHANNELS 2
+}
+
+#include <ALSA/PCM.H>
+#include <ALSA/Hardware.H>
+#include <ALSA/Software.H>
+#include <ALSA/Stream.H>
+#include <ALSA/Playback.H>
+#include <ALSA/Capture.H>
+#endif // ALSA_H
