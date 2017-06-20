@@ -80,6 +80,8 @@ typedef unsigned int uint;
 #define ALSA_ERROR_OFFSET -40500 ///< Define JACK_ERROR_OFFSET in your code (<0) to offset the Jack client errors.
 #endif
 
+#define MAX_ERROR_OFFSET DEBUG_ERROR_OFFSET ///< The lowest debug error magnitude from gtkiostream
+#define MIN_ERROR_OFFSET (ALSA_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
 
 #include <map>
 #include <string>
@@ -111,7 +113,7 @@ public:
     \param errorNum The error number to use to index the errors map for textual information
     \return The errorNum for further processing.
     */
-    int evaluateError(int errorNum) {
+    virtual int evaluateError(int errorNum) {
 #ifndef NDEBUG
         if (errorNum!=NO_ERROR)
             fprintf(stderr, "Error : %d %s ", errorNum, errors[errorNum].c_str());
@@ -127,7 +129,7 @@ public:
     \param append A std::string message to append to the standard error.
     \return The errorNum for further processing.
     */
-    int evaluateError(int errorNum, std::string append) {
+    virtual int evaluateError(int errorNum, std::string append) {
 #ifndef NDEBUG
         evaluateError(errorNum);
         fprintf(stderr, "%s", append.c_str());
