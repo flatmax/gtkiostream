@@ -47,12 +47,11 @@ namespace ALSA {
         std::cerr<<"Couldn't setSampleRate"<<std::endl;
         return ret;
       }
-      std::cout<<"Srteam:: fs = "<<startRate<<std::endl;
+      return 0;
     }
 
     /// Destructor
     virtual ~Stream(){
-      close();
     }
 
     /**
@@ -78,14 +77,6 @@ namespace ALSA {
         if ((ret=fillParams())<0)
           std::cerr<<"Couldn't fillParams "<<snd_strerror(ret)<<std::endl;
         return ret;
-    }
-
-    /* Reopen the stream, set params must be called manually
-    \return >= 0 on success
-    */
-    int reOpen(const char *devName) {
-      close();
-      return open(devName, SND_PCM_STREAM_PLAYBACK, block);
     }
 
     /** Set hardware and software params

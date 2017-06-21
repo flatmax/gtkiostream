@@ -20,6 +20,7 @@ namespace ALSA {
     virtual ~PCM(){
       if (log)
         snd_output_close(log);
+      close();
     }
 
     virtual snd_pcm_t *getPCM(){

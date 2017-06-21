@@ -22,15 +22,10 @@ namespace ALSA {
     }
 
     void open(const char *devName="default"){
-      int err=Stream::init(devName, SND_PCM_STREAM_PLAYBACK, block ? 0 : SND_PCM_NONBLOCK);
-      if (err < 0) {
-        std::cout<<err<<std::endl;
-        std::cerr<<"Playback :: Playback : open error: "<< snd_strerror(err)<<std::endl;
+      int ret=Stream::init(devName, SND_PCM_STREAM_PLAYBACK, block ? 0 : SND_PCM_NONBLOCK);
+      if (ret < 0) {
+        std::cerr<<"Playback :: Playback : open error: "<< snd_strerror(ret)<<std::endl;
         assert("open error");
-      }
-      if ((err=setParams())<0) {
-        std::cerr<<"Playback :: Playback : set params error: "<< snd_strerror(err)<<std::endl;
-        assert("set params error");
       }
     }
 
@@ -68,6 +63,20 @@ namespace ALSA {
       return 0;
     }
 
+    /** Non-interleaved writes.
+    @param audioData RowMajor Matrix
+    @return NO_ERROR on success an error otherwise
+    */
+    template <typename Derived>
+    int writeBufN(const Eigen::DenseBase<Derived> &audioData){
+        std::cout<<"non interleaved"<<std::endl;
+        if (buffer.size()!=audioData.cols())
+          buffer.resize(audioData.cols());
+        for (int i=0;i<audioData.cols();i++)
+          buffer[i]=(void*)audioData.col(i).data();
+        return writeBuf(&buffer[0], audioData.rows(), audioData.cols());
+    }
+
     /** Write audio data to a buffer, returning error or the number written
     @param buffer The buffer to write to the pcm device - interleaved data
     @param len The number of frames to write
@@ -94,19 +103,7 @@ namespace ALSA {
 
     template <typename Derived>
     int writeBuf(const Eigen::DenseBase<Derived> &audioData){
-      if (audioData.cols()==audioData.rows()){ // can't tell which version of writeBuf to use - error
-        printf("Error : audioData.cols()==audioData.rows()=%d\nPlease use writeBuf with pointers\n",audioData.cols());
-        return -1;
-      }
-      if (audioData.rows()>audioData.cols()){ // non interleaved writes
-        std::cout<<"non interleaved"<<std::endl;
-        if (buffer.size()!=audioData.cols())
-          buffer.resize(audioData.cols());
-        for (int i=0;i<audioData.cols();i++)
-          buffer[i]=(void*)audioData.col(i).data();
-        return writeBuf(&buffer[0], audioData.rows(), audioData.cols());
-      } else // interleaved writes
-        return writeBuf((char*)&audioData(0,0), audioData.cols());
+        return writeBuf((char*)&audioData(0,0), audioData.rows());
     }
 
     /** Using known parameters from the Eigen densebase, write the audio out.
@@ -115,17 +112,11 @@ namespace ALSA {
     */
     template <typename Derived>
     Playback& operator<<(const Eigen::DenseBase<Derived> &audioData){
-//      int ret=writeBuf((char*)&audioData(0,0),audioData.cols());
-      int ret=writeBuf(audioData);
+      int ret=writeBuf((char*)&audioData(0,0), audioData.rows());
       if (ret<0)
         throw;
       return *this;
     }
-
-    // template <typename Derived>
-    // void createInternalBuffer(Eigen::DenseBase<Derived> &audioMatrix){
-    //
-    // }
   };
 }
 #endif //PLAYBACK_H

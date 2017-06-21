@@ -14,10 +14,6 @@ namespace ALSA {
         std::cerr<<"Capture :: Capture : open error: "<< snd_strerror(err)<<std::endl;
         assert("open error");
       }
-      if ((err=setParams())<0) {
-        std::cerr<<"Capture :: Capture : set params error: "<< snd_strerror(err)<<std::endl;
-        assert("set params error");
-      }
     }
   public:
     Capture(const char *devName) : Stream() {

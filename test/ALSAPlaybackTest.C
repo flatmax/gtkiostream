@@ -36,18 +36,21 @@ int main(int argc, char *argv[]) {
   cout<<"opened the device "<<playBack.getDeviceName()<<endl;
 
   int res;
-//   if ((res=playBack.reOpen(deviceName.c_str()))<0)
-//     return ALSADebug().evaluateError(res,"Couldn't reopen the device ");
-//
-// #ifndef USE_INTERLEAVED
-//   cout<<"\n\nsetting non interleaved"<<endl;
-//   if ((res=playBack.setAccess(SND_PCM_ACCESS_RW_NONINTERLEAVED))<0)
-//     return ALSADebug().evaluateError(res);
-// #endif
+  // we don't want defaults so reset and refil the params ...
+  playBack.resetParams();
 
-  int latency=2048;
-  // if ((res=playBack.setBufSize(latency))<0)
-  //   return ALSADebug().evaluateError(res);
+  if ((res=playBack.setFormat(SND_PCM_FORMAT_S16_LE))<0)
+    return ALSADebug().evaluateError(res);
+
+#ifndef USE_INTERLEAVED
+  cout<<"\n\nsetting non interleaved"<<endl;
+  if ((res=playBack.setAccess(SND_PCM_ACCESS_RW_NONINTERLEAVED))<0)
+    return ALSADebug().evaluateError(res);
+#else
+  cout<<"\n\nsetting interleaved"<<endl;
+  if ((res=playBack.setAccess(SND_PCM_ACCESS_RW_INTERLEAVED))<0)
+    return ALSADebug().evaluateError(res);
+#endif
 
   Sox<short int> sox;
   res=sox.openRead(argv[1]);
@@ -55,19 +58,24 @@ int main(int argc, char *argv[]) {
   return SoxDebug().evaluateError(res);
 
   unsigned int fs;
-  cout<<"file fs = "<<sox.getFSIn()<<" Hz"<<endl;
   if (sox.getFSIn()!=playBack.getSampleRate()){
     cout<<"sample rate mismatch, file = "<<sox.getFSIn()<<" Hz and ALSA = "<<playBack.getSampleRate()<<endl;
-    playBack.setSampleRate(sox.getFSIn());
+    if ((res=playBack.setSampleRate(sox.getFSIn()))<0)
+      return ALSADebug().evaluateError(res);
     fs=playBack.getSampleRate();
-    cout<<"rates are now, file = "<<sox.getFSIn()<<" Hz and ALSA = "<<fs<<endl;
   }
+  cout<<"rates are now, file = "<<sox.getFSIn()<<" Hz and ALSA = "<<fs<<endl;
+
+  int latency=2048;
+  if ((res=playBack.setBufSize(latency))<0)
+    return ALSADebug().evaluateError(res);
+
   cout<<"latency = "<<(float)latency/(float)fs<<" s"<<endl;
 
-  // if (playBack.getChannels()!=sox.getChCntIn())
-  //   playBack.setChannels(sox.getChCntIn());
+  if (playBack.getChannels()!=sox.getChCntIn())
+    playBack.setChannels(sox.getChCntIn());
 
-//  playBack.setParams();
+  playBack.setParams();
   snd_pcm_format_t format;
   playBack.getFormat(format);
   cout<<"format "<<playBack.getFormatName(format)<<endl;
@@ -81,46 +89,33 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  Eigen::Array<short int, Eigen::Dynamic, Eigen::Dynamic> buffer;
-  #ifdef USE_INTERLEAVED
-  Eigen::Array<short int, Eigen::Dynamic, Eigen::Dynamic> alsaBuf(0,0);
-  #endif
+  // playBack.enableLog();
+  //   cout<<"status"<<endl;
+  // playBack.dumpStatus();
+  //  cout<<"PCM"<<endl;
+  //  playBack.dumpPCM();
+  //  cout<<"setup"<<endl;
+  //  playBack.dumpSetup();
+  //  cout<<"\n\nHW setup"<<endl;
+  //  playBack.dumpHWSetup();
+  //  cout<<"\nHW params"<<endl;
+  //  playBack.dumpHWParams();
+  //  cout<<"\n\nSW setup"<<endl;
+  //  playBack.dumpSWSetup();
+  //  cout<<"\nSW params"<<endl;
+  //  playBack.dumpSWParams();
+
+  Eigen::Array<short int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> buffer;
   size_t totalWritten=0;
   while (sox.read(buffer, pSize)>=0){
     if (buffer.rows()==0) // end of the file.
       break;
-
-#ifdef USE_INTERLEAVED
-    // initial pass through requires the following setups ... for interleaved operation
-    if (alsaBuf.rows()!=buffer.cols()||alsaBuf.cols()!=buffer.rows())
-      alsaBuf.resize(buffer.cols(),buffer.rows());
-    alsaBuf=buffer.transpose();
-#endif
-
-// playBack.enableLog();
-// cout<<"status"<<endl;
-// playBack.dumpStatus();
-//  cout<<"PCM"<<endl;
-//  playBack.dumpPCM();
-//  cout<<"setup"<<endl;
-//  playBack.dumpSetup();
-//  cout<<"\n\nHW setup"<<endl;
-//  playBack.dumpHWSetup();
-//  cout<<"\nHW params"<<endl;
-//  playBack.dumpHWParams();
-//  cout<<"\n\nSW setup"<<endl;
-//  playBack.dumpSWSetup();
-//  cout<<"\nSW params"<<endl;
-//  playBack.dumpSWParams();
-
-    #ifdef USE_INTERLEAVED
-    //      res=playBack.writeBuf((char*)alsaBuf.data(),buffer.rows());
-    playBack<<alsaBuf; // play the audio data
-    #else // non interleaved
+#ifndef USE_INTERLEAVED
+    playBack.writeBufN(buffer);
+#else
     playBack<<buffer; // play the audio data
-    #endif
+#endif
     totalWritten+=buffer.rows();
-    //      cout<<(double)totalWritten/(double)fs<<" s\n";
   }
   return 0;
 }

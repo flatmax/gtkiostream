@@ -29,6 +29,7 @@ namespace ALSA {
     }
 
     /** Fill params with a full configuration space for a PCM.
+    Note you have to call setAccess, setFormat, setChannels, setSampleRate if you call this.
     \return >= 0 on success
     */
     int fillParams() {
@@ -36,17 +37,24 @@ namespace ALSA {
       return snd_pcm_hw_params_any(getPCM(), hParams);
     }
 
+    /** Reset the params with a full configuration space for a PCM.
+    Note you have to call setAccess, setFormat, setChannels, setSampleRate if you call this.
+    \return >= 0 on success
+    */
+    int resetParams() {
+      return fillParams();
+    }
 
     Hardware() {
       hParams=NULL;
       snd_pcm_hw_params_malloc(&hParams);
       if (!hParams)
-      assert("Couldn't malloc HW params");
+        assert("Couldn't malloc HW params");
     }
 
     virtual ~Hardware() {
       if (hParams)
-      snd_pcm_hw_params_free(hParams);
+        snd_pcm_hw_params_free(hParams);
       hParams=NULL;
     }
 

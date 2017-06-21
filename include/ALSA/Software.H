@@ -6,17 +6,18 @@
 namespace ALSA {
   class Software : public Hardware {
     snd_pcm_sw_params_t *sParams; ///< PCM software params
+
   public:
     Software(void){
       sParams=NULL;
       snd_pcm_sw_params_malloc(&sParams);
       if (!sParams)
-      assert("Couldn't malloc SW params");
+        assert("Couldn't malloc SW params");
     }
 
     virtual ~Software(void){
       if (sParams)
-      snd_pcm_sw_params_free(sParams);
+        snd_pcm_sw_params_free(sParams);
       sParams=NULL;
     }
 
