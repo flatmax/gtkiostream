@@ -265,7 +265,7 @@ DeBoorTest_LDADD = $(top_builddir)/src/deBoor/libSpline.la $(LDADD)
 # $(FFTW3_LIBS)
 
 if HAVE_ALSA
-noinst_PROGRAMS += ALSAPlaybackTest ALSACaptureTest #ALSAFullDuplexTest
+noinst_PROGRAMS += ALSAPlaybackTest ALSACaptureTest ALSAFullDuplexTest
 
 ALSAPlaybackTest_SOURCES = ALSAPlaybackTest.C
 ALSAPlaybackTest_CPPFLAGS = -I$(top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
@@ -275,9 +275,9 @@ ALSACaptureTest_SOURCES = ALSACaptureTest.C
 ALSACaptureTest_CPPFLAGS = -I$(top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
 ALSACaptureTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  $(LDADD)
 
-# ALSAFullDuplexTest_SOURCES = ALSAFullDuplexTest.C
-# ALSAFullDuplexTest_CPPFLAGS = -I$(top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
-# ALSAFullDuplexTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  $(LDADD)
+ALSAFullDuplexTest_SOURCES = ALSAFullDuplexTest.C
+ALSAFullDuplexTest_CPPFLAGS = -I$(top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
+ALSAFullDuplexTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  $(LDADD)
 
 pkglib_LTLIBRARIES = libasound_module_pcm_ALSAPluginTest.la libasound_module_pcm_ALSAExternalPluginTest.la
 libasound_module_pcm_ALSAPluginTest_la_SOURCES = ALSAPluginTest.C

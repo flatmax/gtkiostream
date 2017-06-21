@@ -6,7 +6,7 @@
 namespace ALSA {
   /** C++ object for the ALSA stream either an input or output group of channels of a soundcard.
   */
-  class Stream : public virtual Software {
+  class Stream : public Software {
 
   protected:
     bool block; ///< Whether to block or use NONBLOCK

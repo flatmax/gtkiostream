@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     cout<<"Usage:\n"<<argv[0]<<" audioFileName"<<endl;
     return -1;
   }
-  const string deviceName="hw:0,0";
+  const string deviceName="hw:0";
   Capture capture(deviceName.c_str());
   cout<<"opened the device "<<capture.getDeviceName()<<endl;
 

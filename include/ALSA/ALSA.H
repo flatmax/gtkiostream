@@ -15,6 +15,8 @@ namespace ALSA {
 	#define ALSA_UNKNOWN_READ_ERROR -2+ALSA_ERROR_OFFSET ///< error when reading and an unknown code is retured
 	#define ALSA_FULLDUPLEX_PROCESS_ERROR -3+ALSA_ERROR_OFFSET ///< error when processing the full duplex method.
 	#define ALSA_FRAME_MISMATCH_ERROR -4+ALSA_ERROR_OFFSET ///< error when frame sizes are incorrect
+	#define ALSA_NO_CHANNELS_ERROR -5+ALSA_ERROR_OFFSET ///< error when channel cnt is zero
+	#define ALSA_YOUR_PROCESS_FN_ERROR -6+ALSA_ERROR_OFFSET ///< error when calling the user's process function
 
 	class ALSADebug : public Debug {
 	public:
@@ -24,6 +26,8 @@ namespace ALSA {
 			errors[ALSA_UNKNOWN_READ_ERROR]=std::string("Tried to read but couldn't for an unknown reason.");
 			errors[ALSA_FULLDUPLEX_PROCESS_ERROR]=std::string("Tried to execute your process function, but it returned error.");
 			errors[ALSA_FRAME_MISMATCH_ERROR]=std::string("Frame size mismatch. ");
+			errors[ALSA_NO_CHANNELS_ERROR]=std::string("No channels found. ");
+			errors[ALSA_YOUR_PROCESS_FN_ERROR]=std::string("Your process function returned error. ");
 			#endif
 		}
 

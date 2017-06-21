@@ -1,0 +1,131 @@
+#ifndef FULLDUPLEX_H
+#define CAPTURE_H
+
+#include <ALSA/ALSA.H>
+
+namespace ALSA {
+	/** Class to operate ALSA in a full duplex mode. The process is write out, read in and process.
+	You implement the process method. An example is like so :
+	\code
+	class FullDuplexTest : public FullDuplex {
+		int N; ///< The number of frames
+		int ch; ///< The number of channels
+
+		int process(){
+			if (inputAudio.rows()!=N || inputAudio.cols()!=ch){ // force resize on the first pass through
+				inputAudio.resize(N, ch);
+				outputAudio.resize(N, ch);
+			}
+
+			outputAudio=inputAudio; // copy the input to output.
+			return 0; // return 0 to continue
+		}
+	public:
+		FullDuplexTest(const char*devName, int latency) : FullDuplex(devName){
+			ch=2; // use this static number of input and output channels.
+			N=latency;
+			inputAudio.resize(0,0); // force zero size to ensure resice on the first process.
+			outputAudio.resize(0,0);
+		}
+	};
+	\endcode
+	*/
+	class FullDuplex : public Capture, public Playback {
+		/** write, read and process.
+		\returns <0 on error, 0 to continue, >0 to stop
+		*/
+		int writeReadProcess(){
+			int ret=Playback::writeBuf(outputAudio);
+			if (ret==0)
+				ret=Capture::readBuf(inputAudio);
+			if (ret==0)
+				ret=process();
+			return ret;
+		}
+
+		/** Your class must inherit this class and implement the process method.
+		The inputAudio and outputAudio variables should be resized to the number of channels
+		and frames you want to process. Note that the number of frames must be the same for
+		both the inputAudio and outputAudio variables.
+		\return <0 on error, 0 to continue and >0 to stop.
+		*/
+		virtual int process()=0;
+protected:
+	/// The input audio variable, columns are channels, rows are frames (samples).
+	Eigen::Array<short int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> inputAudio;
+	/// The output audio variable, columns are channels, rows are frames (samples).
+	Eigen::Array<short int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> outputAudio;
+
+	public:
+		/** Constructor using the same device for both capture and playback.
+		\param devName The device name to use
+		*/
+		FullDuplex(const char *devName) : Capture(devName), Playback(devName) {}
+
+		/** Constructor using the different devices for capture and playback.
+		\param playDevName The device name to use
+		\param captureDevName The device name to use
+		*/
+		FullDuplex(const char *playDevName, const char *captureDevName) : Capture(captureDevName), Playback(playDevName) {}
+
+		/** Destructor
+		*/
+		virtual ~FullDuplex(void){}
+
+		/** link the capture and playback devices.
+		\return <0 on error.
+		*/
+		int link(){
+			return snd_pcm_link(Playback::getPCM(), Capture::getPCM());
+		}
+
+		/** unlink the capture and playback devices.
+		\return <0 on error.
+		*/
+		int unLink(){
+			return snd_pcm_unlink(Capture::getPCM());
+		}
+
+		/** Begin the read and write process.
+		Your process method is called once before starting the ALSA read/write functions.
+		This allows you to initialise your member variables as required in a non-realtime fashion.
+		This method will set the channels as you require them and prepare the playback/capture hardware/software.
+		\return <0 on error, >0 on success.
+		*/
+		int go(){
+			int ret=process(), ret2; // call the user's process method to initialise mamber variables.
+			if (ret<0)
+				return ALSADebug().evaluateError(ALSA_YOUR_PROCESS_FN_ERROR);
+
+			if (inputAudio.rows()!=outputAudio.rows()) // check for frames mismatch
+				return ALSADebug().evaluateError(ALSA_FRAME_MISMATCH_ERROR, "Your process method didn't initialise the inputAudio and outputAudio member variables with the same number of frames.");
+			if (inputAudio.cols()==0 || outputAudio.cols()==0) // check for no channels
+				return ALSADebug().evaluateError(ALSA_NO_CHANNELS_ERROR, "Your process method didn't initialise the inputAudio and outputAudio member variables with any channels.");
+			// set the playback and capture channels and period sizes accordingly and set the parameters
+			if ((ret=Playback::setChannels(outputAudio.cols()))<0)
+				return ALSADebug().evaluateError(ret);
+			if ((ret=Capture::setChannels(inputAudio.cols()))<0)
+				return ALSADebug().evaluateError(ret);
+			if ((ret=Playback::setBufSize(outputAudio.rows()))<0)
+				return ALSADebug().evaluateError(ret);
+			if ((ret=Capture::setBufSize(inputAudio.rows()))<0)
+				return ALSADebug().evaluateError(ret);
+
+			Playback::setParams();
+			Capture::setParams();
+
+			if ((ret=link())<0)
+				return ALSADebug().evaluateError(ret);
+
+			while ((ret=writeReadProcess())==0)
+				;
+			if ((ret2=unLink())<0)
+				if (ret>=0)
+					return ALSADebug().evaluateError(ret2);
+				else
+					ALSADebug().evaluateError(ret2);
+			return ret;
+		}
+	};
+}
+#endif //FULLDUPLEX_H
