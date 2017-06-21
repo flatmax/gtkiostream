@@ -16,44 +16,55 @@ namespace ALSA {
       }
     }
   public:
+    /** Constructor specifying the device name
+    \param devName The device name to open.
+    */
     Capture(const char *devName) : Stream() {
       init(devName);
     };
 
+    /// Constructor
     Capture() {
       init("default");
     };
 
-    size_t readbuf(char *buffer, size_t len, size_t &frames, size_t &max){
-      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
-      size_t r;
-
-      if (!block) {
-        do {
-          r = snd_pcm_readi(getPCM(), buffer, len);
-        } while (r == -EAGAIN);
-        if (r > 0) {
-          frames += r;
-          if (max < r)
-          max = r;
-        }
-        printf("read = %li\n", r);
-      } else {
-        int frame_bytes = (getFormatBits() / 8) * getChannels();
-        do {
-          r = snd_pcm_readi(getPCM(), buffer, len);
-          if (r > 0) {
-            buffer += r * frame_bytes;
-            len -= r;
-            frames += r;
-            if (max < r)
-            max = r;
+    /** Read data from the PCM device - inverleaved version
+    \param buffer The audio buffer to read into
+    \param len The number of audio frames to write
+    */
+    int readBuf(char *buffer, size_t len){
+      PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
+      int ret=0;
+      while ((len-=ret)>0){
+        ret = snd_pcm_readi(getPCM(), buffer, len);
+        if (ret<0)
+          switch (ret){
+            case -EBADFD:
+              printf("Capture::readbuf : PCM state %s\n", getStateName());
+              return ALSADebug().evaluateError(ret, "reading failed because pcm is not in the correct state\n");
+            case -EPIPE:
+              return ALSADebug().evaluateError(ret);
+            case -ESTRPIPE:
+              return ALSADebug().evaluateError(ret);
+            default:
+              return ALSADebug().evaluateError(ALSA_UNKNOWN_READ_ERROR);
           }
-          printf("r = %li, len = %li\n", r, len);
-        } while (r >= 1 && len > 0);
+        if (ret==0)
+          wait();
       }
-      // showstat(getPCM(), 0);
-      return r;
+      return 0;
+    }
+
+    /** Using known parameters from the Eigen densebase, read the audio in.
+    @param audioData One channel per column
+    @return A reference to this instance for further use.
+    */
+    template <typename Derived>
+    Capture& operator>>(const Eigen::DenseBase<Derived> &audioData){
+      int ret=readBuf((char*)&audioData(0,0), audioData.rows());
+      if (ret<0)
+        throw;
+      return *this;
     }
   };
 }

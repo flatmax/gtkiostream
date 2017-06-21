@@ -107,7 +107,7 @@ namespace ALSA {
     }
 
     /** Using known parameters from the Eigen densebase, write the audio out.
-    @param audioData One channel per row (transpose of the normal format)
+    @param audioData One channel per column
     @return A reference to this instance for further use.
     */
     template <typename Derived>

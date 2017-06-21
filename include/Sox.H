@@ -29,11 +29,11 @@
 #define SOX_CLOSE_FILE_ERROR SOX_ERROR_OFFSET-2 ///< Error when libsox couldn't close the file
 #define SOX_READ_FILE_NOT_OPENED_ERROR SOX_ERROR_OFFSET-3 ///< Error when the input file hasn't already been opened using Sox::openRead
 #define SOX_EOF_OR_ERROR SOX_ERROR_OFFSET-4 ///< Sox returned from a read or write either at the end of the file or in error
-#define SOX_READ_MAXSCALE_ERROR SOX_ERROR_OFFSET-5 ///< Sox couldn't open the filename.max to read the rescale value for the audio file.
-#define SOX_WRITE_FILE_OPEN_ERROR SOX_ERROR_OFFSET-6 ///< Error when libsox couldn't open the output file
-#define SOX_WRITE_FILE_NOT_OPENED_ERROR SOX_ERROR_OFFSET-7 ///< Error when the output file hasn't already been opened using Sox::openRead
-#define SOX_WRITE_OUT_CHANNEL_MISMATCH SOX_ERROR_OFFSET-8 ///< Error when trying to write data and the channel count doesn't match
-#define SOX_WRITE_SAMPLES_WRITTEN_MISMATCH_ERROR SOX_ERROR_OFFSET-9 ///< Error when trying to write data and the incorrect amount of data is written
+#define SOX_READ_MAXSCALE_ERROR SOX_ERROR_OFFSET-6 ///< Sox couldn't open the filename.max to read the rescale value for the audio file.
+#define SOX_WRITE_FILE_OPEN_ERROR SOX_ERROR_OFFSET-7 ///< Error when libsox couldn't open the output file
+#define SOX_WRITE_FILE_NOT_OPENED_ERROR SOX_ERROR_OFFSET-8 ///< Error when the output file hasn't already been opened using Sox::openRead
+#define SOX_WRITE_OUT_CHANNEL_MISMATCH SOX_ERROR_OFFSET-9 ///< Error when trying to write data and the channel count doesn't match
+#define SOX_WRITE_SAMPLES_WRITTEN_MISMATCH_ERROR SOX_ERROR_OFFSET-10 ///< Error when trying to write data and the incorrect amount of data is written
 
 #include <sox.h>
 
@@ -49,15 +49,15 @@ public:
     */
     SoxDebug() {
 #ifndef NDEBUG
-        errors[SOX_READ_FILE_OPEN_ERROR]=string("SOX: Couldn't open the input file");
-        errors[SOX_CLOSE_FILE_ERROR]=string("SOX: Couldn't open the output file");
-        errors[SOX_READ_FILE_NOT_OPENED_ERROR]=string("SOX: Couldn't read from file as the input file hasn't been opened yet");
-        errors[SOX_EOF_OR_ERROR]=string("SOX: Either an error or the EOF was hit whilst operating on the file");
-        errors[SOX_READ_MAXSCALE_ERROR]=string("SOX: couldn't open the max file to find the value to rescale the maximum to, if you continue the audio file will not be re-scaled correctly");
-        errors[SOX_WRITE_FILE_OPEN_ERROR]=string("SOX: Couldn't write to file as the output file hasn't been opened yet");
-        errors[SOX_WRITE_FILE_NOT_OPENED_ERROR]=string("SOX: Couldn't write to the file as the output file hasn't been opened yet");
-        errors[SOX_WRITE_OUT_CHANNEL_MISMATCH]=string("SOX: you provided data to write out which doesn't match the number of channels specified during openWrite for the output file");
-        errors[SOX_WRITE_SAMPLES_WRITTEN_MISMATCH_ERROR]=string("SOX: The incorrect number of samples were written to file. ");
+			errors[SOX_READ_FILE_OPEN_ERROR]=string("SOX: Couldn't open the input file");
+			errors[SOX_CLOSE_FILE_ERROR]=string("SOX: Couldn't open the output file");
+			errors[SOX_READ_FILE_NOT_OPENED_ERROR]=string("SOX: Couldn't read from file as the input file hasn't been opened yet");
+			errors[SOX_EOF_OR_ERROR]=string("SOX: Either an error or the EOF was hit whilst operating on the file");
+			errors[SOX_READ_MAXSCALE_ERROR]=string("SOX: couldn't open the max file to find the value to rescale the maximum to, if you continue the audio file will not be re-scaled correctly");
+			errors[SOX_WRITE_FILE_OPEN_ERROR]=string("SOX: Couldn't write to file as the output file hasn't been opened yet");
+			errors[SOX_WRITE_FILE_NOT_OPENED_ERROR]=string("SOX: Couldn't write to the file as the output file hasn't been opened yet");
+			errors[SOX_WRITE_OUT_CHANNEL_MISMATCH]=string("SOX: you provided data to write out which doesn't match the number of channels specified during openWrite for the output file");
+			errors[SOX_WRITE_SAMPLES_WRITTEN_MISMATCH_ERROR]=string("SOX: The incorrect number of samples were written to file. ");
 #endif
     }
 
