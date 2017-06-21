@@ -26,7 +26,6 @@ using namespace ALSA;
 #define USE_INTERLEAVED
 
 int main(int argc, char *argv[]) {
-  //  Playback playBack;
   if (argc<2){
     cout<<"Usage:\n"<<argv[0]<<" audioFileName"<<endl;
     return -1;
