@@ -126,6 +126,72 @@ protected:
 					ALSADebug().evaluateError(ret2);
 			return ret;
 		}
+
+		/** Reset the params with a full configuration space for both PCMs.
+		Note you have to call setAccess, setFormat, setChannels, setSampleRate if you call this.
+		\return >= 0 on success
+		*/
+		int resetParams() {
+			int ret=0;
+			if (ret=Playback::resetParams()<0)
+				return ret;
+			return Capture::resetParams();
+		}
+
+		/** @see Hardware::setFormat
+		Set the word format of the hardware
+		*/
+		int setFormat(snd_pcm_format_t format) {
+			int ret=0;
+			if (ret=Playback::setFormat(format)<0)
+				return ret;
+			return Capture::setFormat(format);
+		}
+
+		/** @see Hardware::setAccess
+		Set the interleaving of the hardware.
+		*/
+		int setAccess(snd_pcm_access_t access) {
+			int ret=0;
+			if (ret=Playback::setAccess(access)<0)
+				return ret;
+			return Capture::setAccess(access);
+		};
+
+		/** Set the sample rate closest to the desired rate.
+		@see Hardware::setSampleRate
+		\param rrate The desired sample rate.
+		\param dir The direction to search in (-1,0,1)
+		\return >= 0 on success
+		*/
+		int setSampleRate(unsigned int rrate, int dir=0) {
+			int ret=0;
+			if (ret=Playback::setSampleRate(rrate, dir)<0)
+				return ret;
+			return Capture::setSampleRate(rrate, dir);
+		}
+
+		/** Set the buffer size
+		\param the desired buffer size
+		\return <0 on error.
+		*/
+		int setBufSize(snd_pcm_uframes_t bufSize) {
+			int ret=0;
+			if (ret=Playback::setBufSize(bufSize)<0)
+				return ret;
+			return Capture::setBufSize(bufSize);
+		}
+
+		/** Set the number of channels
+		\param cnt The number of channels.
+		\return >= 0 on success
+		*/
+		int setChannels(unsigned int cnt) {
+			int ret=0;
+			if (ret=Playback::setChannels(cnt)<0)
+				return ret;
+			return Capture::setChannels(cnt);
+		}
 	};
 }
 #endif //FULLDUPLEX_H

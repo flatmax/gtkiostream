@@ -65,34 +65,26 @@ int main(int argc, char *argv[]) {
 	FullDuplexTest fullDuplex(deviceName.c_str(), latency);
 	cout<<"opened the device "<<fullDuplex.Playback::getDeviceName()<<endl;
 
-	int res;
 	// we don't want defaults so reset and refil the params ...
-	fullDuplex.Playback::resetParams();
-	fullDuplex.Capture::resetParams();
+	int res=fullDuplex.resetParams();
+	if (res<0)
+		return res;
 
-	if ((res=fullDuplex.Playback::setFormat(format))<0)
-		return ALSADebug().evaluateError(res);
-	if ((res=fullDuplex.Capture::setFormat(format))<0)
-		return ALSADebug().evaluateError(res);
+	if ((res=fullDuplex.setFormat(format))<0)
+		return res;
 
 #ifndef USE_INTERLEAVED
 	cout<<"\n\nsetting non interleaved"<<endl;
-	if ((res=fullDuplex.Playback::setAccess(SND_PCM_ACCESS_RW_NONINTERLEAVED))<0)
-		return ALSADebug().evaluateError(res);
-	if ((res=fullDuplex.Capture::setAccess(SND_PCM_ACCESS_RW_NONINTERLEAVED))<0)
-		return ALSADebug().evaluateError(res);
+	res=fullDuplex.setAccess(SND_PCM_ACCESS_RW_NONINTERLEAVED);
 #else
 	cout<<"\n\nsetting interleaved"<<endl;
-	if ((res=fullDuplex.Playback::setAccess(SND_PCM_ACCESS_RW_INTERLEAVED))<0)
-		return ALSADebug().evaluateError(res);
-	if ((res=fullDuplex.Capture::setAccess(SND_PCM_ACCESS_RW_INTERLEAVED))<0)
-		return ALSADebug().evaluateError(res);
+	res=fullDuplex.setAccess(SND_PCM_ACCESS_RW_INTERLEAVED);
 #endif
+	if (res<0)
+		return res;
 
-	if ((res=fullDuplex.Playback::setSampleRate(fs))<0)
-		return ALSADebug().evaluateError(res);
-	if ((res=fullDuplex.Capture::setSampleRate(fs))<0)
-		return ALSADebug().evaluateError(res);
+	if ((res=fullDuplex.setSampleRate(fs))<0)
+		return res;
 
 	res=fullDuplex.go(); // start the full duplex read/write/process going.
 	return ALSADebug().evaluateError(res);

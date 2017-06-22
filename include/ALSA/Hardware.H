@@ -34,7 +34,10 @@ namespace ALSA {
 		*/
 		int fillParams() {
 			PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
-			return snd_pcm_hw_params_any(getPCM(), hParams);
+			int ret=snd_pcm_hw_params_any(getPCM(), hParams);
+			if (ret<0)
+				ALSADebug().evaluateError(ret);
+			return ret;
 		}
 
 		/** Reset the params with a full configuration space for a PCM.
@@ -162,7 +165,10 @@ namespace ALSA {
 		*/
 		int setFormat(snd_pcm_format_t format) {
 			PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
-			return snd_pcm_hw_params_set_format(getPCM(), hParams, format);
+			int ret=snd_pcm_hw_params_set_format(getPCM(), hParams, format);
+			if (ret<0)
+				return ALSADebug().evaluateError(ret);
+			return ret;
 		}
 
 		/** Get the format from a configuration space
@@ -202,7 +208,10 @@ namespace ALSA {
 		*/
 		int setSampleRate(unsigned int rrate, int dir=0) {
 			PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
-			return snd_pcm_hw_params_set_rate_near(getPCM(), hParams, &rrate, &dir);
+			int ret=snd_pcm_hw_params_set_rate_near(getPCM(), hParams, &rrate, &dir);
+			if (ret<0)
+				return ALSADebug().evaluateError(ret);
+			return ret;
 		}
 
 		/** Get the sample rate
@@ -252,7 +261,8 @@ namespace ALSA {
 		}
 
 		/** Set the buffer size
-		@param the desired buffer size
+		\param the desired buffer size
+		\return <0 on error.
 		*/
 		int setBufSize(snd_pcm_uframes_t bufSize) {
 			PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
@@ -260,12 +270,13 @@ namespace ALSA {
 
 			int err = snd_pcm_hw_params_set_buffer_size_near(getPCM(), hParams, &periodSize);
 			if (err < 0) {
-				std::cerr<<"Unable to set buffer size "<<bufSize * 2<<" "<< snd_strerror(err)<<std::endl;
+				printf("Unable to set buffer size %l  %s\n",(bufSize*2), snd_strerror(err));
 				return err;
 			}
 			periodSize /= 2;
 			if ((err = setPeriodSize(&periodSize)) < 0)
-				std::cerr<<"Unable to set period size "<<periodSize<<" "<< snd_strerror(err)<<std::endl;
+				printf("Unable to set period size %l  %s\n",periodSize, snd_strerror(err));
+			return err;
 		}
 
 		const char *formatDescription(const snd_pcm_format_t format) const {
