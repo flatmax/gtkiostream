@@ -16,59 +16,59 @@
 */
 
 #include "BlockBuffer.H"
+#include <iostream>
 
 int main(int argc, char *argv[]) {
     BlockBuffer bb;
     bb.resizeBuffers(3,5);
 
     Eigen::Array<short unsigned, Eigen::Dynamic, Eigen::Dynamic> *b1=bb.getEmptyBuffer(); // get an full buffer
-    cout<<"get empty buffer "<<endl;
+    std::cout<<"get empty buffer "<<std::endl;
     Eigen::Array<short unsigned, Eigen::Dynamic, Eigen::Dynamic> *b2=bb.getEmptyBuffer(); // get an full buffer
-    cout<<"get empty buffer "<<endl;
+    std::cout<<"get empty buffer "<<std::endl;
     for (int i=0;i<b1->rows();i++){
         for (int j=0;j<b1->cols();j++){
-                cout<<"i,j = "<<i<<','<<j<<'\t';
+                std::cout<<"i,j = "<<i<<','<<j<<'\t';
             (*b1)(i,j)=1;
             (*b2)(i,j)=2;
         }
-        cout<<endl;
+        std::cout<<std::endl;
     }
-    cout<<"set constants  "<<endl;
+    std::cout<<"set constants  "<<std::endl;
 
     bb.putFullBuffer(b2);
     bb.putFullBuffer(b1);
-    cout<<"put full buffers"<<endl;
+    std::cout<<"put full buffers"<<std::endl;
 
     b1=bb.getFullBuffer();
-    cout<<(*b1)<<endl;
+    std::cout<<(*b1)<<std::endl;
     bb.putEmptyBuffer(b1);
 
     b1=bb.getFullBuffer();
-    cout<<*b1<<endl;
+    std::cout<<*b1<<std::endl;
     bb.putEmptyBuffer(b1);
 
     b1=bb.getEmptyBuffer();
-    cout<<*b1<<endl;
+    std::cout<<*b1<<std::endl;
     bb.putEmptyBuffer(b1);
 
     b1=bb.getEmptyBuffer();
-    cout<<*b1<<endl;
+    std::cout<<*b1<<std::endl;
     bb.putEmptyBuffer(b1);
 
     b1=bb.getEmptyBuffer();
-    cout<<*b1<<endl;
+    std::cout<<*b1<<std::endl;
     bb.putEmptyBuffer(b1);
 
-    cout<<" resizing"<<endl;
+    std::cout<<" resizing"<<std::endl;
     bb.resize(4);
     b1=bb.getEmptyBuffer();
-    cout<<*b1<<endl;
+    std::cout<<*b1<<std::endl;
     b1=bb.getEmptyBuffer();
-    cout<<*b1<<endl;
+    std::cout<<*b1<<std::endl;
     b1=bb.getEmptyBuffer();
-    cout<<*b1<<endl;
+    std::cout<<*b1<<std::endl;
     b1=bb.getEmptyBuffer();
-    cout<<*b1<<endl;
+    std::cout<<*b1<<std::endl;
     return 0;
 }
-

@@ -25,6 +25,9 @@
 #include <sched.h>
 #include "Sox.H"
 
+#include <iostream>
+using namespace std;
+
 int printUsage(string name, int N, float T) {
     cout<<name<<" : An application to stream input from IIO devices to file."<<endl;
     cout<<"Usage:"<<endl;

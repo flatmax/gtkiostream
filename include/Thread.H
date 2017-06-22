@@ -25,8 +25,6 @@
 #include <stdio.h>
 #endif
 
-#include <iostream>
-using namespace std;
 #include <string.h>
 #include "Debug.H"
 
@@ -43,14 +41,14 @@ class ThreadDebug : public Debug {
 public:
     ThreadDebug(void) {
 #ifndef NDEBUG
-        errors[THREAD_CREATE_ERROR]=string("The thread couldn't be started.");
-        errors[THREAD_MUTEX_UNINIT_ERROR]=string("The mutex has not been properly initialized.");
-        errors[THREAD_MUTEX_DEADLK_ERROR]=string("The mutex has already been locked. Deadlock error.");
-        errors[THREAD_MUTEX_DONTOWN_ERROR]=string("The mutex is not owned by the thread attempting to unlock, error.");
-        errors[THREAD_MUTEX_DESTROY_LOCKED_ERROR]=string("You are trying to destroy the mutex which is locked, error.");
-        errors[THREAD_MUTEX_LOCKBUSY_WARNING]=string("You are trying to lock a mutex which is already locked, you didn't acquire lock this time, try again.");
-        errors[THREAD_NOTFOUND_ERROR]=string("That thread couldn't be found.");
-        errors[THREAD_COND_WAITBUSY_ERROR]=string("One or more threads is waiting on the Cond variable. Can't destroy. ");
+        errors[THREAD_CREATE_ERROR]=std::string("The thread couldn't be started.");
+        errors[THREAD_MUTEX_UNINIT_ERROR]=std::string("The mutex has not been properly initialized.");
+        errors[THREAD_MUTEX_DEADLK_ERROR]=std::string("The mutex has already been locked. Deadlock error.");
+        errors[THREAD_MUTEX_DONTOWN_ERROR]=std::string("The mutex is not owned by the thread attempting to unlock, error.");
+        errors[THREAD_MUTEX_DESTROY_LOCKED_ERROR]=std::string("You are trying to destroy the mutex which is locked, error.");
+        errors[THREAD_MUTEX_LOCKBUSY_WARNING]=std::string("You are trying to lock a mutex which is already locked, you didn't acquire lock this time, try again.");
+        errors[THREAD_NOTFOUND_ERROR]=std::string("That thread couldn't be found.");
+        errors[THREAD_COND_WAITBUSY_ERROR]=std::string("One or more threads is waiting on the Cond variable. Can't destroy. ");
 
 #endif
     }

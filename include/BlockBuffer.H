@@ -19,7 +19,11 @@
 
 #include <queue>
 #include <Thread.H>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
+#pragma GCC diagnostic pop
 
 #define BLOCK_BUFFER_DEFAULT_COUNT 3
 
@@ -28,9 +32,9 @@ Uses mutexes so this class is thread safe.
 All buffers start on the emptyBuffers queue.
 */
 class BlockBuffer {
-    vector<Eigen::Array<unsigned short, Eigen::Dynamic, Eigen::Dynamic> > buffers; ///< The vector of buffers
-    queue<Eigen::Array<unsigned short, Eigen::Dynamic, Eigen::Dynamic> *> emptyBuffers; ///< The empty buffer queue
-    queue<Eigen::Array<unsigned short, Eigen::Dynamic, Eigen::Dynamic> *> fullBuffers; ///< The full buffer queue
+    std::vector<Eigen::Array<unsigned short, Eigen::Dynamic, Eigen::Dynamic> > buffers; ///< The vector of buffers
+    std::queue<Eigen::Array<unsigned short, Eigen::Dynamic, Eigen::Dynamic> *> emptyBuffers; ///< The empty buffer queue
+    std::queue<Eigen::Array<unsigned short, Eigen::Dynamic, Eigen::Dynamic> *> fullBuffers; ///< The full buffer queue
 
     Mutex fullBufferMutex; ///< Used for
     Mutex emptyBufferMutex; ///< Used for

@@ -19,7 +19,11 @@
 #define IIO_H_
 
 #include "IIODevice.H"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
+#pragma GCC diagnostic pop
 
 #include "DirectoryScanner.H"
 
@@ -36,7 +40,7 @@ In this version, this class assumes that all devices are driven by the same chip
 
 This class will open and maintain all IIO devices with the same chip name. For example :
 \code
-    string chipName("AD7476A"); // we are looking for devices on the IIO system with the "AD7476A" chip
+    std::string chipName("AD7476A"); // we are looking for devices on the IIO system with the "AD7476A" chip
     IIO iio;
     iio.findDevicesByChipName(chipName);
 
@@ -65,16 +69,16 @@ This channel has 16 bits, which require shifting down by 16 bits.
 This device has 32 bits in one frame of DMA data shifting.
 \endcode
 */
-class IIO : public vector<IIODevice> {
+class IIO : public std::vector<IIODevice> {
     static const char *iioDir; ///< The sys fs location of iio devcies "/sys/bus/iio/devices/"
 
     /** Find the name of the chip on the device at devicePath.
     \param devicePath = "/sys/bus/iio/devices/iio:deviceN"
-    \return The chip name, or an empty string on error.
+    \return The chip name, or an empty std::string on error.
     */
-    string findChipName(string devicePath) {
-        string chipName;
-        ifstream nameFile((devicePath+"/name").c_str());
+    std::string findChipName(std::string devicePath) {
+        std::string chipName;
+        std::ifstream nameFile((devicePath+"/name").c_str());
         if (nameFile.good()) // if we can open the name
             nameFile>>chipName;
         return chipName;
@@ -90,8 +94,8 @@ public:
     \param chipName The name of the iio chip, e.g. "AD7476"
     \return NO_ERROR on success, or the appropriate error number otherwise.
     */
-    int findDevicesByChipName(string chipName) {
-        vector<string> excluded; // paths we don't want to search
+    int findDevicesByChipName(std::string chipName) {
+        vector<std::string> excluded; // paths we don't want to search
         excluded.push_back(".");
         excluded.push_back("..");
 
@@ -102,11 +106,11 @@ public:
 
         // If any of the devices have a name which matches the chipName we are after, then keep it.
         for (unsigned int i=0; i<ds.size(); i++) {
-            string devicePath(iioDir);
+            std::string devicePath(iioDir);
             devicePath+=ds[i];
             //cout<<findChipName(devicePath)<<endl;
             // search for chipName (e.g. "ADAU7476") in the sysfs name file, which can be chipName+"_1" or some other suffix.
-            if (findChipName(devicePath).find(chipName)!=string::npos) {
+            if (findChipName(devicePath).find(chipName)!=std::string::npos) {
                 push_back(IIODevice(devicePath, chipName)); // found a relevant device, so add it to the known devices
                 operator[](size()-1).scanDevice();
             }
@@ -118,7 +122,7 @@ public:
 //    \param deviceName The name of the iio device, e.g. "iio:1"
 //    \return NOERROR on success, or the appropriate error number otherwise.
 //    */
-//    int open(string deviceName);
+//    int open(std::string deviceName);
 
     /** Find the number of devices present.
     \return the number of devices maintained by this IIO system.
@@ -141,7 +145,7 @@ public:
     */
     void printInfo() {
         for (uint i=0; i<getDeviceCnt(); i++) {
-            cout<<"Device "<<i<<'\t';
+            printf("Device %d\t",i);
             operator[](i).printInfo();
         }
     }
@@ -155,7 +159,7 @@ public:
         int ret=NO_ERROR;
         for (unsigned int i=0; i<getDeviceCnt(); i++) {
             if ((ret=operator[](i).open())!=NO_ERROR) {
-                ostringstream deviceDetail;
+                std::stringstream deviceDetail;
                 deviceDetail<<" Device "<<i;
                 IIODebug().evaluateError(ret, deviceDetail.str());
                 break;
@@ -219,7 +223,7 @@ public:
         if (getDeviceCnt()<1)
             return IIODebug().evaluateError(IIO_NODEVICES_ERROR);
         if (sizeof(TYPE)!=operator[](0).getChFrameSize()) {
-            ostringstream msg;
+            std::stringstream msg;
             msg<<"The provided array type has "<<sizeof(TYPE)<<" bytes per sample, where as the IIO devices have "<<getChFrameSize()<<" bytes per sample\n";
             return IIODebug().evaluateError(IIO_ARRAY_FRAME_MISMATCH_ERROR, msg.str());
         }
@@ -249,12 +253,12 @@ public:
     template<typename TYPE>
     int read(uint N, const Eigen::Array<TYPE, Eigen::Dynamic, Eigen::Dynamic> &array) {
         if (sizeof(TYPE)!=operator[](0).getChFrameSize()) {
-            ostringstream msg;
+            std::stringstream msg;
             msg<<"The provided array type has "<<sizeof(TYPE)<<" bytes per sample, where as the IIO devices have "<<getChFrameSize()<<" bytes per sample\n";
             return IIODebug().evaluateError(IIO_ARRAY_FRAME_MISMATCH_ERROR, msg.str());
         }
         if (array.rows()!=N*operator[](0).getChCnt() && array.cols()>getDeviceCnt()) {
-            ostringstream msg;
+            std::stringstream msg;
             msg<<"The provided array is not shaped correctly, size=("<<array.rows()<<", "<<array.cols()<<") but size=(N*device ch cnt, device cnt) is required, where size=("<<N*getChCnt()<<", "<<getDeviceCnt()<<")\n";
             return IIODebug().evaluateError(IIO_ARRAY_SIZE_MISMATCH_ERROR, msg.str());
         }
@@ -266,8 +270,8 @@ public:
             for (int i=0; i <array.cols(); i++) { // read N samples from each device which is requested
                 int ret=operator[](i).read(toRead, (void*)array.col(i).data());
                 if (ret<0){ // error
-                    ostringstream msg;
-                    msg<<"Couldn't read the desired number of samples from device "<<i<<endl;
+                    std::stringstream msg;
+                    msg<<"Couldn't read the desired number of samples from device "<<i<<std::endl;
                     return IIODebug().evaluateError(IIODEVICE_READ_ERROR, msg.str());
                 } else
                     if (i==0){ // follow the lead of the first device
