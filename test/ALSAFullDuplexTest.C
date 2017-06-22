@@ -38,9 +38,9 @@ class FullDuplexTest : public FullDuplex {
 	*/
 	int process(){
 		if (inputAudio.rows()!=N || inputAudio.cols()!=ch){
-			cout<<"resize"<<endl;
 			inputAudio.resize(N, ch);
 			outputAudio.resize(N, ch);
+			inputAudio.setZero();
 		}
 		outputAudio=inputAudio; // copy the input to output.
 		return 0; // return 0 to continue
