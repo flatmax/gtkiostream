@@ -201,6 +201,18 @@ namespace ALSA {
 				return cnt;
 		}
 
+		/** Get the maximum number of channels for this device.
+		\return <0 on error, the maximum number of channels this device can drive.
+		*/
+		int getMaxChannels(){
+			PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+			unsigned int mCh;
+			int ret=snd_pcm_hw_params_get_channels_max(hParams, &mCh);
+			if (ret<0)
+				return ALSADebug().evaluateError(ret);
+			return mCh;
+		}
+
 		/** Set the sample rate closest to the desired rate.
 		\param rrate The desired sample rate.
 		\param dir The direction to search in (-1,0,1)
@@ -270,12 +282,12 @@ namespace ALSA {
 
 			int err = snd_pcm_hw_params_set_buffer_size_near(getPCM(), hParams, &periodSize);
 			if (err < 0) {
-				printf("Unable to set buffer size %l  %s\n",(bufSize*2), snd_strerror(err));
+				printf("Unable to set buffer size %l  %s \n",(bufSize*2), snd_strerror(err));
 				return err;
 			}
 			periodSize /= 2;
 			if ((err = setPeriodSize(&periodSize)) < 0)
-				printf("Unable to set period size %l  %s\n",periodSize, snd_strerror(err));
+				printf("Unable to set period size %l  %s \n",periodSize, snd_strerror(err));
 			return err;
 		}
 

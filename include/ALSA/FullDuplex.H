@@ -92,7 +92,7 @@ protected:
 		This method will set the channels as you require them and prepare the playback/capture hardware/software.
 		\return <0 on error, >0 on success.
 		*/
-		int go(){
+		virtual int go(){
 			int ret=process(), ret2; // call the user's process method to initialise mamber variables.
 			if (ret<0)
 				return ALSADebug().evaluateError(ALSA_YOUR_PROCESS_FN_ERROR);
