@@ -23,7 +23,11 @@
 #endif
 
 #include <Debug.H>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wignored-attributes"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
+#pragma GCC diagnostic pop
 
 #define SOX_READ_FILE_OPEN_ERROR SOX_ERROR_OFFSET-1 ///< Error when libsox couldn't open the input file
 #define SOX_CLOSE_FILE_ERROR SOX_ERROR_OFFSET-2 ///< Error when libsox couldn't close the file
