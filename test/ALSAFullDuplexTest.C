@@ -26,7 +26,7 @@ using namespace ALSA;
 
 #define USE_INTERLEAVED
 
-class FullDuplexTest : public FullDuplex {
+class FullDuplexTest : public FullDuplex<int> {
 	int N; ///< The number of frames
 	int ch; ///< The number of channels
 
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
 	int latency=2048;
 	int fs=44100; // The sample rate
 	float duration=2.1; // The number of seconds to record for
-	snd_pcm_format_t format=SND_PCM_FORMAT_S16_LE;
+	snd_pcm_format_t format=SND_PCM_FORMAT_S32_LE;
 	cout<<"latency = "<<(float)latency/(float)fs<<" s"<<endl;
 
 	const string deviceName="hw:0";

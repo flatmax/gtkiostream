@@ -30,6 +30,7 @@ namespace ALSA {
 	};
 	\endcode
 	*/
+	template<typename FRAME_TYPE>
 	class FullDuplex : public Capture, public Playback {
 		/** write, read and process.
 		\returns <0 on error, 0 to continue, >0 to stop
@@ -52,9 +53,9 @@ namespace ALSA {
 		virtual int process()=0;
 protected:
 	/// The input audio variable, columns are channels, rows are frames (samples).
-	Eigen::Array<short int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> inputAudio;
+	Eigen::Array<FRAME_TYPE, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> inputAudio;
 	/// The output audio variable, columns are channels, rows are frames (samples).
-	Eigen::Array<short int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> outputAudio;
+	Eigen::Array<FRAME_TYPE, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> outputAudio;
 
 	public:
 		/** Constructor using the same device for both capture and playback.
@@ -111,8 +112,27 @@ protected:
 			if ((ret=Capture::setBufSize(inputAudio.rows()))<0)
 				return ALSADebug().evaluateError(ret);
 
+			if (sizeof(FRAME_TYPE)!=Playback::getFormatPhysicalWidth()/8)
+				return ALSADebug().evaluateError(ALSA_FORMAT_MISMATCH_ERROR, " When comparing the FullDuplex sample type template word against the ALSA format word. ");
+
 			Playback::setParams();
 			Capture::setParams();
+
+			// Capture::enableLog();
+			// std::cout<<"status"<<std::endl;
+			// Capture::dumpStatus();
+			// std::cout<<"PCM"<<std::endl;
+			// Capture::dumpPCM();
+			// std::cout<<"setup"<<std::endl;
+			// Capture::dumpSetup();
+			// std::cout<<"\n\nHW setup"<<std::endl;
+			// Capture::dumpHWSetup();
+			// std::cout<<"\nHW params"<<std::endl;
+			// Capture::dumpHWParams();
+			// std::cout<<"\n\nSW setup"<<std::endl;
+			// Capture::dumpSWSetup();
+			// std::cout<<"\nSW params"<<std::endl;
+			// Capture::dumpSWParams();
 
 			if ((ret=link())<0)
 				return ALSADebug().evaluateError(ret);

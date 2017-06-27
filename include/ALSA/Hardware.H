@@ -180,6 +180,17 @@ namespace ALSA {
 			return snd_pcm_hw_params_get_format(hParams, &format);
 		}
 
+		/** Get the bits per sample.
+		\return <0 on error or the bits per sample.
+		*/
+		int getFormatPhysicalWidth(){
+			int ret=0;
+			snd_pcm_format_t format;
+			if ((ret=getFormat(format))<0)
+				return ret;
+			return snd_pcm_format_physical_width(format);
+		}
+
 		/** Set the number of channels
 		\param cnt The number of channels.
 		\return >= 0 on success
@@ -282,12 +293,12 @@ namespace ALSA {
 
 			int err = snd_pcm_hw_params_set_buffer_size_near(getPCM(), hParams, &periodSize);
 			if (err < 0) {
-				printf("Unable to set buffer size %l  %s \n",(bufSize*2), snd_strerror(err));
+				printf("Unable to set buffer size %d %s \n",(int)(bufSize*2), snd_strerror(err));
 				return err;
 			}
 			periodSize /= 2;
 			if ((err = setPeriodSize(&periodSize)) < 0)
-				printf("Unable to set period size %l  %s \n",periodSize, snd_strerror(err));
+				printf("Unable to set period size %d %s \n",(int)periodSize, snd_strerror(err));
 			return err;
 		}
 

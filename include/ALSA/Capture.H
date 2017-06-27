@@ -34,23 +34,31 @@ namespace ALSA {
 		*/
 		int readBuf(char *buffer, size_t len){
 			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
+			// PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
 			int ret=0;
 			while ((len-=ret)>0){
 				ret = snd_pcm_readi(getPCM(), buffer, len);
 				if (ret<0)
 					switch (ret){
+						case -EAGAIN: // try again
+							ret=0;
+							break;
 						case -EBADFD:
-						printf("Capture::readbuf : PCM state %s\n", getStateName());
-						return ALSADebug().evaluateError(ret, "reading failed because pcm is not in the correct state\n");
+							printf("Capture::readbuf : PCM state %s\n", getStateName());
+							return ALSADebug().evaluateError(ret, "reading failed because pcm is not in the correct state\n");
 						case -EPIPE:
-						return ALSADebug().evaluateError(ret);
+								ALSADebug().evaluateError(ret," writeBuf overrun\n");
+							return ALSADebug().evaluateError(ret);
 						case -ESTRPIPE:
-						return ALSADebug().evaluateError(ret);
+							return ALSADebug().evaluateError(ret);
 						default:
-						return ALSADebug().evaluateError(ALSA_UNKNOWN_READ_ERROR);
+							std::cout<<"read error "<<ret<<'\n';
+							return ALSADebug().evaluateError(ALSA_UNKNOWN_READ_ERROR);
 					}
-				if (ret==0)
+				if (ret==0 && block!=0)
 					wait();
+				buffer+= ret*bytes_per_frame;
 			}
 			return 0;
 		}

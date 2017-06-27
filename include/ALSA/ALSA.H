@@ -17,6 +17,7 @@ namespace ALSA {
 	#define ALSA_FRAME_MISMATCH_ERROR -4+ALSA_ERROR_OFFSET ///< error when frame sizes are incorrect
 	#define ALSA_NO_CHANNELS_ERROR -5+ALSA_ERROR_OFFSET ///< error when channel cnt is zero
 	#define ALSA_YOUR_PROCESS_FN_ERROR -6+ALSA_ERROR_OFFSET ///< error when calling the user's process function
+	#define ALSA_FORMAT_MISMATCH_ERROR -7+ALSA_ERROR_OFFSET ///< error when comparing bits sizes of two words
 
 	class ALSADebug : public Debug {
 	public:
@@ -28,6 +29,7 @@ namespace ALSA {
 			errors[ALSA_FRAME_MISMATCH_ERROR]=std::string("Frame size mismatch. ");
 			errors[ALSA_NO_CHANNELS_ERROR]=std::string("No channels found. ");
 			errors[ALSA_YOUR_PROCESS_FN_ERROR]=std::string("Your process function returned error. ");
+			errors[ALSA_FORMAT_MISMATCH_ERROR]=std::string("The bits in the words don't match. ");
 			#endif
 		}
 

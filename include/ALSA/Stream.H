@@ -19,7 +19,7 @@ namespace ALSA {
 
     int init(const char *device, snd_pcm_stream_t streamType, bool blockIn) {
       block=blockIn;
-      int ret=open(device, streamType, block);
+      int ret=open(device, streamType, block ? 0 : SND_PCM_NONBLOCK);
       if (ret<0){
         std::cerr<<"Couldn't open device"<<std::endl;
         return ret;
