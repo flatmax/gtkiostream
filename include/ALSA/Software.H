@@ -60,7 +60,7 @@ namespace ALSA {
     \return The pointer to start reading or writing to/from
     */
     void *getAddress(const snd_pcm_channel_area_t *areas, snd_pcm_uframes_t offset) const {
-      return (areas->addr+(areas->first+offset*areas->step)/8);
+      return (void*)((char*)(areas->addr)+(areas->first+offset*areas->step)/8);
     }
 
     /** Return the number of channels in an ALSA provided areas type
