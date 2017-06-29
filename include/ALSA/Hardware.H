@@ -216,7 +216,7 @@ namespace ALSA {
 		\return <0 on error, the maximum number of channels this device can drive.
 		*/
 		int getMaxChannels(){
-			PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
 			unsigned int mCh;
 			int ret=snd_pcm_hw_params_get_channels_max(hParams, &mCh);
 			if (ret<0)

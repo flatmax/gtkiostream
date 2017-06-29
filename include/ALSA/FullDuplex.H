@@ -102,22 +102,24 @@ protected:
 				return ALSADebug().evaluateError(ALSA_FRAME_MISMATCH_ERROR, "Your process method didn't initialise the inputAudio and outputAudio member variables with the same number of frames.");
 			if (inputAudio.cols()==0 || outputAudio.cols()==0) // check for no channels
 				return ALSADebug().evaluateError(ALSA_NO_CHANNELS_ERROR, "Your process method didn't initialise the inputAudio and outputAudio member variables with any channels.");
-			// set the playback and capture channels and period sizes accordingly and set the parameters
-			if ((ret=Playback::setChannels(outputAudio.cols()))<0)
-				return ALSADebug().evaluateError(ret);
-			if ((ret=Capture::setChannels(inputAudio.cols()))<0)
-				return ALSADebug().evaluateError(ret);
-			if ((ret=Playback::setBufSize(outputAudio.rows()))<0)
-				return ALSADebug().evaluateError(ret);
-			if ((ret=Capture::setBufSize(inputAudio.rows()))<0)
-				return ALSADebug().evaluateError(ret);
 
-			if (sizeof(FRAME_TYPE)!=Playback::getFormatPhysicalWidth()/8)
-				return ALSADebug().evaluateError(ALSA_FORMAT_MISMATCH_ERROR, " When comparing the FullDuplex sample type template word against the ALSA format word. ");
+			if (!Playback::prepared()){
+				// set the playback and capture channels and period sizes accordingly and set the parameters
+				if ((ret=Playback::setChannels(outputAudio.cols()))<0)
+					return ALSADebug().evaluateError(ret);
+				if ((ret=Capture::setChannels(inputAudio.cols()))<0)
+					return ALSADebug().evaluateError(ret);
+				if ((ret=Playback::setBufSize(outputAudio.rows()))<0)
+					return ALSADebug().evaluateError(ret);
+				if ((ret=Capture::setBufSize(inputAudio.rows()))<0)
+					return ALSADebug().evaluateError(ret);
 
-			Playback::setParams();
-			Capture::setParams();
+				if (sizeof(FRAME_TYPE)!=Playback::getFormatPhysicalWidth()/8)
+					return ALSADebug().evaluateError(ALSA_FORMAT_MISMATCH_ERROR, " When comparing the FullDuplex sample type template word against the ALSA format word. ");
 
+				Playback::setParams();
+				Capture::setParams();
+			}
 			// Capture::enableLog();
 			// std::cout<<"status"<<std::endl;
 			// Capture::dumpStatus();
@@ -139,6 +141,8 @@ protected:
 
 			while ((ret=writeReadProcess())==0)
 				;
+			if (Playback::running())
+				Playback::drop(); // stop the pcm
 			if ((ret2=unLink())<0)
 				if (ret>=0)
 					return ALSADebug().evaluateError(ret2);
