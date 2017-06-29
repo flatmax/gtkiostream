@@ -34,7 +34,7 @@ AC_PREFIX_DEFAULT(/usr)
 LT_INIT
 
 #AC_SUBST(VERSION_INFO, 1:0:1)
-AC_SUBST(LT_RELEASE, [gtkiostream_major_version.gtkiostream_minor_version.gtkiostream_micro_version])
+AC_SUBST(LT_RELEASE, [gtkiostream_version])
 AC_SUBST(LT_CURRENT, [gtkiostream_current_version:gtkiostream_revision_version:gtkiostream_age_version])
 
 # Checks for programs.
