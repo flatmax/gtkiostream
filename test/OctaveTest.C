@@ -76,8 +76,8 @@ int main(int argc, char *argv[]){
 
     cout<<"script test"<<endl;
     // run the script OctaveTest.m ... which is in the tempPath
-    vector<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> > input(2), output(1);
-    Eigen::Matrix<double, 1, 1> dVal;
+    vector<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> > input(1), output(1);
+    Eigen::Matrix<float, 1, 1> dVal;
     dVal(0,0)=10.;
     input[0].resize(2,2); input[0]<<1,2,3,4;
     input[1]=dVal;
