@@ -219,12 +219,12 @@ void BitStream::dump(void) {
     const int N=sizeof(BitStream::VTYPE)*CHAR_BIT; // work with char
     const int M=(int)fmod(size(),N); // the initial bit count short of N
     for (int i=0; i<size()/N; i++)
-        printf("%d ",(std::bitset<N>)data[i]);
+        printf("%lu ",((std::bitset<N>)data[i]).to_ulong());
     if (M) {
         std::bitset<N> bits(data[size()/N]);
         bits>>=N-M;
         for (int i=0; i<M; i++)
-            printf("%d",bits[M-i-1]);
+            printf("%d", bits[M-i-1]==1);
     }
     printf("\n");
 }
