@@ -59,4 +59,7 @@
 \example BitStreamTest3.C
 \example BitStreamTest4.C
 \example ALSAExternalPluginTest.C
+\example ALSAFullDuplexTest.C
+\example ALSAPlaybackTest.C
+\example ALSACaptureTest.C
 */
