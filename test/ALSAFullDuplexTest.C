@@ -24,8 +24,6 @@ using namespace ALSA;
 
 #include "Sox.H"
 
-#define USE_INTERLEAVED
-
 class FullDuplexTest : public FullDuplex<int> {
 	int N; ///< The number of frames
 	int ch; ///< The number of channels
@@ -56,13 +54,11 @@ public:
 
 int main(int argc, char *argv[]) {
 	int latency=2048;
-	int fs=44100; // The sample rate
-	float duration=2.1; // The number of seconds to record for
-	snd_pcm_format_t format=SND_PCM_FORMAT_S32_LE;
+	int fs=48000; // The sample rate
 	cout<<"latency = "<<(float)latency/(float)fs<<" s"<<endl;
 
-	const string deviceName="hw:0";
-	FullDuplexTest fullDuplex(deviceName.c_str(), latency);
+	const char deviceName[]="hw:0";
+	FullDuplexTest fullDuplex(deviceName, latency);
 	cout<<"opened the device "<<fullDuplex.Playback::getDeviceName()<<endl;
 
 	// we don't want defaults so reset and refil the params ...
@@ -70,16 +66,11 @@ int main(int argc, char *argv[]) {
 	if (res<0)
 		return res;
 
+	snd_pcm_format_t format=SND_PCM_FORMAT_S32_LE;
 	if ((res=fullDuplex.setFormat(format))<0)
 		return res;
 
-#ifndef USE_INTERLEAVED
-	cout<<"\n\nsetting non interleaved"<<endl;
-	res=fullDuplex.setAccess(SND_PCM_ACCESS_RW_NONINTERLEAVED);
-#else
-	cout<<"\n\nsetting interleaved"<<endl;
 	res=fullDuplex.setAccess(SND_PCM_ACCESS_RW_INTERLEAVED);
-#endif
 	if (res<0)
 		return res;
 
