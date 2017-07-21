@@ -28,37 +28,47 @@
 int main(int argc, char *argv[]) {
 
     int ret;
+    {
+      Sox<double> sox;
 
-    Sox<double> sox;
+      vector<string> formats=sox.availableFormats();
+      cout<<"The known output file extensions (output file formats) are the following :"<<endl;
+      for (int i=0; i<formats.size(); i++)
+          cout<<formats[i]<<' ';
+      cout<<endl;
 
-    vector<string> formats=sox.availableFormats();
-    cout<<"The known output file extensions (output file formats) are the following :"<<endl;
-    for (int i=0; i<formats.size(); i++)
-        cout<<formats[i]<<' ';
-    cout<<endl;
+      string fileName("/tmp/soxTest.w64");
 
-    string fileName("/tmp/soxTest.w64");
+      Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>  x; ///< The reference signal
+      x=Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>::Random(100000,5);
 
-    Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>  x; ///< The reference signal
-    x=Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>::Random(10,5);
+      double fs=96.e3;
+      if ((ret=sox.openWrite(fileName, fs, x.cols(), x.maxCoeff())))
+          return SoxDebug().evaluateError(ret);
+      if ((ret=sox.write(x))!=x.rows()*x.cols())
+          return SoxDebug().evaluateError(ret);
+      sox.closeWrite();
 
-    double fs=96.e3;
-    if ((ret=sox.openWrite(fileName, fs, x.cols(), x.maxCoeff())))
-        return SoxDebug().evaluateError(ret);
-    if ((ret=sox.write(x))!=x.rows()*x.cols())
-        return SoxDebug().evaluateError(ret);
-    sox.closeWrite();
+      Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>  y; ///< The loaded reference signal
+      if (ret=sox.openRead(fileName))
+          return SoxDebug().evaluateError(ret);
+      if (ret=sox.read(y))
+          return SoxDebug().evaluateError(ret);
 
-    Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>  y; ///< The loaded reference signal
-    if (ret=sox.openRead(fileName))
-        return SoxDebug().evaluateError(ret);
-    if (ret=sox.read(y))
-        return SoxDebug().evaluateError(ret);
+      // cout<<x-y<<endl;
+      // cout<<endl;
+      //cout<<100.*(x-y)*x<<endl;
+    }
+    {
+      Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>  x; ///< The reference signal
+      x=Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>::Random(100000,5);
+      Sox<int> sox;
+      ret=sox.openWrite("/tmp/soxTest.wav", 96.e3, x.cols(), x.maxCoeff());
+    	if (ret<0)
+    		return SoxDebug().evaluateError(ret);
+    	sox.write(x);
 
-    cout<<x-y<<endl;
-    cout<<endl;
-    cout<<100.*(x-y)*x<<endl;
+    }
 
     return 0;
 }
-

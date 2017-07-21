@@ -72,13 +72,23 @@ public:
 		// std::cout<<" : bytes : first="<<src_areas->first/8<<" step="<<src_areas->step/8<<std::endl;
 		// std::cout<<"dest : first="<<dst_areas->first<<" step="<<dst_areas->step<<'\t';
 		// std::cout<<" : bytes : first="<<dst_areas->first/8<<" step="<<dst_areas->step/8<<std::endl;
-		int ret=snd_pcm_areas_copy(dst_areas, dst_offset, src_areas, src_offset, 2, size, SND_PCM_FORMAT_FLOAT_LE);
-		float *fp=(float*)src_areas->addr;
-		//cout<<size<<'\t'<<ret<<'\n';
-		for (int i=0; i<size; i++)
-			cout<<fp[i]<<'\n';
-		//cout<<'\n';
-    	return size;
+		// int ret=snd_pcm_areas_copy(dst_areas, dst_offset, src_areas, src_offset, 2, size, SND_PCM_FORMAT_FLOAT_LE);
+		// float *fp=(float*)src_areas->addr;
+		// //cout<<size<<'\t'<<ret<<'\n';
+		// for (int i=0; i<size; i++)
+		// 	cout<<fp[i]<<'\n';
+		// //cout<<'\n';
+
+		int ch=2;
+		Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic> stride(1,ch);
+		float *srcAddr=(float*)getAddress(src_areas, src_offset); //(src_areas->addr+(src_areas->first+src_offset*src_areas->step)/8);
+		float *dstAddr=(float*)getAddress(dst_areas, dst_offset); //(dst_areas->addr+(dst_areas->first+dst_offset*dst_areas->step)/8);
+		Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic> >
+																						in(srcAddr, size, ch, stride);
+		Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic> >
+																						out(dstAddr, size, ch, stride);
+		out=in;
+  	return size;
 	}
 };
 
