@@ -228,33 +228,38 @@ public:
  * \section intro_sec Introduction
 
  This software is for the following :
+ - the implementation of audio clients for playing/recording and the processing of sound, good for digital signal processing (DSP) as well
  - building GUIs
- - Object Request Broking (ORB) classes over networks
  - the interfaceing of C++ to Octave.org using Eigen3 matrices.
  - the implementation of feeforward neural networks
- - the implementation of audio clients for playing/recording and the processing of sound, good for digital signal processing (DSP) as well
+ - Object Request Broking (ORB) classes over networks
+
+ The audio system interfaces to the both ALSA and a <a href="http://www.jackaudio.org">Jack audio</a> server. The ALSA code allows you to produce ALSA plugins or directly output/input and do full duplex processing.
+ This jackd server allows real time audio processing when you have a patched kernel or if your operating system is capable of schedueling in some real time manner.
+
+ Apart from jackd and ALSA, this code also interfaces to SoX (the swiss army knife of audio processing). This allows you to read and write audio files of almost any type. Further, various tools for DSP are supplied, such
+ as audio masking (psychoacoustic type audio masking as used in mp3), also WSOLA which allows you to speed up audio and slow it down, without changing its pitch.
+ The IIO code in this project is also used in jackd as a driver for interfacing IIO capable chips.
 
  The GUI related classes are intended to be light weight GTK wrappers for use in C++.
-
  As far as the GUI software is concerned, it is all contanined in the class header files, this means that you can simply
- include the headers and code away without having to worry about compiling any source code files other then your own.
+ include the headers and code away without having to worry about compiling any source code files other then your own. I have put a set of tutorials to get the basic idea of GUI programming across to you up <a href="https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=173531">here</a> it is targeting newbies.
+
+ <a href="http://www.octave.org">Octave</a> is interfaced using <a href="http://eigen.tuxfamily.org">Eigen3</a> and/or <a href="http://opencv.org/">openCV matrices</a> which are hardware optimised matrix computation library, OpenCV also being a image processing library.
+
+ The feedforward neural networks use <a href="http://eigen.tuxfamily.org">Eigen3</a> for their implementation, which ensures the efficient evaluation using hardware vector processing and parrallel computation, where possible.
+
+ Various other parts of this distribution include
+ - AudioMasker, an audio masking model which is similar to the psychoacoustical model used in mp3 compression.
+ - WSOLA, time scale modification for multichannel audio, this allows you to speed up and slow down audio without chaning its pitch.
+ - WSOLA and WSOLAJackGTK are also provided as binary executables which can be run from the command line with or without a GUI, respectively.
+ - IIO processing which is embedded as a driver in jackd2.
 
  The ORB (object request brokering) classes ORBOriginator and ORBReplicator utilise <a href="http://www.zeroc.com">Zeroc Ice</a> to implement the actual ORB application layer.
  When the term ORB is used, it implies the following :
  - The mirroring of classes from one side of the network to the other.
  - The execution of class methods on the origintaing side of the network from the replicating side of the network.
  - The ability to call methods synchronously OR asynchronously (threaded execution).
-
- <a href="http://www.octave.org">Octave</a> is interfaced using <a href="http://eigen.tuxfamily.org">Eigen3</a> and/or <a href="http://opencv.org/">openCV matrices</a> which are hardware optimised matrix computation library, OpenCV also being a image processing library.
-
- The feedforward neural networks use <a href="http://eigen.tuxfamily.org">Eigen3</a> for their implementation, which ensures the efficient evaluation using hardware vector processing and parrallel computation, where possible.
-
- The audio system interfaces to the <a href="http://www.jackaudio.org">Jack audio</a> server. This server allows real time audio processing when you have a patched kernel or if your operating system is capable of schedueling in some real time manner.
-
- Various other parts of this distribution include
- - AudioMasker, an audio masking model which is similar to the psychoacoustical model used in mp3 compression.
- - WSOLA, time scale modification for multichannel audio, this allows you to speed up and slow down audio without chaning its pitch.
- - WSOLA and WSOLAJackGTK are also provided as binary executables which can be run from the command line with or without a GUI, respectively.
 
  This distribution also ships with many examples of how to use the various classes contained within.
 
