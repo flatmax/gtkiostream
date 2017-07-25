@@ -17,10 +17,6 @@
 #ifndef FFTCOMMON_H_
 #define FFTCOMMON_H_
 
-#include <iostream>
-#include <string.h>
-using namespace std;
-
 #define PLANTYPE FFTW_ESTIMATE
 
 #include <fftw3.h>

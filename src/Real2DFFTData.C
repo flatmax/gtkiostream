@@ -18,18 +18,19 @@
 #include "fft/FFTCommon.H"
 #include "fft/Real2DFFTData.H"
 
+#include <string.h>
+
 Real2DFFTData::
 Real2DFFTData(int r, int c){
-  //  std::cout <<"Real2DFFTData init:"<<this<<std::endl;
   x=r; y=c;
   mem=NULL;
   out=NULL;
   in=power=NULL;
   timeXSum=xSum=ySum=realXSum=imagXSum=NULL;
-  std::cout<<"power size="<<x*(c/2+1)<<std::endl;
+  printf("power size=%d\n",x*(c/2+1));
 
   if (!(mem=new fftw_real[x*y+x*(c/2+1)+2*x*(c/2+1)+x+(c/2+1)])){
-    std::cout<<"Real2DFFTData: malloc 2 fail"<<std::endl;
+    printf("Real2DFFTData: malloc 2 fail\n");
     memDeInit();
   } else {
     in=&mem[0];
@@ -40,15 +41,15 @@ Real2DFFTData(int r, int c){
   }
 
   if (!(timeXSum=new fftw_real[x])){
-    std::cout<<"Real2DFFTData: malloc 3 fail"<<std::endl;
+    printf("Real2DFFTData: malloc 3 fail\n");
     memDeInit();
   }
   if (!(realXSum=new fftw_real[x])){
-    std::cout<<"Real2DFFTData: malloc 3a fail"<<std::endl;
+    printf("Real2DFFTData: malloc 3a fail\n");
     memDeInit();
   }
   if (!(imagXSum=new fftw_real[x])){
-    std::cout<<"Real2DFFTData: malloc 3b fail"<<std::endl;
+    printf("Real2DFFTData: malloc 3b fail\n");
     memDeInit();
   }
 
@@ -72,7 +73,7 @@ memDeInit(void){
   realXSum=NULL;
   if (imagXSum) delete [] imagXSum;
   imagXSum=NULL;
-  std::cout<<"Real2DFFTData: DeInit Out"<<std::endl;
+  printf("Real2DFFTData: DeInit Out\n");
 }
 
 void Real2DFFTData::
@@ -124,7 +125,7 @@ sqrtPowerSpec(){
 }
 
 
-#include <fstream>
+// #include <fstream>
 void Real2DFFTData::
 compLogPowerSpec(){
   int maxIndexX, maxIndexY;
@@ -132,13 +133,13 @@ compLogPowerSpec(){
   totalPower=0.0;
   maxPower=-999999999.9, minPower=9999999.9;
   double temp;
-  std::ofstream ofs("2Dfft.dat");
+  // std::ofstream ofs("2Dfft.dat");
   for (int i=0; i < x; i++){  // The x dimension
     int index=i*(y/2+1);
     for (int j=0;j<y/2+1;j++){ // The y dimension
       temp=c_re(out[index+j])*c_re(out[index+j])+c_im(out[index+j])*c_im(out[index+j]);
       temp=10.0*log10(temp);
-      ofs<<temp<<'\t';
+      // ofs<<temp<<'\t';
       totalPower += (power[index+j]=temp);
       //      std::cout<<temp<<'\t'<<maxPower<<'\t'<<minPower<<std::endl;
       //std::cout<<temp<<std::endl;
@@ -149,9 +150,9 @@ compLogPowerSpec(){
 	minPower=temp; minIndexX=i; minIndexY=j;
       }
     }
-    ofs <<std::endl;
+    // ofs <<std::endl;
   }
-  ofs.close();
+  // ofs.close();
   //std::cout <<"Real2DFFTData: compPowerSpec: max indexes : (x, y) "<<maxIndexX<<'\t'<<maxIndexY<<std::endl;
   //std::cout <<"Real2DFFTData: compPowerSpec: min indexes : (x, y) "<<minIndexX<<'\t'<<minIndexY<<std::endl;
 }
@@ -241,4 +242,12 @@ powerSpecAverage(){
       maxYSumIndex=j;
     }
   }
+}
+
+void Real2DFFTData::clearInput(void){
+  memset(in, 0, x*2*(y/2+1)*sizeof(fftw_real));
+}
+
+void Real2DFFTData::clearOutput(void){
+  memset(out, 0, x*(y/2+1)*sizeof(fftw_complex));
 }

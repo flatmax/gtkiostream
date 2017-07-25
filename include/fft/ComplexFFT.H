@@ -74,7 +74,7 @@ public:
   /// Forward transform the data (in to out)
   void fwdTransform(){
   if (!data)
-    std::cerr<<"ComplexFFT::fwdTransform : data not present, please switch data"<<std::endl;
+    printf("ComplexFFT::fwdTransform : data not present, please switch data\n");
   else
     fftw_execute(fwdPlan);
   /*fftw_execute_dft(
@@ -88,7 +88,7 @@ public:
   /// Inverse transform the data (out to in)
   void invTransform(){
   if (!data)
-    std::cerr<<"ComplexFFT::invTransform : data not present, please switch data"<<std::endl;
+    printf("ComplexFFT::invTransform : data not present, please switch data\n");
   else
     fftw_execute(invPlan);
   /*fftw_execute_dft(

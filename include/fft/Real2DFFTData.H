@@ -83,8 +83,8 @@ public:
   void findYMax(void);
 
   /// Zeros the in array
-  void clearInput(void){memset(in, 0, x*2*(y/2+1)*sizeof(fftw_real));}
+  void clearInput(void);
   /// Zeros the out awway
-  void clearOutput(void){memset(out, 0, x*(y/2+1)*sizeof(fftw_complex));}
+  void clearOutput(void);
 };
 #endif // REAL2DFFTDATA_H_

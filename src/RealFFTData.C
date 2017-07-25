@@ -17,7 +17,6 @@
 
 #include "fft/RealFFTData.H"
 
-#include <iostream>
 #include <math.h>
 #include <stdlib.h>
 
@@ -33,7 +32,7 @@ RealFFTData(int sz){
   out = new fftw_real[size];
   power_spectrum = new fftw_real[size/2+1];
   if (!in || !out || !power_spectrum){
-    std::cerr << "Could not allocate enough mem for a RealFFT"<<std::endl;
+    printf("Could not allocate enough mem for a RealFFT\n");
     if (in) delete [] in;
     if (out) delete [] out;
     if (power_spectrum) delete [] power_spectrum;
@@ -48,7 +47,7 @@ RealFFTData(int sz, fftw_real *inp, fftw_real *outp){
   //  cout <<"RealFFTData init:"<<this<<endl;
   size=sz;
   if (!inp || !outp){
-    std::cerr<<"RealFFTData::RealFFTData : input or output array doesn't exist"<<std::endl;
+    printf("RealFFTData::RealFFTData : input or output array doesn't exist\n");
     exit(-1);
   }
   in = inp;
@@ -58,7 +57,7 @@ RealFFTData(int sz, fftw_real *inp, fftw_real *outp){
 
   power_spectrum = new fftw_real[size/2+1];
   if (!power_spectrum){
-    std::cerr << "Could not allocate enough mem for a RealFFT"<<std::endl;
+    printf("Could not allocate enough mem for a RealFFT\n");
     if (power_spectrum) delete [] power_spectrum;
     exit(-1);
   }

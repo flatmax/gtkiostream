@@ -79,7 +79,7 @@ public:
     /// Forward transform the data (in to out)
     void fwdTransform() {
         if (!data)
-            std::cerr<<"RealFFT::fwdTransform : data not present, please switch data"<<std::endl;
+            printf("RealFFT::fwdTransform : data not present, please switch data");
         else
             fftw_execute(fwdPlan);
     }
@@ -87,7 +87,7 @@ public:
     /// Inverse transform the data (out to in)
     void invTransform() {
         if (!data)
-            std::cerr<<"RealFFT::invTransform : data not present, please switch data"<<std::endl;
+            printf("RealFFT::invTransform : data not present, please switch data");
         else
             fftw_execute(invPlan);
     }

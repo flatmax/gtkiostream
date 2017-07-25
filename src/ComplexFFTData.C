@@ -17,12 +17,8 @@
 #include "fft/ComplexFFTData.H"
 #include <stdlib.h>
 
-#include <iostream>
-using namespace std;
-
 ComplexFFTData::
 ComplexFFTData(int sz) {
-    //  std::cout <<"ComplexFFTData init:"<<this<<std::endl;
     size=sz;
     in = out = NULL;
     power_spectrum = NULL;
@@ -34,7 +30,7 @@ ComplexFFTData(int sz) {
     out = (fftw_complex*)fftw_malloc(size*sizeof(fftw_complex));
     power_spectrum = (fftw_real*)fftw_malloc(size*sizeof(fftw_real));
     if (!in || !out || !power_spectrum) {
-        std::cerr << "Could not allocate enough mem for a ComplexFFT"<<std::endl;
+        printf("Could not allocate enough mem for a ComplexFFT\n");
         //if (in) delete [] in;
         //if (out) delete [] out;
         //if (power_spectrum) delete [] power_spectrum;
@@ -47,7 +43,6 @@ ComplexFFTData(int sz) {
         exit(-1);
     }
     totalPower = 0.0;
-    //  std::cout <<"ComplexFFTData exit"<<std::endl;
 }
 
 ComplexFFTData::~ComplexFFTData() {
