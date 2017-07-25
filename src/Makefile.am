@@ -20,7 +20,6 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
 lib_LTLIBRARIES = libgtkIOStream.la libAudioMask.la libfft.la
-
 if HAVE_ZEROC_ICE
 #MGGIS=machineGeneratedGtkiostream
 #${MGGIS}/%.C : %.ice
@@ -45,7 +44,7 @@ libgtkIOStream_la_SOURCES = WSOLA.C BitStream.C #IIO/IIO.C IIO/IIODevice.C
 libgtkIOStream_la_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(GTKDATABOX_CFLAGS) $(FFTW3_CFLAGS)
 libgtkIOStream_la_LDFLAGS =  -rdynamic -version-info $(LT_CURRENT) $(GTKDATABOX_LIBS) -release $(LT_RELEASE)
 
-libdsp_la_SOURCES = 
+libdsp_la_SOURCES =
 libdsp_la_CPPFLAGS = -I$(top_srcdir)/include $(FFTW3_CFLAGS) $(EIGEN_CFLAGS) -DMFILE_PATH1=\"mFiles\" -DMFILE_PATH2=\"$(DESTDIR)$(docdir)/mFiles\"
 libdsp_la_LDFLAGS =  -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(LT_RELEASE)
 
@@ -92,8 +91,13 @@ libAudioMask_la_CPPFLAGS = -I$(top_srcdir)/include $(FFTW3_CFLAGS) $(EIGEN_CFLAG
 libAudioMask_la_LDFLAGS =  -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(LT_RELEASE)
 
 if HAVE_EMSCRIPTEN
-all-local: libgtkIOStream.la
+all-local: libgtkIOStream.la libfft.la
+	@emcc --bind -s TOTAL_MEMORY=32MB --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libfft.so -o .libs/libfft.js
+	mv .libs/libfft.js .libs/libfft.node
+	@emcc --bind --llvm-lto 1 --memory-init-file 0 -s "BINARYEN_METHOD='native-wasm'" -s WASM=1 $(AM_CXXFLAGS) .libs/libfft.so -o .libs/libfft.js
 	@emcc --bind --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so -o .libs/libgtkIOStream.js
+install-exec-hook:
+	cp .libs/libfft.js .libs/libfft.wasm $(DESTDIR)$(libdir) #.libs/libfft.node
 clean-local:
-	@rm -f .libs/libgtkIOStream.js
+	@rm -f .libs/libgtkIOStream.js .libs/libfft.node .libs/libfft.js .libs/libfft.wasm
 endif

@@ -187,3 +187,24 @@ zeroFFTData(void){
   for (int i=0;i<getSize();i++)
     out[i]=0.0;
 }
+
+#include "config.h"
+#ifdef HAVE_EMSCRIPTEN
+#include <emscripten/bind.h>
+EMSCRIPTEN_BINDINGS(RealFFTData_ex) {
+  emscripten::class_<RealFFTData>("RealFFTData")
+  .constructor<int>() // the constructor takes in a size
+    .function("limitHalfPowerSpec", &RealFFTData::limitHalfPowerSpec)
+    .function("getSize", &RealFFTData::getSize)
+    .function("getHalfSize", &RealFFTData::getHalfSize)
+    .function("findMaxIn", &RealFFTData::findMaxIn)
+    .function("findMaxMinPowerBins", &RealFFTData::findMaxMinPowerBins)
+    .function("compPowerSpec", &RealFFTData::compPowerSpec)
+    .function("sqrtPowerSpec", &RealFFTData::sqrtPowerSpec)
+    .function("zeroFFTData", &RealFFTData::zeroFFTData);
+
+//    .function("getFS", &EQ::getFS)
+//    .property("x", &MyClass::getX, &MyClass::setX)
+//    .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
+}
+#endif
