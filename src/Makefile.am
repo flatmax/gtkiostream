@@ -82,7 +82,7 @@ libdsp_la_SOURCES += DSP/CrossoverAudio.C DSP/MixerTestAudio.C
 endif
 
 
-libfft_la_SOURCES = ComplexFFTData.C Real2DFFTData.C RealFFTData.C
+libfft_la_SOURCES = ComplexFFTData.C Real2DFFTData.C RealFFTData.C RealFFT.C
 libfft_la_CPPFLAGS = -I$(top_srcdir)/include $(FFTW3_CFLAGS)
 libfft_la_LDFLAGS =  -version-info $(LT_CURRENT)  $(FFTW3_LIBS) -release $(LT_RELEASE)
 
