@@ -20,8 +20,6 @@
 #include "fft/FFTCommon.H"
 #include "fft/RealFFTData.H"
 
-//class RealFFTData;
-
 ///class RealFFT controls fftw plans and executes fwd/inv transforms
 class RealFFT {
     /// The fwd/inv plans
@@ -68,12 +66,16 @@ public:
         destroyPlan();
     }
 
-
     /// Use this to change associated fft data (for fft'ing)
     void switchData(RealFFTData *d) {
         destroyPlan();
         data=d;
         createPlan();
+    }
+
+    /// Use this to change associated fft data (for fft'ing)
+    void switchData(RealFFTData &d) {
+        switchData(&d);
     }
 
     /// Forward transform the data (in to out)
@@ -95,4 +97,22 @@ public:
 /** \example RealFFTExample.C
  * This is an example of how to use the class.
  */
+
+ #include "config.h"
+ #ifdef HAVE_EMSCRIPTEN
+ #include <emscripten/bind.h>
+ EMSCRIPTEN_BINDINGS(RealFFT_ex) {
+   emscripten::class_<RealFFT>("RealFFT")
+   .constructor() // empty constructor - requires switchData to be called
+   .constructor<RealFFTData*>() // the constructor takes in a data class
+   .function("switchData", emscripten::select_overload<void(RealFFTData&)>(&RealFFT::switchData))
+   .function("fwdTransform", &RealFFT::fwdTransform)
+   .function("invTransform", &RealFFT::invTransform);
+
+ //    .function("getFS", &EQ::getFS)
+ //    .property("x", &MyClass::getX, &MyClass::setX)
+ //    .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
+ }
+ #endif
+
 #endif // REALFFT_H_
