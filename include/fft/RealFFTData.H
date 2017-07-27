@@ -58,10 +58,32 @@ public:
   int compPowerSpec();
   /// This function computes the square root of the power spectrum and returns the max bin
   int sqrtPowerSpec();
-
+  /// This is the power spectrum in dB
+  void powerInDB();
   //  int powerSpecDeriv(); // Find the derivative of the power spectrum
 
   /// This function zeros the output data array (out)
   void zeroFFTData(void);
+
+  /** load the input data.
+  \param i The index to load into.
+  \param val The value to load into in[i]
+  */
+  void load(const unsigned int i, const fftw_real val);
+  /** unload the output data.
+  \param i The index to load into.
+  \return The value to load into out[i]
+  */
+  fftw_real unload(const unsigned int i);
+  /** unload the power_spectrum data.
+  \param i The index to load into.
+  \return The value to load into power_spectrum[i]
+  */
+  fftw_real unloadPS(const unsigned int i);
+
+  /// For debugging purposes, dump the in array to stdout
+  void dumpIn();
+  /// For debugging purposes, dump the out array to stdout
+  void dumpOut();
 };
 #endif // REALFFTDATA_H_

@@ -151,6 +151,14 @@ sqrtPowerSpec(){
   return maxPowerBin;
 }
 
+void RealFFTData::
+powerInDB(){
+  compPowerSpec();
+  sqrtPowerSpec();
+  for (int k = 0; k < (getSize()+1)/2; ++k)  /* (k < N/2 rounded up) */
+      power_spectrum[k]=20.*log10(power_spectrum[k]);
+}
+
 /*
 int RealFFTData::
 powerSpecDeriv(){
@@ -180,11 +188,40 @@ if (getSize() % 2 == 0) // N is even
 }
 */
 
-void  RealFFTData::
+void RealFFTData::
 zeroFFTData(void){
   //cout<<"here"<<std::endl;
   for (int i=0;i<getSize();i++)
     out[i]=0.0;
+}
+
+void RealFFTData::load(const unsigned int i, const fftw_real val){
+  if (i<getSize())
+    in[i]=val;
+}
+
+fftw_real RealFFTData::unload(const unsigned int i){
+  if (i<getSize())
+    return out[i];
+  return 0./0.; // on error return NaN
+}
+
+fftw_real RealFFTData::unloadPS(const unsigned int i){
+  if (i<=getSize()/2+1)
+    return power_spectrum[i];
+  return 0./0.; // on error return NaN
+}
+
+void RealFFTData::dumpIn(){
+  for (int i=0;i<getSize();i++)
+    printf("%f\t", in[i]);
+  printf("\n");
+}
+
+void RealFFTData::dumpOut(){
+  for (int i=0;i<getSize();i++)
+    printf("%f\t", out[i]);
+  printf("\n");
 }
 
 #include "config.h"
@@ -200,7 +237,14 @@ EMSCRIPTEN_BINDINGS(RealFFTData_ex) {
     .function("findMaxMinPowerBins", &RealFFTData::findMaxMinPowerBins)
     .function("compPowerSpec", &RealFFTData::compPowerSpec)
     .function("sqrtPowerSpec", &RealFFTData::sqrtPowerSpec)
-    .function("zeroFFTData", &RealFFTData::zeroFFTData);
+    .function("powerInDB", &RealFFTData::powerInDB)
+    .function("zeroFFTData", &RealFFTData::zeroFFTData)
+    .function("load", &RealFFTData::load)
+    .function("unload", &RealFFTData::unload)
+    .function("unloadPS", &RealFFTData::unloadPS)
+    .function("dumpIn", &RealFFTData::dumpIn)
+    .function("dumpOut", &RealFFTData::dumpOut)
+    ;
 
 //    .function("getFS", &EQ::getFS)
 //    .property("x", &MyClass::getX, &MyClass::setX)

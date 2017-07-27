@@ -92,10 +92,10 @@ libAudioMask_la_LDFLAGS =  -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(
 
 if HAVE_EMSCRIPTEN
 all-local: libgtkIOStream.la libfft.la
-	@emcc --bind -s TOTAL_MEMORY=32MB --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libfft.so -o .libs/libfft.js
+	@emcc --bind -s TOTAL_MEMORY=32MB --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libfft.so $(FFTW3_LIBS) -o .libs/libfft.js
 	mv .libs/libfft.js .libs/libfft.node
-	@emcc --bind --llvm-lto 1 --memory-init-file 0 -s "BINARYEN_METHOD='native-wasm'" -s WASM=1 $(AM_CXXFLAGS) .libs/libfft.so -o .libs/libfft.js
-	@emcc --bind --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so -o .libs/libgtkIOStream.js
+	@emcc --bind --llvm-lto 1 --memory-init-file 0 -s "BINARYEN_METHOD='native-wasm'" -s "WASM=1" $(AM_CXXFLAGS) .libs/libfft.so $(FFTW3_LIBS) -o .libs/libfft.js
+	@emcc --bind --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(FFTW3_LIBS) -o .libs/libgtkIOStream.js
 install-exec-hook:
 	cp .libs/libfft.js .libs/libfft.wasm $(DESTDIR)$(libdir) #.libs/libfft.node
 clean-local:
