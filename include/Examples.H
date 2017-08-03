@@ -62,4 +62,5 @@
 \example ALSAFullDuplexTest.C
 \example ALSAPlaybackTest.C
 \example ALSACaptureTest.C
+\example IIRTest.C
 */
