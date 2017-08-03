@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
     int chCnt=10;
 
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> B, A;
-    B=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(N,chCnt);
+    B=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(N-5,chCnt);
     A=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(N,chCnt);
     B/=100.;
     A/=100.;

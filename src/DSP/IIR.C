@@ -58,8 +58,8 @@ int IIR::process(const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> &x,
 
     for (int i=0; i<x.rows(); i++){
         mem.row(0)=-x.row(i);
-        mem.row(0)=-(A*mem).colwise().sum();
-        yTemp.row(i)=(B*mem).colwise().sum();
+        mem.row(0)=-(A*mem.block(0, 0, A.rows(), A.cols())).colwise().sum();
+        yTemp.row(i)=(B*mem.block(0, 0, B.rows(), B.cols())).colwise().sum();
         for (int j=mem.rows()-1; j>0; j--)
             mem.row(j)=mem.row(j-1);
     }
