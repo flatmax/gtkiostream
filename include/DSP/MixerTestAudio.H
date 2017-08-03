@@ -1,6 +1,6 @@
 #ifndef MIXERTESTAUDIO_H
 #define MIXERTESTAUDIO_H
-/* Copyright 2000-2014 Matt Flax <flatmax@flatmax.org>
+/* Copyright 2000-2017 Matt Flax <flatmax@flatmax.org>
    This file is part of GTK+ IOStream class set
 
    GTK+ IOStream is free software; you can redistribute it and/or modify

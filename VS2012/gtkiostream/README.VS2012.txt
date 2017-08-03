@@ -17,7 +17,7 @@ http://eigen.tuxfamily.org/index.php?title=Main_Page
 To use the ORBing system, you will need ZeroC ICE :
 http://www.zeroc.com/
 
-/* Copyright 2000-2014 Matt Flax <flatmax@flatmax.org>
+/* Copyright 2000-2017 Matt Flax <flatmax@flatmax.org>
    This file is part of GTK+ IOStream class set
 
    GTK+ IOStream is free software; you can redistribute it and/or modify

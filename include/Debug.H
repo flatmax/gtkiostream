@@ -1,4 +1,4 @@
-/* Copyright 2000-2014 Matt Flax <flatmax@flatmax.org>
+/* Copyright 2000-2017 Matt Flax <flatmax@flatmax.org>
    This file is part of GTK+ IOStream class set
 
    GTK+ IOStream is free software; you can redistribute it and/or modify
@@ -80,8 +80,12 @@ typedef unsigned int uint;
 #define ALSA_ERROR_OFFSET -40500 ///< Define JACK_ERROR_OFFSET in your code (<0) to offset the Jack client errors.
 #endif
 
+#ifndef IIR_ERROR_OFFSET
+#define IIR_ERROR_OFFSET -40600 ///< Define JACK_ERROR_OFFSET in your code (<0) to offset the Jack client errors.
+#endif
+
 #define MAX_ERROR_OFFSET DEBUG_ERROR_OFFSET ///< The lowest debug error magnitude from gtkiostream
-#define MIN_ERROR_OFFSET (ALSA_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
+#define MIN_ERROR_OFFSET (IIR_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
 
 #include <map>
 #include <string>
