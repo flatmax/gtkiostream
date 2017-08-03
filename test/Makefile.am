@@ -84,7 +84,7 @@ FrameTest_SOURCES = FrameTest.C
 
 if HAVE_OCTAVE
 noinst_PROGRAMS += RealFFTExample Real2DFFTExample ComplexFFTExample OctaveTest
-noinst_PROGRAMS += AudioMaskerExample
+noinst_PROGRAMS += AudioMaskerExample IIRTest
 
 EXTRA_LIBS += $(MKOCTFILE_LIBPATH) $(MKOCTFILE_LIBS)
 EXTRA_CFLAGS += $(MKOCTFILE_CFLAGS)
@@ -210,6 +210,10 @@ DecompositionTest_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libg
 OverlapAddTest_SOURCES = OverlapAddTest.C
 OverlapAddTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
 OverlapAddTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libdsp.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
+
+IIRTest_SOURCES = IIRTest.C
+IIRTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
+IIRTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libdsp.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
 
 BlockBufferTest_SOURCES = BlockBufferTest.C
 BlockBufferTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) -fpermissive $(EXTRA_CFLAGS)

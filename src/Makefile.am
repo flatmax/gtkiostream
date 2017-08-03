@@ -44,7 +44,8 @@ libgtkIOStream_la_SOURCES = WSOLA.C BitStream.C #IIO/IIO.C IIO/IIODevice.C
 libgtkIOStream_la_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(GTKDATABOX_CFLAGS) $(FFTW3_CFLAGS)
 libgtkIOStream_la_LDFLAGS =  -rdynamic -version-info $(LT_CURRENT) $(GTKDATABOX_LIBS) -release $(LT_RELEASE)
 
-libdsp_la_SOURCES =
+lib_LTLIBRARIES += libdsp.la
+libdsp_la_SOURCES = DSP/IIR.C
 libdsp_la_CPPFLAGS = -I$(top_srcdir)/include $(FFTW3_CFLAGS) $(EIGEN_CFLAGS) -DMFILE_PATH1=\"mFiles\" -DMFILE_PATH2=\"$(DESTDIR)$(docdir)/mFiles\"
 libdsp_la_LDFLAGS =  -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(LT_RELEASE)
 
@@ -56,7 +57,6 @@ endif
 
 if HAVE_OCTAVE
 #libdsp_la_SOURCES += Decomposition.C
-lib_LTLIBRARIES += libdsp.la
 libgtkIOStream_la_SOURCES += Octave.C
 libgtkIOStream_la_CPPFLAGS += $(MKOCTFILE_CFLAGS)
 libgtkIOStream_la_LDFLAGS += $(MKOCTFILE_LIBPATH) $(MKOCTFILE_LIBS)
@@ -77,7 +77,6 @@ libgtkIOStream_la_SOURCES += JackPortMonitor.C
 libgtkIOStream_la_CPPFLAGS += $(JACK_CFLAGS)
 libgtkIOStream_la_LDFLAGS += $(JACK_LIBS)
 
-lib_LTLIBRARIES += libdsp.la
 libdsp_la_SOURCES += DSP/CrossoverAudio.C DSP/MixerTestAudio.C
 endif
 
