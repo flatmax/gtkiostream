@@ -8,6 +8,6 @@ Description: Headers and library for GUI, ORBing, Octave and Jack audio interfac
 URL: http://sourceforge.net/projects/gtkiostream
 Version: @VERSION@
 Requires:
-Libs: -L${libdir} -lgtkIOStream @ALSA_LIBS@ @GTK_LIBS@ @EIGEN_LIBS@ @SOX_LIBS@ @MKOCTFILE_LIBPATH@ @MKOCTFILE_PCLIBPATH@ @MKOCTFILE_LIBS@ @JACK_LIBS@ @FFTW3_LIBS@ @OPENCV_LIBS@
+Libs: -L${libdir} -ldsp -lgtkIOStream @ALSA_LIBS@ @GTK_LIBS@ @EIGEN_LIBS@ @SOX_LIBS@ @MKOCTFILE_LIBPATH@ @MKOCTFILE_PCLIBPATH@ @MKOCTFILE_LIBS@ @JACK_LIBS@ @FFTW3_LIBS@ @OPENCV_LIBS@
 Cflags: -I${includedir}/gtkIOStream @ALSA_CFLAGS@ @GTK_CFLAGS@ @EIGEN_CFLAGS@ @SOX_CFLAGS@ @MKOCTFILE_CFLAGS@ @JACK_CFLAGS@ @FFTW3_CFLAGS@ @OPENCV_CFLAGS@
 Libs.private:
