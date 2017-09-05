@@ -14,31 +14,30 @@
    You have received a copy of the GNU General Public License
    along with GTK+ IOStream
 */
-#include "DSP/IIR.H"
+#include "DSP/IIRCascade.H"
 #include <Octave.H>
 #include <iostream>
 using namespace std;
 int main(int argc, char *argv[]){
 
-    int N=2100;
-    int chCnt=10;
+    int N=100;
+    int sectionCnt=10;
 
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> B, A;
-    B=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(N,chCnt);
-    A=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(N-5,chCnt);
+    B=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(N,sectionCnt);
+    A=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(N-2,sectionCnt);
     B/=100.;
     A/=100.;
-    A.row(0)=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Ones(1,chCnt);
+    A.row(0)=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Ones(1,sectionCnt);
 
-
-    IIR iir;
+    IIRCascade iir;
     iir.reset(B, A);
-
-    N=12800;
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> x, y;
-    x=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(N,chCnt);
+    N=1200;
+    Eigen::Matrix<double, Eigen::Dynamic, 1> x, y;
+    x=Eigen::Matrix<double, Eigen::Dynamic, 1>::Random(N,1);
     y.resize(x.rows(), x.cols());
     iir.process(x, y);
+    // cout<<"yOut2=["<<y<<"];"<<endl;
 
 //    cout<<"B=["<<B<<"];\n"<<endl;
  //   cout<<"A=["<<A<<"];\n"<<endl;
@@ -50,16 +49,22 @@ int main(int argc, char *argv[]){
 
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> yHat;
     yHat.resize(x.rows(), x.cols());
-    for (int i=0; i<chCnt; i++){
+    for (int i=0; i<sectionCnt; i++){
         vector<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> > input, output; // The octave input and output
         input.push_back(B.col(i));
         input.push_back(A.col(i));
-        input.push_back(x.col(i));
+        input.push_back(x);
         octave.runM("filter", input, output);
-        yHat.col(i)=output[0];
+        x=output[0];
     }
+    yHat=x;
     cout<<(y-yHat).array().abs().sum()/y.rows()/y.cols()<<endl;
-//    cout<<y<<endl;
+
+    // cout<<"A=["<<A<<"];"<<endl;
+    // cout<<"B=["<<B<<"];"<<endl;
+    // cout<<"xIn=["<<x<<"];"<<endl;
+    // cout<<"yOut=["<<y<<"];"<<endl;
+
 
     return 0;
 }

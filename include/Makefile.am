@@ -40,7 +40,7 @@ nobase_oldinclude_HEADERS = mffm/BST.H mffm/HeapTreeType.H mffm/HeapTree.H mffm/
                             AudioMask/MooreSpread.H AudioMask/AudioMaskCommon.H DSP/Decomposition.H  DSP/OverlapAdd.H \
                             IIO/IIO.H IIO/IIODevice.H IIO/IIOChannel.H IIO/IIOThreaded.H IIO/IIOThreadedQ.H IIO/IIOMMap.H posixForMicrosoft/dirent.h \
                             ALSA/ALSA.H ALSA/ALSAExternalPlugin.H ALSA/FullDuplex.H ALSA/PCM.H ALSA/Software.H \
-														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H DSP/IIR.H
+														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H DSP/IIR.H DSP/IIRCascade.H
 
 nobase_oldinclude_HEADERS += xpm/play.xpm
 

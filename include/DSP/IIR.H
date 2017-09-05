@@ -23,6 +23,7 @@
 #define IIR_A0_ERROR IIR_ERROR_OFFSET-1 ///< Error when feedback coefficient A0 is not = 1
 #define IIR_CH_CNT_ERROR IIR_ERROR_OFFSET-2 ///< Channel count mismatch error
 #define IIR_N_CNT_ERROR IIR_ERROR_OFFSET-3 ///< Channel count mismatch error
+#define IIR_REQUIRE_COL_ERROR IIR_ERROR_OFFSET-4 ///< Channel count mismatch error
 
 class IIRDebug :  virtual public Debug  {
 public:
@@ -31,6 +32,7 @@ public:
         errors[IIR_A0_ERROR]=std::string("IIR feedback coefficient a0 != 1. ");
         errors[IIR_CH_CNT_ERROR]=std::string("The channel counts aren't the same. ");
         errors[IIR_N_CNT_ERROR]=std::string("The sample counts aren't the same. ");
+        errors[IIR_REQUIRE_COL_ERROR]=std::string("The Matrix must be defined as a single col matrix, not dynamic. ");
 
 #endif // NDEBUG
     }
