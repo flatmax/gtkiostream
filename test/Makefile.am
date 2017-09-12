@@ -40,7 +40,10 @@ noinst_PROGRAMS += JackPortMonitorGuiTest TimeTest
 EXTRA_LIBS += $(GTK_LIBS)
 EXTRA_CFLAGS += $(GTK_CFLAGS)
 
-noinst_PROGRAMS += AlignmentTest MessageDialogTest ScaleTest TableTest TextViewTest CairoArrowTest DrawingAreaTest ButtonsTest2 ButtonsTest PangoTest PangoTest2 ComboBoxTextTest ButtonsFontTest SeparatorTest InlineTest ProgressBarTest LabelsTest LabelsTest2 CairoBoxTest SelectionAreaTest CairoCircleTest DragNDropTest DragNDropSimpleTest DragNDropNowindowTest ScrollingTest FileDialogTest FrameTest
+noinst_PROGRAMS += AlignmentTest MessageDialogTest ScaleTest TableTest TextViewTest CairoArrowTest DrawingAreaTest \
+									 ButtonsTest2 ButtonsTest PangoTest PangoTest2 ComboBoxTextTest ButtonsFontTest SeparatorTest \
+									 InlineTest ProgressBarTest LabelsTest LabelsTest2 CairoBoxTest SelectionAreaTest CairoCircleTest \
+									 DragNDropTest DragNDropSimpleTest DragNDropNowindowTest ScrollingTest FileDialogTest FrameTest
 endif
 
 # these need to be fixed for GTK3
@@ -91,9 +94,14 @@ EXTRA_CFLAGS += $(MKOCTFILE_CFLAGS)
 endif
 
 if HAVE_SOX
+if HAVE_EMSCRIPTEN
+noinst_PROGRAMS += SoxTest
+EXTRA_LIBS += $(SOX_LIBS)
+else
 if NOT_MINGW_SYSTEM
 noinst_PROGRAMS += IIOMMapTest IIOTest IIOQueueTest SoxTest
 EXTRA_LIBS += $(SOX_LIBS)
+endif
 endif
 endif
 

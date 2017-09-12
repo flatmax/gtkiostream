@@ -23,8 +23,11 @@ EXTRA_CFLAGS =
 
 if HAVE_SOX
 bin_PROGRAMS += WSOLA audioMasker HexToSox
+if HAVE_EMSCRIPTEN
+else
 if NOT_MINGW_SYSTEM
 bin_PROGRAMS += IIOSox
+endif
 endif
 EXTRA_CFLAGS += $(SOX_CFLAGS)
 EXTRA_LIBS += $(SOX_LIBS)
