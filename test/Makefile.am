@@ -21,8 +21,10 @@
 EXTRA_LIBS =
 EXTRA_CFLAGS =
 
-noinst_PROGRAMS = OptionParserTest DirectoryScannerTest NeuralNetworkTest ThreadTest BlockBufferTest
-noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6
+noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest
+noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6 FileWatchThreadedTest
+#noinst_PROGRAMS += DSFStreamTest
+
 #noinst_PROGRAMS += DeBoorTest
 
 if HAVE_GTKDATABOX
