@@ -37,7 +37,7 @@ class ALSAExternalPlugin : public Software {
 	}
 
 protected:
-    snd_pcm_extplug_t extplug; /// The ALSA plugin
+  snd_pcm_extplug_t extplug; /// The ALSA plugin
 	snd_config_t * slaveConf; /// The slave to use
 
 	/** Set the name of the plugin
@@ -77,7 +77,7 @@ public:
     \return 0 on success, < 0 on failure
     */
     virtual int close(){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
         return 0;
     }
 
@@ -86,7 +86,7 @@ public:
     \return 0 on success, < 0 on failure
     */
     virtual int hwParams(snd_pcm_hw_params_t *params){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
 		copyFrom(params);
 		std::cout<<"channels : "<<getChannels()<<std::endl;
 		std::cout<<"fs       : "<<getSampleRate(0)<<" Hz"<<std::endl;
@@ -102,7 +102,7 @@ public:
     \return 0 on success, < 0 on failure
     */
     virtual int hwFree(){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	////std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
         return 0;
     }
 
@@ -110,14 +110,14 @@ public:
     \return 0 on success, < 0 on failure
     */
     virtual void dump(snd_output_t *out){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
     }
 
     /** init
     \return 0 on success, < 0 on failure
     */
     virtual int init(){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
         return 0;
     }
 
@@ -128,7 +128,7 @@ public:
 	/** The transfer method
 	*/
 	virtual snd_pcm_sframes_t transfer(const snd_pcm_channel_area_t *dst_areas, snd_pcm_uframes_t dst_offset, const snd_pcm_channel_area_t *src_areas, snd_pcm_uframes_t src_offset, snd_pcm_uframes_t size){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
     	return size;
 	}
 
@@ -148,7 +148,7 @@ public:
     \return 0 on success, < 0 on failure
     */
     virtual int parseConfig(const char *name, snd_config_t *conf, snd_pcm_stream_t stream, int mode){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
 		snd_config_iterator_t i, next;
 		snd_config_for_each(i, next, conf) {
 			snd_config_t *n = snd_config_iterator_entry(i);

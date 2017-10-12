@@ -114,8 +114,10 @@ protected:
 				if ((ret=Capture::setBufSize(inputAudio.rows()))<0)
 					return ALSADebug().evaluateError(ret);
 
-				if (sizeof(FRAME_TYPE)!=Playback::getFormatPhysicalWidth()/8)
+				if (sizeof(FRAME_TYPE)!=Playback::getFormatPhysicalWidth()/8){
+					printf("sizeof(FRAME_TYPE) = %d, Playback::getFormatPhysicalWidth()/8 = %d\n", sizeof(FRAME_TYPE), Playback::getFormatPhysicalWidth()/8);
 					return ALSADebug().evaluateError(ALSA_FORMAT_MISMATCH_ERROR, " When comparing the FullDuplex sample type template word against the ALSA format word. ");
+				}
 
 				Playback::setParams();
 				Capture::setParams();

@@ -73,13 +73,13 @@ public:
     \return 0 on success, < 0 on failure
     */
     virtual int parseConfig(const char *name, snd_config_t *conf, snd_pcm_stream_t stream, int mode){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
         return 0;
     }
 
     /// start method
     virtual int start(){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
 		/* When trying to start a PCM that's already running, the result is
 		   EBADFD. We might have implicitly started the buffer by filling it
 		   up, so just ignore this request if we're already running. */
@@ -91,7 +91,7 @@ public:
 
     /// stop method
     virtual int stop(){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
 		return snd_pcm_drop(slave);
     }
 
@@ -105,7 +105,7 @@ public:
 	}
 
 	virtual snd_pcm_sframes_t transfer(const snd_pcm_channel_area_t *areas, snd_pcm_uframes_t offset, snd_pcm_uframes_t size){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
     	return size;
 	}
 

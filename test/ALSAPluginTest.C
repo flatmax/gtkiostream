@@ -72,21 +72,21 @@ class ALSAPluginTest : public ALSAPlugin {
     /** Start method
     */
     // virtual int start(){
-    // 	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    // 	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
     // 	return 0;
     // }
 
     /** Start method
     */
     // virtual int stop(){
-    // 	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    // 	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
     // 	return 0;
     // }
 
     /** Pointer method
     */
     virtual snd_pcm_sframes_t pointer(){
-    	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
     	return 0;
     }
 public:
@@ -101,7 +101,7 @@ public:
 	}
 
  	virtual int parseConfig(const char *name, snd_config_t *conf, snd_pcm_stream_t stream, int mode){
-    	std::cout<<typeid(*this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(*this).name()<<'\t'<<__func__<<std::endl;
 		const char *card = NULL;
 		const char *pcm_string = NULL;
 
