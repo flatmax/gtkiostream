@@ -22,7 +22,8 @@ otherinclude_HEADERS = Alignment.H Container.H GtkUtils.H OptionParser.H Selecti
                        Buttons.H DrawingArea.H Labels.H Pango.H Sox.H CairoArrow.H EventBox.H Pixmap.H Table.H ColourLineSpec.H FileGtk.H MessageDialog.H Plot.H \
                        TextView.H colourWheel.H Frame.H ProgressBar.H Thread.H ComboBoxText.H gtkDialog.H NeuralNetwork.H Scales.H Widget.H \
                        commonTimeCodeX.H gtkInterface.H Octave.H Scrolling.H WSOLA.H WSOLAJack.H Surface.H SelectionArea.H CairoBox.H DirectoryScanner.H BlockBuffer.H \
-                       DragNDrop.H CairoArc.H CairoCircle.H JackBase.H JackPortMonitor.H BitStream.H FileDialog.H Window.H
+                       DragNDrop.H CairoArc.H CairoCircle.H JackBase.H JackPortMonitor.H BitStream.H FileDialog.H Window.H \
+                       FileWatchThreaded.H 
 
 if CYGWIN
 otherinclude_HEADERS += TimeTools.H

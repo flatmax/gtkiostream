@@ -308,3 +308,9 @@ libasound_module_pcm_ALSAExternalPluginTest_la_SOURCES = ALSAExternalPluginTest.
 libasound_module_pcm_ALSAExternalPluginTest_la_CPPFLAGS = $(EIGEN_CFLAGS)
 libasound_module_pcm_ALSAExternalPluginTest_la_LDFLAGS = -module -avoid-version -export-dynamic -no-undefined
 endif
+
+# DSFStreamTest_SOURCES = DSFStreamTest.C
+# DSFStreamTest_CPPFLAGS = -I$(abs_top_srcdir)/include -fpermissive
+# DSFStreamTest_LDADD =
+
+FileWatchThreadedTest_SOURCES = FileWatchThreadedTest.C
