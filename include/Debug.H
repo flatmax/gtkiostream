@@ -84,11 +84,17 @@ typedef unsigned int uint;
 #define IIR_ERROR_OFFSET -40600 ///< Define JACK_ERROR_OFFSET in your code (<0) to offset the Jack client errors.
 #endif
 
+// #ifndef DSF_ERROR_OFFSET
+// #define DSF_ERROR_OFFSET -40650
+// #endif
+
 #define MAX_ERROR_OFFSET DEBUG_ERROR_OFFSET ///< The lowest debug error magnitude from gtkiostream
 #define MIN_ERROR_OFFSET (IIR_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
+//#define MIN_ERROR_OFFSET (DSF_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
 
 #include <map>
 #include <string>
+#include <string.h>
 
 /** Debug information for handling errors.
 This class has two modes, testing on the NDEBUG flag is NOT present, it outputs to std::cerr and has filled member variables.
@@ -119,8 +125,11 @@ public:
     */
     virtual int evaluateError(int errorNum) {
 #ifndef NDEBUG
-        if (errorNum!=NO_ERROR)
-            fprintf(stderr, "Error : %d %s ", errorNum, errors[errorNum].c_str());
+      if (errorNum!=NO_ERROR)
+        if (errors.find(errorNum)==errors.end()) // if we don't have this error then perhaps it is a system error ?
+          fprintf(stderr, "Error : %d strerror reports : %s ", errorNum, strerror(errno));
+        else
+          fprintf(stderr, "Error : %d %s ", errorNum, errors[errorNum].c_str());
 #endif
         return errorNum;
     }
