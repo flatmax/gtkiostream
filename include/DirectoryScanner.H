@@ -24,6 +24,7 @@
 #define DIRSCAN_CLOSEDIR_ERROR DIRSCAN_ERROR_OFFSET-2 ///< Error when the specified dir doesn't close successfully
 #define DIRSCAN_NOTOPEN_ERROR DIRSCAN_ERROR_OFFSET-3 ///< Error when the directory hasn't been open yet.
 #define DIRSCAN_CREATEDIR_ERROR DIRSCAN_ERROR_OFFSET-4 ///< Error when the directory hasn't been open yet.
+#define DIRSCAN_DIRDOESNTEXIST_ERROR DIRSCAN_ERROR_OFFSET-5 ///< Error when the directory hasn't been open yet.
 
 #include <vector>
 
@@ -33,6 +34,8 @@
 #else
 #include <sys/stat.h>
 #include <dirent.h>
+#include <pwd.h> // for getHomeDir
+#include <unistd.h> // for getHomeDir
 #endif
 #include <string.h>
 
@@ -48,6 +51,7 @@ public:
         errors[DIRSCAN_CLOSEDIR_ERROR]=std::string("Error when trying to close the directory. ");
         errors[DIRSCAN_NOTOPEN_ERROR]=std::string("You must open the directory first. ");
         errors[DIRSCAN_CREATEDIR_ERROR]=std::string("Could not create the directory named : ");
+        errors[DIRSCAN_DIRDOESNTEXIST_ERROR]=std::string("Could not find that directory : ");
 
 #endif
     }
@@ -60,15 +64,22 @@ class DirectoryScanner : public std::vector<std::string> {
     DIR *dir;
     std::string path;
 public:
-    /** Can the directory at path. The directoryItems are filled.
-    \param path The path to scan for files/directories
-    */
-    DirectoryScanner(std::string path) {
-        dir=NULL;
-        open(path);
-    }
+  /** Empty constructor call open to operate.
+  */
+  DirectoryScanner() {
+      dir=NULL;
+  }
+
+  /** Can the directory at path. The directoryItems are filled.
+  \param path The path to scan for files/directories
+  */
+  DirectoryScanner(std::string path) {
+      dir=NULL;
+      open(path);
+  }
 
     virtual ~DirectoryScanner() {
+      if (dir)
         close();
     }
 
@@ -152,51 +163,72 @@ public:
         return path;
     }
 
+    #if !defined(_MSC_VER) && !defined(__MINGW32__)
+  /** Get the user's home directory
+  \return The user's home directory if successful, empty string otherwise
+  */
+  static std::string getHomeDir(){
+    struct passwd *pw = getpwuid(getuid());
+    if (pw)
+      return std::string(pw->pw_dir);
+    else
+      return std::string();
+  }
+#endif
 	/** Make a directory.
 	\param pathname The directory to make
 	*/
 #if !defined(_MSC_VER) && !defined(__MINGW32__)
 	static int mkDir(const std::string &pathname, mode_t mode){
-		 int res=mkdir(pathname.c_str(), mode);
+    printf("hi2 \n");
+    std::string cmd("mkdir -p ");
+    cmd+=pathname;
+    printf("%s\n",cmd.c_str());
+    int ret=system(cmd.c_str());
+    printf("%d\n",ret);
+    if (ret!=0) { // onfailure try with mkdir
+      int res=mkdir(pathname.c_str(), mode);
+      if (res==EDQUOT)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The user's quota of disk blocks or inodes on the filesystem has been exhausted.");
+      if (res==EFAULT)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" points outside your accessible address space.");
+      if (res==ELOOP)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". Too many symbolic links were encountered in resolving pathname.");
+      if (res==ELOOP)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". Too many symbolic links were encountered in resolving pathname.");
+      if (res==EMLINK)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The number of links to the parent directory would exceed LINK_MAX.");
+      if (res==ENAMETOOLONG)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" was too long.");
+      if (res==ENOENT)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". A directory component in pathname does not exist or is a dangling symbolic link.");
+      if (res==ENOMEM)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". Insufficient kernel memory was available.");
+      if (res==ENOSPC)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The device containing pathname has no room for  the  new  directory.");
 
-	if (res==EDQUOT)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The user's quota of disk blocks or inodes on the filesystem has been exhausted.");
-	if (res==EFAULT)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" points outside your accessible address space.");
-	if (res==ELOOP)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". Too many symbolic links were encountered in resolving pathname.");
-	if (res==ELOOP)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". Too many symbolic links were encountered in resolving pathname.");
-	if (res==EMLINK)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The number of links to the parent directory would exceed LINK_MAX.");
-	if (res==ENAMETOOLONG)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" was too long.");
-	if (res==ENOENT)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". A directory component in pathname does not exist or is a dangling symbolic link.");
-	if (res==ENOMEM)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". Insufficient kernel memory was available.");
-	if (res==ENOSPC)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The device containing pathname has no room for  the  new  directory.");
-
-	if (res==ENOSPC)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The  new  directory  cannot  be  created because the user's disk quota is exhausted.");
-	if (res==ENOTDIR)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". A component used as a directory in pathname is not, in fact, a directory.");
-	if (res==EPERM )
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The filesystem containing pathname does not support the creation of directories.");
-	if (res==EROFS)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" refers to a file on a read-only filesystem.");
-	if (res==EACCES)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The  parent  directory  does  not  allow write permission to the process, or one of the directories in  pathname  did  not  allow search permission.");
+      if (res==ENOSPC)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The  new  directory  cannot  be  created because the user's disk quota is exhausted.");
+      if (res==ENOTDIR)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". A component used as a directory in pathname is not, in fact, a directory.");
+      if (res==EPERM )
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The filesystem containing pathname does not support the creation of directories.");
+      if (res==EROFS)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" refers to a file on a read-only filesystem.");
+      if (res==EACCES)
+       return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+". The  parent  directory  does  not  allow write permission to the process, or one of the directories in  pathname  did  not  allow search permission.");
+      if (res==EEXIST)
+        return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" already exists");
+    }
 #else
-	static int mkDir(const std::string &pathname){
-		 int res=_mkdir(pathname.c_str());
-	if (res==ENOENT)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" the path couldn't be found");
+	static int mkDir(const std::string &pathname) {
+    printf("hi1 \n");
+    int res=_mkdir(pathname.c_str());
+    if (res==ENOENT)
+      return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" the path couldn't be found");
+    if (res==EEXIST)
+      return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" already exists");
 #endif
-	if (res==EEXIST)
-           return DirectoryScannerDebug().evaluateError(DIRSCAN_CREATEDIR_ERROR, pathname+" already exists");
-
 	 return NO_ERROR;
 	}
 };

@@ -115,6 +115,9 @@ TimeTest_SOURCES = TimeTest.C
 OptionParserTest_SOURCES = OptionParserTest.C
 ThreadTest_SOURCES = ThreadTest.C
 
+
+DirectoryScannerMkDirTest_SOURCES = DirectoryScannerMkDirTest.C
+
 DirectoryScannerTest_SOURCES = DirectoryScannerTest.C
 DirectoryScannerTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS)
 DirectoryScannerTest_LDADD =
