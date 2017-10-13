@@ -321,7 +321,7 @@ public:
         pthread_cond_signal(&cond);
     }
 
-    /** Signal a single all waiting threads.
+    /** Signal all waiting threads.
     Assumes that the inherited Mutex::lock() method has already been called.
     Returns with Cond::Mutex in a locked state.
     */
