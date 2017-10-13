@@ -23,27 +23,50 @@ Date: 2013.05.03
 #include "Futex.H"
 #include "Thread.H"
 #include <unistd.h>
+#include <time.h>
 
 #include <iostream>
 using namespace std;
+
+// function to measure time
+double diff(timespec start, timespec end)
+{
+	timespec temp;
+	if ((end.tv_nsec-start.tv_nsec)<0) {
+		temp.tv_sec = end.tv_sec-start.tv_sec-1;
+		temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
+	} else {
+		temp.tv_sec = end.tv_sec-start.tv_sec;
+		temp.tv_nsec = end.tv_nsec-start.tv_nsec;
+	}
+	return (double)temp.tv_sec+(double)temp.tv_nsec*1.e-9;
+}
+
+timespec time0; // start time
 
 /** The simple interface for threading a single method.
 */
 class FutexWaitThread : public ThreadedMethod {
   Futex *f;
-
+  double sleepTime;
   void *threadMain(void){
+    timespec timeHere;
     cout<<"sleeping"<<endl;
     f->wait();
-    cout<<"woken"<<endl;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &timeHere);
+      sleepTime=diff(time0,timeHere);
+      sleep(1);
     return NULL;
   }
 public:
   FutexWaitThread(Futex *fIn){
     f=fIn;
   }
-};
 
+  void wakeDelay(){
+    cout<<"woken after "<<sleepTime<<"seconds\n\n";
+  }
+};
 
 int main(int argc, char *argv[]){
   cout<<INT_MAX<<endl;
@@ -56,8 +79,13 @@ int main(int argc, char *argv[]){
   fwt2.run();
   sleep(1);
   cout<<"about to call wake"<<endl;
+
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time0);
   f.wakeAll();
   cout<<"called wake"<<endl;
-  sleep(1);
-    return NO_ERROR;
+  sleep(2);
+  fwt.wakeDelay();
+  fwt1.wakeDelay();
+  fwt2.wakeDelay();
+  return NO_ERROR;
 }
