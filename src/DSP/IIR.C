@@ -41,15 +41,15 @@ int IIR::reset(const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &Bin, 
 
 int IIR::process(const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> &x, Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> const &y){
     if (x.cols()!=A.cols()){
-        printf("Input channel count (%l) mismatch to filter channel count (%l)", x.cols(), A.cols());
+        printf("Input channel count %lld mismatch to filter channel count %lld", (long long)x.cols(), (long long)A.cols());
         return IIRDebug().evaluateError(IIR_CH_CNT_ERROR);
     }
     if (y.cols()!=A.cols()){
-        printf("Output channel count (%l) mismatch to filter channel count (%l)", y.cols(), A.cols());
+        printf("Output channel count %lld mismatch to filter channel count %lld", (long long)y.cols(), (long long)A.cols());
         return IIRDebug().evaluateError(IIR_CH_CNT_ERROR);
     }
     if (x.rows()!=y.rows()){
-        printf("Input sample count (%l) not equal to output sample count (%l)", x.rows(), y.rows());
+        printf("Input sample count %lld not equal to output sample count %lld", (long long)x.rows(), (long long)y.rows());
         return IIRDebug().evaluateError(IIR_N_CNT_ERROR);
     }
 

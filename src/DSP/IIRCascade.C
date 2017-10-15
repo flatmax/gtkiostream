@@ -24,7 +24,7 @@ int IIRCascade::process(const Eigen::Matrix<double, Eigen::Dynamic, 1> &x, Eigen
 //        return EQDebug().evaluateError(EQ_CH_CNT_ERROR, errStr.str());
 //    }
     if (x.rows()!=y.rows()){
-        printf("Input sample count (%l) not equal to output sample count (%l)", x.rows(), y.rows());
+        printf("Input sample count %lld not equal to output sample count %lld", (long long)x.rows(), (long long)y.rows());
         return IIRDebug().evaluateError(IIR_N_CNT_ERROR);
     }
 
