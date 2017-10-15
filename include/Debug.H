@@ -19,6 +19,8 @@
 
 #include <stdio.h>
 
+#include <errno.h>
+
 #ifndef uint
 typedef unsigned int uint;
 #endif
