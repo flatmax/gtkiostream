@@ -23,7 +23,7 @@ EXTRA_CFLAGS =
 
 noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest
 noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6 FileWatchThreadedTest
-noinst_PROGRAMS += FutexTest
+noinst_PROGRAMS += FutexTest FutexVsPThreadTest
 #noinst_PROGRAMS += DSFStreamTest
 
 #noinst_PROGRAMS += DeBoorTest
@@ -317,3 +317,4 @@ endif
 FileWatchThreadedTest_SOURCES = FileWatchThreadedTest.C
 
 FutexTest_SOURCES = FutexTest.C
+FutexVsPThreadTest_SOURCES = FutexVsPThreadTest.C
