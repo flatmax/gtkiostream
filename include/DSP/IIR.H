@@ -57,14 +57,27 @@ public:
     IIR();
     virtual ~IIR();
     int reset(const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &Bin, const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &Ain);
+    // int reset(const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &Bin, const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &Ain, Eigen::Dynamic, Eigen::Dynamic> &memIn);
     int reset(){
         mem.setZero();
         return 0;
     }
+    int setMem(const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &memIn);
+    int setMem(const IIR &iir);
+    void resetMem(){mem.setZero();}
 
     /** Direct form II algorithm */
     int process(const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> &x, Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> const &y);
+    int process(const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> &x, Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> const &y,
+                const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &BStep, const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &AStep);
     int getChannelCount(){return B.cols();}
-    void resetMem(){mem.setZero();}
+
+    /** Copy A, B and mem to another class - possibly with a different channel count
+    */
+    // int IIR::copyTo(IIR iirIn);
+
+    Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> getB(){return B;}
+    Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> getA(){return A;}
+    Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> getMem(){return mem;}
 };
 #endif // IIR_H
