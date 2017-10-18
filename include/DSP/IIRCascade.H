@@ -26,6 +26,8 @@ class IIRCascade : public IIR
 {
     Eigen::Matrix<double, Eigen::Dynamic, 1> xTemp; ///< Temporary casecading signal
 
+    void process(); ///< Inner process
+    int processStepped(const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &BStep, const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &AStep);
 public:
     IIRCascade();
     virtual ~IIRCascade();
@@ -34,6 +36,11 @@ public:
     \param[out] y The output response of the IIR filter casecade
     */
     int process(const Eigen::Matrix<double, Eigen::Dynamic, 1> &x, Eigen::Matrix<double, Eigen::Dynamic, 1> const &y);
+    int process(const Eigen::Matrix<float, Eigen::Dynamic, 1> &x, Eigen::Matrix<float, Eigen::Dynamic, 1> const &y);
+    int process(const Eigen::Matrix<double, Eigen::Dynamic, 1> &x, Eigen::Matrix<double, Eigen::Dynamic, 1> const &y,
+                const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &BStep, const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &AStep);
+    int process(const Eigen::Matrix<float, Eigen::Dynamic, 1> &x, Eigen::Matrix<float, Eigen::Dynamic, 1> const &y,
+                const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &BStep, const Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> &AStep);
 
     /** Used to catch input arguments which are of non-static single column format. process will not work with these types
     */

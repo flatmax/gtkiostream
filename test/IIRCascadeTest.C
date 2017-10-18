@@ -34,9 +34,14 @@ int main(int argc, char *argv[]){
     iir.reset(B, A);
     N=1200;
     Eigen::Matrix<double, Eigen::Dynamic, 1> x, y;
-    x=Eigen::Matrix<double, Eigen::Dynamic, 1>::Random(N,1);
+    Eigen::Matrix<float, Eigen::Dynamic, 1> xf, yf;
+    xf=Eigen::Matrix<float, Eigen::Dynamic, 1>::Random(N,1);
+    x=xf.cast<double>();
     y.resize(x.rows(), x.cols());
+    yf.resize(x.rows(), x.cols());
     iir.process(x, y);
+    iir.reset();
+    iir.process(xf, yf);
     // cout<<"yOut2=["<<y<<"];"<<endl;
 
 //    cout<<"B=["<<B<<"];\n"<<endl;
@@ -47,7 +52,7 @@ int main(int argc, char *argv[]){
     vector<string> args(1); args[0]=string("");
     octave.startOctave(args);
 
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> yHat;
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> yHat, tempOct;
     yHat.resize(x.rows(), x.cols());
     for (int i=0; i<sectionCnt; i++){
         vector<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> > input, output; // The octave input and output
@@ -59,12 +64,14 @@ int main(int argc, char *argv[]){
     }
     yHat=x;
     cout<<(y-yHat).array().abs().sum()/y.rows()/y.cols()<<endl;
+    cout<<(yf-y.cast<float>()).array().abs().sum()/y.rows()/y.cols()<<endl;
 
     // cout<<"A=["<<A<<"];"<<endl;
     // cout<<"B=["<<B<<"];"<<endl;
     // cout<<"xIn=["<<x<<"];"<<endl;
-    // cout<<"yOut=["<<y<<"];"<<endl;
-
-
+    // cout<<"y=["<<y<<"];"<<endl;
+    // cout<<"yf=["<<yf<<"];"<<endl;
+    // cout<<"x=["<<x<<"];"<<endl;
+    // cout<<"xf=["<<xf<<"];"<<endl;
     return 0;
 }
