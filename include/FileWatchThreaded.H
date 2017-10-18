@@ -50,6 +50,8 @@ class FileWatchThreaded : public ThreadedMethod {
     #define BUF_SIZE MAX_EVENTS*(sizeof(struct inotify_event) + NAME_MAX + 1)
     char eventBuf[BUF_SIZE] __attribute__ ((aligned(__alignof__(struct inotify_event)))); ///< The buffered events
 
+    std::map<std::string, int> pathFds; ///< This will contain a map between watch file descriptors and file/dir names
+
     virtual void *threadMain(void){
       while (int numRead = read(fd, eventBuf, BUF_SIZE)) {
         if (numRead == 0 | numRead == -1){
@@ -85,12 +87,15 @@ public:
   }
 
   /** Add a file or directory to watch here
+  \param path The directory or file to watch
+  \return 0 on success
   */
-  int add(std::string path){
+  virtual int add(std::string path){
     int ret = inotify_add_watch(fd, path.c_str(), IN_ALL_EVENTS);
     if (ret == -1)
       return Debug().evaluateError(fd, " FileWatchThreaded : When calling inotify_add_watch.");
-    return ret;
+    pathFds[path]=ret; // store the path fd
+    return 0;
   }
 
   /** Overload this function to deal with IN_MODIFY events
