@@ -34,7 +34,7 @@ public:
 	}
 
  	virtual int parseConfig(const char *name, snd_config_t *conf, snd_pcm_stream_t stream, int mode){
-    	std::cout<<typeid(*this).name()<<'\t'<<__func__<<std::endl;
+    	//std::cout<<typeid(*this).name()<<'\t'<<__func__<<std::endl;
 
 		if (stream != SND_PCM_STREAM_PLAYBACK) {
 			ostringstream oss;
@@ -47,7 +47,7 @@ public:
 	}
 
 	virtual int specifyHWParams(){
-		std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+		//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
 		int ret;
 		snd_pcm_extplug_set_param_minmax(&extplug, SND_PCM_EXTPLUG_HW_CHANNELS, 2, 2);
 		snd_pcm_extplug_set_slave_param(&extplug, SND_PCM_EXTPLUG_HW_CHANNELS, 2);
@@ -67,7 +67,7 @@ public:
 	}
 
 	virtual snd_pcm_sframes_t transfer(const snd_pcm_channel_area_t *dst_areas, snd_pcm_uframes_t dst_offset, const snd_pcm_channel_area_t *src_areas, snd_pcm_uframes_t src_offset, snd_pcm_uframes_t size){
-  //   	std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+  //   	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
 		// std::cout<<"src : first="<<src_areas->first<<" step="<<src_areas->step<<'\t';
 		// std::cout<<" : bytes : first="<<src_areas->first/8<<" step="<<src_areas->step/8<<std::endl;
 		// std::cout<<"dest : first="<<dst_areas->first<<" step="<<dst_areas->step<<'\t';
