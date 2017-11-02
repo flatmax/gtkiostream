@@ -267,10 +267,7 @@ namespace ALSA {
 		*/
 		int getPeriodSize(int *dir=NULL) {
 			snd_pcm_uframes_t p;
-			int ret=snd_pcm_hw_params_get_period_size(hParams, &p, dir);
-			if (ret<0)
-				return ret;
-			return p;
+			return getPeriodSize(&p, dir);
 		}
 
 		/** Set the period size
