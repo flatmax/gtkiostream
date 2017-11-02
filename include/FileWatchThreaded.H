@@ -72,6 +72,18 @@ class FileWatchThreaded : public ThreadedMethod {
       return NULL;
     }
 
+    /** Overload this function to deal with IN_MODIFY events
+    \param name When watching a directory, the file name modified is given here
+    */
+    virtual void modified(char *name){
+    }
+
+    /** Overload this function to deal with IN_CLOSE_WRITE events
+    \param name When watching a directory, the file name modified is given here
+    */
+    virtual void closeWrite(char *name){
+      // printf("FileWatchThreaded::close write\n");
+    }
 public:
   /// Constructor
   FileWatchThreaded(){
@@ -96,19 +108,6 @@ public:
       return Debug().evaluateError(fd, " FileWatchThreaded : When calling inotify_add_watch.");
     pathFds[path]=ret; // store the path fd
     return 0;
-  }
-
-  /** Overload this function to deal with IN_MODIFY events
-  \param name When watching a directory, the file name modified is given here
-  */
-  virtual void modified(char *name){
-  }
-
-  /** Overload this function to deal with IN_CLOSE_WRITE events
-  \param name When watching a directory, the file name modified is given here
-  */
-  virtual void closeWrite(char *name){
-    // printf("FileWatchThreaded::close write\n");
   }
 };
 
