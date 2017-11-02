@@ -33,7 +33,7 @@
 // taken from octave/toplev.h
 typedef void (*octave_exit_func) (int);
 extern OCTINTERP_API octave_exit_func octave_exit;
-extern OCTINTERP_API void clean_up_and_exit (int status, bool safe_to_return = false);
+extern OCTINTERP_API void clean_up_and_exit (int, bool);
 
 extern OCTINTERP_API octave_value_list
 feval (const string& name, const octave_value_list& args = octave_value_list (), int nargout = 0);
