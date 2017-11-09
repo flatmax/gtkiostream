@@ -109,6 +109,24 @@ public:
     pathFds[path]=ret; // store the path fd
     return 0;
   }
+
+  /** Add a file or directory to watch here, if it doesn't exist, then create
+  \param path The directory or file to watch
+  \return 0 on success
+  */
+  virtual int addFile(std::string path){
+    int ret=add(path);
+    if (ret==ESRCH) { // file doesn't exist, attempt to create
+      FILE *fid=fopen(path.c_str(), "a");
+      if (fid==NULL) // check for failure
+        ret=-EIO;
+      else {
+        fclose(fid);
+        ret=add(path); // now try to add the file a second time
+      }
+    }
+    return ret;
+  }
 };
 
 #endif // FILEWATCHTHREAD_H_
