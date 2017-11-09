@@ -25,7 +25,7 @@ m4_define([gtkiostream_age_version], [0]) # ++ if API added since last release, 
 m4_define([gtkiostream_version],       [gtkiostream_current_version.gtkiostream_revision_version.gtkiostream_age_version])
 
 AC_PREREQ([2.69])
-AC_INIT( gtkIOStream, [gtkiostream_version], [ https://sourceforge.net/p/gtkiostream/tickets/ ])
+AC_INIT( gtkIOStream, [gtkiostream_version], [ https://github.com/flatmax/gtkiostream/issues ])
 AM_INIT_AUTOMAKE([dist-xz tar-ustar subdir-objects])
 AC_CONFIG_SRCDIR([include/Box.H])
 AC_CONFIG_HEADERS([config.h])

@@ -783,7 +783,7 @@ public:
         //cout<<"starting"<<endl;
         while (1) { // terminates when a null is read
             char *token=va_arg(args, char *);
-            if ((token==NULL) | (token=='\0'))
+            if ((token==NULL) | (token==(char *)'\0'))
                 break;
 
             // first attempt to process non-axis (box) settings
