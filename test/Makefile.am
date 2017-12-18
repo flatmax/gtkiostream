@@ -106,7 +106,7 @@ noinst_PROGRAMS += SoxTest
 EXTRA_LIBS += $(SOX_LIBS)
 else
 if NOT_MINGW_SYSTEM
-noinst_PROGRAMS += IIOMMapTest IIOTest IIOQueueTest SoxTest
+noinst_PROGRAMS += IIOMMapTest IIOTest IIOQueueTest SoxTest SoxTest2
 EXTRA_LIBS += $(SOX_LIBS)
 endif
 endif
@@ -248,6 +248,10 @@ BlockBufferTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) -fpermiss
 SoxTest_SOURCES = SoxTest.C
 SoxTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
 SoxTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(LDADD)
+
+SoxTest2_SOURCES = SoxTest2.C
+SoxTest2_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+SoxTest2_LDADD = $(top_builddir)/src/libgtkIOStream.la $(LDADD)
 
 if NOT_MINGW_SYSTEM
 #these will not work on win32

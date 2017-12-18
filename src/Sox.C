@@ -89,6 +89,21 @@ int Sox<FP_TYPE_>::openRead(string fileName) {
 }
 
 template<typename FP_TYPE_>
+int Sox<FP_TYPE_>::openRead(void *buffer, size_t len){
+  bool inputFile=true;
+  close(inputFile);
+
+  in = sox_open_mem_read(buffer, len, NULL, NULL, NULL);
+  if (!in)
+      return SOX_READ_FILE_OPEN_ERROR;
+
+  // No defined max value, user has to set manually - indicate
+  typedef std::numeric_limits<double> Info;
+  maxVal=Info::quiet_NaN();
+  return SOX_READ_MAXSCALE_ERROR;
+}
+
+template<typename FP_TYPE_>
 void Sox<FP_TYPE_>::output_message(unsigned level, const char *filename, const char *fmt, va_list ap) {
     char const * const str[] = {"FAIL", "WARN", "INFO", "DBUG"};
     if (sox_globals.verbosity >= level) {
@@ -147,6 +162,38 @@ int Sox<FP_TYPE_>::openWrite(const string &fileName, double fs, int channels, do
 }
 
 template<typename FP_TYPE_>
+int Sox<FP_TYPE_>::openMemWrite(void *buffer, size_t len, double fs, int channels, double maxVal, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits){
+  int retVal=NO_ERROR; // start assuming no error
+  bool inputFile=false;
+  close(inputFile);
+
+  // setup the desired signalinfo
+  sox_signalinfo_t si; // the signal info.
+  si.rate=fs;
+  si.channels=channels;
+  si.precision=wordSize; // the precision is the number of bits of the data type
+  si.length=0;
+  si.mult=NULL;
+
+  sox_encodinginfo_t encoding; // get default encodings
+  sox_init_encodinginfo(&encoding);
+  encoding.encoding=SOX_ENCODING_UNKNOWN; // setup the endcoding
+  encoding.bits_per_sample=wordSize;
+  encoding.opposite_endian=(switchEndian)?sox_true:sox_false;
+  encoding.reverse_bytes=(revBytes==0)?sox_option_no:((revBytes==1)?sox_option_yes:sox_option_default);
+  encoding.reverse_nibbles=(revNibbles==0)?sox_option_no:((revNibbles==1)?sox_option_yes:sox_option_default);
+  encoding.reverse_bits=(revBits==0)?sox_option_no:((revBits==1)?sox_option_yes:sox_option_default);
+
+  // the output memory buffer
+  out=sox_open_mem_write(buffer, len, &si, &encoding, NULL, NULL);
+  if (out==NULL)
+      retVal=SOX_WRITE_FILE_OPEN_ERROR;
+  outputMaxVal=maxVal;
+  return retVal;
+}
+
+
+template<typename FP_TYPE_>
 int Sox<FP_TYPE_>::write(const vector<vector<FP_TYPE_> > &audioData) {
     int retVal=NO_ERROR; // start assuming no error
     if (out) { // if the output file has been opened...
@@ -203,7 +250,62 @@ vector<string> Sox<FP_TYPE_>::availableFormats(void) {
     return formatExts;
 }
 
+template<typename FP_TYPE_>
+void Sox<FP_TYPE_>::printFormats(){
+  printf("The known output file extensions (output file formats) are the following :\n");
+  vector<string> formats=availableFormats();
+  for (int i=0; i<formats.size(); i++)
+      printf("%s ",formats[i].c_str());
+  printf("\n");
+}
+
+#ifndef HAVE_EMSCRIPTEN
 template class Sox<short int>;
 template class Sox<int>;
 template class Sox<float>;
+#endif
 template class Sox<double>;
+
+#ifdef HAVE_EMSCRIPTEN
+
+template<typename FP_TYPE_>
+FP_TYPE_ Sox<FP_TYPE_>::getSample(unsigned int r, unsigned int c){
+  if (r>=Sox<FP_TYPE_>::audio.rows()) {
+    SoxDebug().evaluateError(SOX_ROW_BOUNDS_ERROR);
+    typedef std::numeric_limits<double> Info;
+    return Info::quiet_NaN();
+  }
+  if (c>=audio.cols()) {
+    SoxDebug().evaluateError(SOX_COL_BOUNDS_ERROR);
+    typedef std::numeric_limits<double> Info;
+    return Info::quiet_NaN();
+  }
+  return audio(r,c);
+}
+
+template<typename FP_TYPE_>
+unsigned int Sox<FP_TYPE_>::getRows(){
+  return audio.rows();
+}
+
+template<typename FP_TYPE_>
+unsigned int Sox<FP_TYPE_>::getCols(){return Sox<FP_TYPE_>::audio.cols();}
+
+template<typename FP_TYPE_>
+int Sox<FP_TYPE_>::readJS(unsigned int count){
+  return read(audio, count);
+}
+
+#include <emscripten/bind.h>
+EMSCRIPTEN_BINDINGS(Sox_ex) {
+  emscripten::class_<Sox<double>>("Sox")
+  .constructor() // the constructor takes in a size
+  .function("printFormats", &Sox<double>::printFormats)
+  .function("getSample", &Sox<double>::getSample)
+  .function("getRows", &Sox<double>::getRows)
+  .function("getCols", &Sox<double>::getCols)
+  .function("openRead", emscripten::select_overload<int(void *, size_t)>(&Sox<double>::openRead), emscripten::allow_raw_pointers())
+  .function("read", &Sox<double>::readJS)
+  ;
+}
+#endif

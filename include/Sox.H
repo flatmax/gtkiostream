@@ -38,12 +38,16 @@
 #define SOX_WRITE_FILE_NOT_OPENED_ERROR SOX_ERROR_OFFSET-8 ///< Error when the output file hasn't already been opened using Sox::openRead
 #define SOX_WRITE_OUT_CHANNEL_MISMATCH SOX_ERROR_OFFSET-9 ///< Error when trying to write data and the channel count doesn't match
 #define SOX_WRITE_SAMPLES_WRITTEN_MISMATCH_ERROR SOX_ERROR_OFFSET-10 ///< Error when trying to write data and the incorrect amount of data is written
+#define SOX_ROW_BOUNDS_ERROR SOX_ERROR_OFFSET-11 ///< Error when trying to access a row out of bounds (Emscripten case)
+#define SOX_COL_BOUNDS_ERROR SOX_ERROR_OFFSET-12 ///< Error when trying to access a col out of bounds (Emscripten case)
 
 #include <sox.h>
 
 #include <limits> // for NaN
 #include <vector>
 using namespace std;
+
+#include "config.h"
 
 /** Debug class for Sox
 */
@@ -61,7 +65,9 @@ public:
 			errors[SOX_WRITE_FILE_OPEN_ERROR]=string("SOX: Couldn't write to file as the output file hasn't been opened yet");
 			errors[SOX_WRITE_FILE_NOT_OPENED_ERROR]=string("SOX: Couldn't write to the file as the output file hasn't been opened yet");
 			errors[SOX_WRITE_OUT_CHANNEL_MISMATCH]=string("SOX: you provided data to write out which doesn't match the number of channels specified during openWrite for the output file");
-			errors[SOX_WRITE_SAMPLES_WRITTEN_MISMATCH_ERROR]=string("SOX: The incorrect number of samples were written to file. ");
+      errors[SOX_WRITE_SAMPLES_WRITTEN_MISMATCH_ERROR]=string("SOX: The incorrect number of samples were written to file. ");
+      errors[SOX_ROW_BOUNDS_ERROR]=string("SOX: Row larger then the matrix size error. ");
+      errors[SOX_COL_BOUNDS_ERROR]=string("SOX: Col larger then the matrix size error. ");
 #endif
     }
 
@@ -112,6 +118,12 @@ public:
     \return A negative error code on failure. SOX_READ_MAXSCALE_ERROR is returned when fileName.max is not found or opened - indicating that audio will not be rescaled correctly.
     */
     int openRead(string fileName);
+
+    /** Open a memory pointer for reading
+    \param buffer The pointer to the memory block
+    \param len The length of the memory block in bytes
+    */
+    int openRead(void *buffer, size_t len);
 
     /** Read audio data from an already opened file.
     The audioData is returned with each column as an audio channel.
@@ -178,6 +190,35 @@ public:
     \return A negative error code on failure.
     */
     virtual int openWrite(const string &fileName, double fs, int channels, double maxVal, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits);
+
+    /** Open a memory pointer for reading
+    \param fs The same rate in Hz.
+    \param buffer The pointer to the memory block
+    \param len The length of the memory block in bytes
+    \param channels The number of channels the file should carry.
+    \param maxVal The maximum value to be contained in the output vector when passed to Sox::write
+    \return A negative error code on failure.
+    */
+    int openMemWrite(void *buffer, size_t len, double fs, int channels, double maxVal){
+        return openMemWrite(buffer, len, fs, channels, maxVal, sizeof(FP_TYPE_)*CHAR_BIT, false, sox_option_default, sox_option_default, sox_option_default);
+    }
+
+    /** Open a memory pointer for writing. Specifying the precision.
+    If the output file is already open, then it is closed first.
+
+    \param buffer The pointer to the memory block
+    \param len The length of the memory block in bytes
+    \param fs The same rate in Hz.
+    \param channels The number of channels the file should carry.
+    \param maxVal The maximum value to be contained in the output vector when passed to Sox::write
+    \param wordSize The number of bits in the word.
+    \param switchEndian Switch the endian from big to little or little to big
+    \param revBytes Reverse the bytes {sox_option_no = 0, sox_option_yes = 1, sox_option_default = 2}
+    \param revNibbles Reverse the nibbles {sox_option_no = 0, sox_option_yes = 1, sox_option_default = 2}
+    \param revBits Reverse the bits {sox_option_no = 0, sox_option_yes = 1, sox_option_default = 2}
+    \return A negative error code on failure.
+    */
+    virtual int openMemWrite(void *buffer, size_t len, double fs, int channels, double maxVal, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits);
 
     /** Write the audio data to an already open file.
     The audioData is written with each column as an audio channel.
@@ -308,5 +349,38 @@ public:
     \return A vector containing the available file format names.
     */
     vector<string> availableFormats(void);
+
+    /** Print out the available formats
+    */
+    void printFormats();
+
+#ifdef HAVE_EMSCRIPTEN
+  /** Emscripten case : Get an audio sample from the audio member variable
+  \param r Row number (starting from 0)
+  \param c Col number (starting from 0)
+  \param val The matrix value at audio(r,c)
+  \return NaN on error.
+  */
+  FP_TYPE_ getSample(unsigned int r, unsigned int c);
+
+  /** Emscripten case : Get the number of rows in the audio data matrix.
+  \return The number of rows in audio.
+  */
+  unsigned int getRows();
+
+  /** Emscripten case : Get the number of cols in the audio data matrix.
+  \return The number of cols in audio.
+  */
+  unsigned int getCols();
+
+  /** Emscripten case : Read audio data into the audio member variable.
+  \param count the number of samples per channel to read, 0 for everything
+  \return NO_ERROR on success, or the error code otherwise. audio holds the read data.
+  */
+  int readJS(unsigned int count=0);
+
+private:
+  Eigen::Matrix<FP_TYPE_, Eigen::Dynamic, Eigen::Dynamic> audio; ///< Emscripten case : The audio data
+#endif // HAVE_EMSCRIPTEN
 };
 #endif // SOX_H_
