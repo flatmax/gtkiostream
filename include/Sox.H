@@ -123,7 +123,7 @@ public:
     \param buffer The pointer to the memory block
     \param len The length of the memory block in bytes
     */
-    int openRead(void *buffer, size_t len);
+    int openRead(intptr_t buffer, size_t len);
 
     /** Read audio data from an already opened file.
     The audioData is returned with each column as an audio channel.

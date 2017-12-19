@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
   int ret=0;
   Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>  x; ///< The reference signal
   cout<<size<<endl;
-  if (ret=sox.openRead(buffer.data(), size))
+  if (ret=sox.openRead((intptr_t)buffer.data(), size))
     if (ret!=SOX_READ_MAXSCALE_ERROR)
       return SoxDebug().evaluateError(ret);
   sox.setMaxVal(10.);

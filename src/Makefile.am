@@ -94,12 +94,12 @@ all-local: libgtkIOStream.la libfft.la libdsp.la
 	@emcc --bind -s TOTAL_MEMORY=32MB --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libfft.so $(FFTW3_LIBS) -o .libs/libfft.js
 	mv .libs/libfft.js .libs/libfft.node
 	@emcc --bind --llvm-lto 1 --memory-init-file 0 -s "MODULARIZE=1" -s EXPORT_NAME="'libfft'" -s "BINARYEN_METHOD='native-wasm'" -s "WASM=1" -s ALLOW_MEMORY_GROWTH=1 $(AM_CXXFLAGS) .libs/libfft.so $(FFTW3_LIBS) -o .libs/libfft.js
-	@emcc --bind -s TOTAL_MEMORY=32MB --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkiostream.js
-	mv .libs/libgtkiostream.js .libs/libgtkiostream.node
-	@emcc --bind --llvm-lto 1 --memory-init-file 0 -s "MODULARIZE=1" -s EXPORT_NAME="'libgtkiostream'" -s "BINARYEN_METHOD='native-wasm'" -s "WASM=1" -s ALLOW_MEMORY_GROWTH=1 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkiostream.js
-#	@emcc --bind --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(FFTW3_LIBS) -o .libs/libgtkiostream.js
+	@emcc --bind -s TOTAL_MEMORY=32MB --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
+	mv .libs/libgtkIOStream.js .libs/libgtkIOStream.node
+	@emcc --bind --llvm-lto 1 --memory-init-file 0 -s "MODULARIZE=1" -s EXPORT_NAME="'libgtkIOStream'" -s "BINARYEN_METHOD='native-wasm'" -s "WASM=1" -s ALLOW_MEMORY_GROWTH=1 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
+#	@emcc --bind --llvm-lto 1 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(FFTW3_LIBS) -o .libs/libgtkIOStream.js
 install-exec-hook:
-	cp .libs/libfft.js .libs/libfft.wasm .libs/libgtkiostream.js .libs/libgtkiostream.wasm $(DESTDIR)$(libdir) #.libs/libfft.node
+	cp .libs/libfft.js .libs/libfft.wasm .libs/libgtkIOStream.js .libs/libgtkIOStream.wasm $(DESTDIR)$(libdir) #.libs/libfft.node
 clean-local:
-	@rm -f .libs/libfft.node .libs/libfft.js .libs/libfft.wasm .libs/libgtkiostream.js .libs/libgtkiostream.wasm
+	@rm -f .libs/libfft.node .libs/libfft.js .libs/libfft.wasm .libs/libgtkIOStream.js .libs/libgtkIOStream.wasm
 endif

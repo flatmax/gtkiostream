@@ -88,12 +88,18 @@ int Sox<FP_TYPE_>::openRead(string fileName) {
     return 0;
 }
 
+#include <iostream>
+
 template<typename FP_TYPE_>
-int Sox<FP_TYPE_>::openRead(void *buffer, size_t len){
+int Sox<FP_TYPE_>::openRead(intptr_t buffer, size_t len){
   bool inputFile=true;
   close(inputFile);
 
-  in = sox_open_mem_read(buffer, len, NULL, NULL, NULL);
+  // for (int i=0;i<len;i++)
+  //   std::cout<<(int)((char*)buffer)[i]<<'\t';
+  // std::cout<<std::endl;
+
+  in = sox_open_mem_read((void*)buffer, len, NULL, NULL, NULL);
   if (!in)
       return SOX_READ_FILE_OPEN_ERROR;
 
@@ -304,7 +310,7 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("getSample", &Sox<double>::getSample)
   .function("getRows", &Sox<double>::getRows)
   .function("getCols", &Sox<double>::getCols)
-  .function("openRead", emscripten::select_overload<int(void *, size_t)>(&Sox<double>::openRead), emscripten::allow_raw_pointers())
+  .function("openRead", emscripten::select_overload<int(intptr_t, size_t)>(&Sox<double>::openRead), emscripten::allow_raw_pointers())
   .function("read", &Sox<double>::readJS)
   ;
 }
