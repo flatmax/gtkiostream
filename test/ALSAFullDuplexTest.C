@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
 	const char deviceName[]="hw:0";
 	FullDuplexTest fullDuplex(deviceName, latency);
 	cout<<"opened the device "<<fullDuplex.Playback::getDeviceName()<<endl;
+	cout<<"channels max "<<fullDuplex.Playback::getMaxChannels()<<endl;
 
 	// we don't want defaults so reset and refil the params ...
 	int res=fullDuplex.resetParams();
