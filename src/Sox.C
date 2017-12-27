@@ -1,5 +1,5 @@
 /* This file was contributed by Deqx.com
-   Copyright 2000-2017 Matt Flax <flatmax@flatmax.org>
+   Copyright 2000-2018 Matt Flax <flatmax@flatmax.org>
    This file is part of GTK+ IOStream class set
 
    GTK+ IOStream is free software; you can redistribute it and/or modify

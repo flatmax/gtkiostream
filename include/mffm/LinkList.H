@@ -1,4 +1,4 @@
-/* Copyright 1998 - 2012 Matt Flax <flatmax@flatmax.org>
+/* Copyright 1998-2018 Matt Flax <flatmax@flatmax.org>
    This file is now part of MFFM VectorBass.
 
    MFFM VectorBass is free software; you can redistribute it and/or modify

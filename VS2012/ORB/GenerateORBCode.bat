@@ -1,4 +1,4 @@
-rem Copyright 2000-2017 Matt Flax <flatmax@flatmax.org>
+rem Copyright 2000-2018 Matt Flax <flatmax@flatmax.org>
 rem   This file is part of GTK+ IOStream class set
 rem
 rem   GTK+ IOStream is free software; you can redistribute it and/or modify
