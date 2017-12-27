@@ -123,7 +123,7 @@ public:
 #ifdef USE_GLIB_THREADS
         thread = g_thread_create((GThreadFunc)start_routine, (gpointer) data, TRUE, &threadErrorPtr);
         if (thread==NULL)
-            return THREAD_CREATE_ERROR;
+          return ThreadDebug().evaluateError(THREAD_CREATE_ERROR);
 #else
         pthread_attr_t attr; // by default assumed PTHREAD_EXPLICIT_SCHED
         pthread_attr_init(&attr);
