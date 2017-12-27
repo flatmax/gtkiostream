@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     cout<<"Usage:\n"<<argv[0]<<" audioFileName"<<endl;
     return -1;
   }
-  const string deviceName="hw:0";
+  const string deviceName="hw:0,0";
   Playback playBack(deviceName.c_str());
   cout<<"opened the device "<<playBack.getDeviceName()<<endl;
 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
   // we don't want defaults so reset and refil the params ...
   playBack.resetParams();
 
-  if ((res=playBack.setFormat(SND_PCM_FORMAT_S16_LE))<0)
+  if ((res=playBack.setFormat(SND_PCM_FORMAT_S32_LE))<0)
     return ALSADebug().evaluateError(res);
 
 #ifndef USE_INTERLEAVED
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
   //  cout<<"\nSW params"<<endl;
   //  playBack.dumpSWParams();
 
-  Eigen::Array<short int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> buffer;
+  Eigen::Array<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> buffer;
   size_t totalWritten=0;
   while (sox.read(buffer, pSize)>=0){
     if (buffer.rows()==0) // end of the file.
@@ -112,7 +112,8 @@ int main(int argc, char *argv[]) {
 #ifndef USE_INTERLEAVED
     playBack.writeBufN(buffer);
 #else
-    playBack<<buffer; // play the audio data
+// playBack<<buffer; // play the audio data
+playBack.writeBuf(buffer); // play the audio data
 #endif
     totalWritten+=buffer.rows();
   }
