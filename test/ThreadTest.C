@@ -192,5 +192,15 @@ int main(int argc, char *argv[]){
     waitingThread.cond.unLock(); // Unlock so the WaitingThread can continue.
 
     sleep(2); // wait for the waiting thread to complete
+
+    ForeverThread ft1;
+    cout<<"running forever thread"<<endl;
+    ft1.run(sched_get_priority_max(SCHED_FIFO));
+    ft1.getPriority();
+    //ft1.run(10);
+    sleep(2);
+    ft1.stop();
+    cout<<"Stopped"<<endl;
+
     return NO_ERROR;
 }

@@ -36,6 +36,7 @@
 #define THREAD_MUTEX_LOCKBUSY_WARNING -5+THREAD_ERROR_OFFSET ///< The mutex can't be locked as it is already locked.
 #define THREAD_NOTFOUND_ERROR -6+THREAD_ERROR_OFFSET ///< The thread can't be found
 #define THREAD_COND_WAITBUSY_ERROR -7+THREAD_ERROR_OFFSET ///< One or more threads is waiting on the Cond variable.
+#define THREAD_SCHED_ERROR -8+THREAD_ERROR_OFFSET ///< Scheduling setting error
 
 class ThreadDebug : public Debug {
 public:
@@ -49,6 +50,7 @@ public:
         errors[THREAD_MUTEX_LOCKBUSY_WARNING]=std::string("You are trying to lock a mutex which is already locked, you didn't acquire lock this time, try again.");
         errors[THREAD_NOTFOUND_ERROR]=std::string("That thread couldn't be found.");
         errors[THREAD_COND_WAITBUSY_ERROR]=std::string("One or more threads is waiting on the Cond variable. Can't destroy. ");
+        errors[THREAD_SCHED_ERROR]=std::string("Problem setting the scheduling. ");
 
 #endif
     }
@@ -66,6 +68,7 @@ class Thread {
 #else
     pthread_t thread; ///< The thread structure
 #endif
+
 public:
     /** Constructor
     */
@@ -113,12 +116,14 @@ public:
     /** Start a thread running start_routine, passing data to that function
     \param start_routine The function to run after the thread has been started
     \param data The argument to be pased to the thread
+    \param priority The priority to schedule with if =0 then don't set the priority (pthreads only)
     \return NO_ERROR on success or THREAD_CREATE_ERROR on failure
     */
 #ifdef USE_GLIB_THREADS
-    int run(void (*start_routine) (void *), void *data) {
+    int run(void (*start_routine) (void *), void *data, int priority=0) {
+      priority=0;
 #else
-    int run(void *(*start_routine) (void *), void *data) {
+    int run(void *(*start_routine) (void *), void *data, int priority=0) {
 #endif
 #ifdef USE_GLIB_THREADS
         thread = g_thread_create((GThreadFunc)start_routine, (gpointer) data, TRUE, &threadErrorPtr);
@@ -127,21 +132,64 @@ public:
 #else
         pthread_attr_t attr; // by default assumed PTHREAD_EXPLICIT_SCHED
         pthread_attr_init(&attr);
-        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+        int threadResp=0;
+
+        printf("entering set priority\n");
+        if (priority>0)
+          if (threadResp=setPriority(&attr, priority))
+            return threadResp;
+        printf("exited set priority\n");
+
+        if (threadResp=pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE))
+          return ThreadDebug().evaluateError(threadResp, "Thread::run : Thread setting detatch state failed.");
 //    int pthread_setcanceltype(int type, int *oldtype);
 
-        int threadResp=pthread_create(&thread, &attr, start_routine, data);
-        if (threadResp!=0) {
-            errno=threadResp;
-            perror("Thread::run : Thread creation failed.");
-        }
+          printf("create\n");
+        if (threadResp=pthread_create(&thread, &attr, start_routine, data))
+          return ThreadDebug().evaluateError(threadResp, "Thread::run : Thread creation failed.");
+
         pthread_attr_destroy(&attr);
-        //return threadResp;
+
         if (threadResp!=0)
             return ThreadDebug().evaluateError(THREAD_CREATE_ERROR);
 #endif
         return 0;
     }
+
+#ifndef USE_GLIB_THREADS
+  int setPriority(pthread_attr_t *attributes, int priority){
+    int res=0;
+    if ((res = pthread_attr_setinheritsched(attributes, PTHREAD_EXPLICIT_SCHED)))
+        return ThreadDebug().evaluateError(res, "Cannot request explicit scheduling for thread");
+
+    if ((res = pthread_attr_setscope(attributes, PTHREAD_SCOPE_SYSTEM)))
+      return ThreadDebug().evaluateError(res, "Cannot set scheduling scope for thread");
+
+    if ((res = pthread_attr_setschedpolicy(attributes, SCHED_FIFO)))
+      return ThreadDebug().evaluateError(res, "Cannot request schedule policy for thread");
+
+    struct sched_param rt_param;
+    memset(&rt_param, 0, sizeof(rt_param));
+    rt_param.sched_priority = priority;
+    if ((res = pthread_attr_setschedparam(attributes, &rt_param)))
+      return ThreadDebug().evaluateError(res, "Cannot set scheduling priority for thread");
+
+    return res;
+  }
+
+  int getPriority(){
+    int res;
+    struct sched_param rt_param;
+    memset(&rt_param, 0, sizeof(rt_param));
+    int policy;
+    if ((res=pthread_getschedparam(thread, &policy, &rt_param)) != 0)
+      return ThreadDebug().evaluateError(res," Getting sched param.");
+    printf("Thread policy is %d priority is %d\n",policy, rt_param.sched_priority);
+    if (policy != SCHED_FIFO)
+      return ThreadDebug().evaluateError(THREAD_SCHED_ERROR, "Scheduling is NOT SCHED_FIFO!\n");
+    return rt_param.sched_priority;
+  }
+#endif
 
     /** Wait for the thread to end
     \return If using USE_GLIB_THREADS then NULL, if using pthreads, then the argument passed to Thread::exit when called by the exiting thread.
@@ -209,10 +257,11 @@ public:
     virtual void *threadMain(void)=0;
 
     /** Start the threadMain in a new thread.
+    \param prioirity Set the priority for the thread e.g. sched_get_priority_max(SCHED_FIFO)
     \return NO_ERROR on success, or a suitable error on failure : THREAD_CREATE_ERROR
     */
-    virtual int run(void) {
-        return Thread::run(threadMainStatic, static_cast<void*>(this));
+    virtual int run(int priority=0) {
+        return Thread::run(threadMainStatic, static_cast<void*>(this), priority);
     }
 };
 
