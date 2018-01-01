@@ -86,12 +86,16 @@ typedef unsigned int uint;
 #define IIR_ERROR_OFFSET -40600 ///< Define JACK_ERROR_OFFSET in your code (<0) to offset the Jack client errors.
 #endif
 
+#ifndef FIR_ERROR_OFFSET
+#define FIR_ERROR_OFFSET -40650 ///< Define JACK_ERROR_OFFSET in your code (<0) to offset the Jack client errors.
+#endif
+
 // #ifndef DSF_ERROR_OFFSET
 // #define DSF_ERROR_OFFSET -40650
 // #endif
 
 #define MAX_ERROR_OFFSET DEBUG_ERROR_OFFSET ///< The lowest debug error magnitude from gtkiostream
-#define MIN_ERROR_OFFSET (IIR_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
+#define MIN_ERROR_OFFSET (FIR_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
 //#define MIN_ERROR_OFFSET (DSF_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
 
 #include <map>
