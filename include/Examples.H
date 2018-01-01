@@ -79,4 +79,6 @@
 \example ALSAPlaybackTest.C
 \example ALSACaptureTest.C
 \example IIRTest.C
+\example IIRCascadeTest.C
+\example FIRTest.C
 */

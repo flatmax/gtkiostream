@@ -34,13 +34,17 @@ using namespace std;
 
 #define FIR_BLOCKSIZE_MISMATCH_ERROR FIR_ERROR_OFFSET-1
 #define FIR_H_EMPTY_ERROR FIR_ERROR_OFFSET-2
+#define FIR_CHANNEL_MISMATCH_ERROR FIR_ERROR_OFFSET-3
 
+/** Debug class for the FIR class
+*/
 class FIRDebug :  virtual public Debug  {
 public:
     FIRDebug(){
 #ifndef NDEBUG
 errors[FIR_BLOCKSIZE_MISMATCH_ERROR]=std::string("The input data was not of the same length you used as the variable for the method init. ");
 errors[FIR_H_EMPTY_ERROR]=std::string("The fileter h is empty, please load using loadTimeDomainCoefficients. ");
+errors[FIR_CHANNEL_MISMATCH_ERROR]=std::string("The input, output and h columns (channels) are not the same count. ");
 
 #endif // NDEBUG
     }
@@ -57,11 +61,11 @@ You need to define the window size N for the algorithm using init.
 This assumes that all input audio data (which is filtered) will be of the same
 window size (block size) as the time domain coefficients.
 Call the filter method with input to convolve with h to produce the output.
+\example FIRTest.C
 */
 class FIR {
   Eigen::FFT<FP_TYPE> fft; ///< The fast Fourier transform
   Eigen::Array<Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, Eigen::Dynamic> H; ///< The DFT of the FIR coefficients
-  //Eigen::Array<FFT<FP_TYPE>::Complex, Eigen::Dynamic, 1> X; ///< The DFT of the FIR coefficients
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> h; ///< the time domain representation of the filter
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> x; ///< the time domain signal for filtering
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> y; ///< the time domain output signal
@@ -69,6 +73,8 @@ class FIR {
   Eigen::Array<Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, 1> Y; ///< the time domain filter output and also the DFT of one col of x
   unsigned int N; ///< Block size of the audio subsystem
 
+  /** Resets the H matrix once N or h is changed.
+  */
   void resetDFT();
 
 public:
@@ -87,7 +93,7 @@ public:
     int loadTimeDomainCoefficients(const std::string fileName);
 
     /** Method to load time domain coefficients from Matrix, convert to the Fourier domain and Construct the necessary data types.
-    \param h The Matrix with time domain coefficients. Each row is a different channel
+    \param h The Matrix with time domain coefficients. Each column is a different channel
     \return Negative value on error.
     */
     void loadTimeDomainCoefficients(const Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> hIn);
@@ -103,6 +109,10 @@ public:
         FIRDebug().evaluateError(FIR_BLOCKSIZE_MISMATCH_ERROR);
         return;
       }
+      if (input.cols()!=h.cols() || output.cols() != h.cols()){
+        FIRDebug().evaluateError(FIR_CHANNEL_MISMATCH_ERROR);
+        return;
+      }
       if (h.rows()==0) {
         FIRDebug().evaluateError(FIR_H_EMPTY_ERROR);
         return;
@@ -112,11 +122,8 @@ public:
         x.setZero(h.rows(), input.cols());
         y.setZero(h.rows(), input.cols());
       }
-      // cout<<"yBefore=["<<y<<"];"<<endl;
-      y.topRows(y.rows()-N)=y.bottomRows(y.rows()-N); // get the residual
-      // cout<<"yMid=["<<y<<"];"<<endl;
+      y.topRows(y.rows()-N)=y.bottomRows(y.rows()-N); // keep the residual
       y.bottomRows(N).setZero();
-      // cout<<"yAfter=["<<y<<"];"<<endl;
 
       x.topRows(N)=input;
 

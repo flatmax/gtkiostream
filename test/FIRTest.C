@@ -14,6 +14,7 @@
    You have received a copy of the GNU General Public License
    along with GTK+ IOStream
 */
+
 #include "DSP/FIR.H"
 #include <Octave.H>
 #include <iostream>
@@ -21,24 +22,27 @@ using namespace std;
 int main(int argc, char *argv[]){
 
     int N=100;
-    int chCnt=1;
+    int chCnt=2;
 
+    // Generate a filter
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> h;
     h=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(N,chCnt);
 
-    FIR fir;
-
+    // Generate the input data and reserve the output data space
     int Mx=10;
     int Nx=Mx*200;
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> x, y;
     x=Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>::Random(Nx,chCnt);
     y.setZero(x.rows(), x.cols());
 
+    // instantiate the FIR object
+    FIR fir;
     fir.init(Mx);
     fir.loadTimeDomainCoefficients(h);
-    for (int i=0; i<Nx/Mx; i++)
+    for (int i=0; i<Nx/Mx; i++) // apply the filter in windows of N samples
       fir.filter(x.block(i*Mx, 0, Mx, chCnt), y.block(i*Mx, 0, Mx, chCnt));
 
+    // Test with Octave's implementaiton.
     Octave octave; /// The octave instance
     vector<string> args(1); args[0]=string("");
     octave.startOctave(args);
@@ -55,6 +59,7 @@ int main(int argc, char *argv[]){
         yHat.col(i)=output[0];
     }
 
+    // calculate the dB of disagreement
     double err=(y-yHat).array().abs().sum()/(double)y.rows()/(double)y.cols();
     double rms=x.array().abs().sum()/(double)x.rows()/(double)x.cols();
     cout<<"rms="<<rms<<endl;
