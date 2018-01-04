@@ -27,11 +27,6 @@
 #include <unsupported/Eigen/FFT>
 #pragma GCC diagnostic pop
 
-
-// REMOVE THIS :
-#include <iostream>
-using namespace std;
-
 #define FIR_BLOCKSIZE_MISMATCH_ERROR FIR_ERROR_OFFSET-1
 #define FIR_H_EMPTY_ERROR FIR_ERROR_OFFSET-2
 #define FIR_CHANNEL_MISMATCH_ERROR FIR_ERROR_OFFSET-3
@@ -68,15 +63,15 @@ class FIR {
   Eigen::Array<Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, Eigen::Dynamic> H; ///< The DFT of the FIR coefficients
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> h; ///< the time domain representation of the filter
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> x; ///< the time domain signal for filtering
-  Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> y; ///< the time domain output signal
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, 1> yTemp; ///< the time domain signal for filtering
   Eigen::Array<Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, 1> Y; ///< the time domain filter output and also the DFT of one col of x
-  unsigned int N; ///< Block size of the audio subsystem
 
   /** Resets the H matrix once N or h is changed.
   */
   void resetDFT();
-
+protected:
+  unsigned int N; ///< Block size of the audio subsystem
+  Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> y; ///< the time domain output signal
 public:
     FIR(){N=0;} ///< Constructor
 
