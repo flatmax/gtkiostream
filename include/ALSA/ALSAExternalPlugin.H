@@ -102,11 +102,12 @@ public:
     \return 0 on success, < 0 on failure
     */
     virtual int hwParams(snd_pcm_hw_params_t *params){
-    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
-		copyFrom(params);
-		std::cout<<"channels : "<<getChannels()<<std::endl;
-		std::cout<<"fs       : "<<getSampleRate(0)<<" Hz"<<std::endl;
-        return 0;
+			std::cout<<__func__<<std::endl;
+			copyFrom(params);
+			std::cout<<"channels : "<<getChannels()<<std::endl;
+			std::cout<<"fs       : "<<getSampleRate(0)<<" Hz"<<std::endl;
+			std::cout<<"period sz: "<<getPeriodSize()<<" frames"<<std::endl;
+			return 0;
     }
 
     /** We have to specify hwparams

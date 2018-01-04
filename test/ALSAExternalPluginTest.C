@@ -46,23 +46,47 @@ public:
  		return ALSAExternalPlugin::parseConfig(name, conf, stream, mode);
 	}
 
+	virtual int hwParams(snd_pcm_hw_params_t *params){
+		std::cout<<__func__<<std::endl;
+		copyFrom(params);
+		cout<<"extplug.rate "<<extplug.rate<<endl;
+		cout<<"extplug.channels "<<extplug.channels<<endl;
+		cout<<"extplug.slave_channels "<<extplug.slave_channels<<endl;
+		cout<<"format "<<ALSA::Hardware::formatDescription(extplug.format)<<endl;
+		cout<<"slave format "<<ALSA::Hardware::formatDescription(extplug.slave_format)<<endl;
+
+		return 0;
+  }
+
 	virtual int specifyHWParams(){
 		//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
 		int ret;
-		snd_pcm_extplug_set_param_minmax(&extplug, SND_PCM_EXTPLUG_HW_CHANNELS, 2, 2);
-		snd_pcm_extplug_set_slave_param(&extplug, SND_PCM_EXTPLUG_HW_CHANNELS, 2);
-		cout<<Hardware::formatDescription(extplug.format)<<endl;
-		cout<<Hardware::formatDescription(extplug.slave_format)<<endl;
+		if ((ret=snd_pcm_extplug_set_param_minmax(&extplug, SND_PCM_EXTPLUG_HW_CHANNELS, 2, 2))!=0)
+      return ALSA::ALSADebug().evaluateError(ret);
+    if ((ret=snd_pcm_extplug_set_slave_param(&extplug, SND_PCM_EXTPLUG_HW_CHANNELS, 2))!=0)
+			return ALSA::ALSADebug().evaluateError(ret);
 
-		outFormat=SND_PCM_FORMAT_FLOAT_LE;
-//		outFormat=SND_PCM_FORMAT_S32_LE;
-		ret=snd_pcm_extplug_set_slave_param(&extplug, SND_PCM_EXTPLUG_HW_FORMAT, outFormat);
-		cout<<ret<<endl;
-//		inFormat=SND_PCM_FORMAT_S32_LE;
 		inFormat=SND_PCM_FORMAT_FLOAT_LE;
-		ret=snd_pcm_extplug_set_param(&extplug, SND_PCM_EXTPLUG_HW_FORMAT, inFormat);
-		cout<<ret<<endl;
+		outFormat=SND_PCM_FORMAT_FLOAT_LE;
+		if ((ret=snd_pcm_extplug_set_param(&extplug, SND_PCM_EXTPLUG_HW_FORMAT, inFormat))!=0)
+      return ALSA::ALSADebug().evaluateError(ret);
+    if ((ret=snd_pcm_extplug_set_slave_param(&extplug, SND_PCM_EXTPLUG_HW_FORMAT, outFormat))!=0)
+      return ALSA::ALSADebug().evaluateError(ret);
+		return 0;
+	}
 
+	virtual int init(){
+		cout<<__func__<<endl;
+		cout<<"period size "<<getPeriodSize()<<endl;
+		if (getPeriodSize()==0){
+			cout<<"can't have 0 period size, exiting"<<endl;
+			return -1;
+		}
+		cout<<"extplug.rate "<<extplug.rate<<endl;
+		cout<<"extplug.channels "<<extplug.channels<<endl;
+		cout<<"extplug.slave_channels "<<extplug.slave_channels<<endl;
+		cout<<"format "<<ALSA::Hardware::formatDescription(extplug.format)<<endl;
+		cout<<"slave format "<<ALSA::Hardware::formatDescription(extplug.slave_format)<<endl;
 		return 0;
 	}
 
