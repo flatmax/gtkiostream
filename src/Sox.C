@@ -305,7 +305,7 @@ int Sox<FP_TYPE_>::readJS(unsigned int count){
 #include <emscripten/bind.h>
 EMSCRIPTEN_BINDINGS(Sox_ex) {
   emscripten::class_<Sox<double>>("Sox")
-  .constructor() // the constructor takes in a size
+  .constructor()
   .function("printFormats", &Sox<double>::printFormats)
   .function("getSample", &Sox<double>::getSample)
   .function("getRows", &Sox<double>::getRows)
