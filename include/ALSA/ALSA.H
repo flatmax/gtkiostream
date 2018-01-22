@@ -34,6 +34,8 @@ namespace ALSA {
 	#define ALSA_NO_CHANNELS_ERROR -5+ALSA_ERROR_OFFSET ///< error when channel cnt is zero
 	#define ALSA_YOUR_PROCESS_FN_ERROR -6+ALSA_ERROR_OFFSET ///< error when calling the user's process function
 	#define ALSA_FORMAT_MISMATCH_ERROR -7+ALSA_ERROR_OFFSET ///< error when comparing bits sizes of two words
+	#define ALSA_MIXER_NOT_OPEN_ERROR -8+ALSA_ERROR_OFFSET ///< error when mixer pointer is null
+	#define ALSA_MIXER_QUERY_ERROR -9+ALSA_ERROR_OFFSET ///< error when attempting to query the mixer
 
 	class ALSADebug : public Debug {
 	public:
@@ -46,6 +48,8 @@ namespace ALSA {
 			errors[ALSA_NO_CHANNELS_ERROR]=std::string("No channels found. ");
 			errors[ALSA_YOUR_PROCESS_FN_ERROR]=std::string("Your process function returned error. ");
 			errors[ALSA_FORMAT_MISMATCH_ERROR]=std::string("The bits in the words don't match. ");
+			errors[ALSA_MIXER_NOT_OPEN_ERROR]=std::string("The mixer device isn't open, open first.");
+			errors[ALSA_MIXER_QUERY_ERROR]=std::string("The mixer query failed.");
 			#endif
 		}
 
@@ -64,9 +68,13 @@ namespace ALSA {
 	};
 
 	#define PCM_NOT_OPEN_CHECK_NO_PRINT(pcm, type) {if (!pcm) return (type)ALSADebug().evaluateError(ALSA_PCM_NOT_OPEN_ERROR);}
-	#define PCM_NOT_OPEN_CHECK_TYPED(pcm, type) {std::cout<<"\t\tfunc: "<<__func__<<'\n'; PCM_NOT_OPEN_CHECK_NO_PRINT(pcm, type)}
+	#define PCM_NOT_OPEN_CHECK_TYPED(pcm, type) {printf("\t\tfunc: %s\n",__func__); PCM_NOT_OPEN_CHECK_NO_PRINT(pcm, type)}
 	#define PCM_NOT_OPEN_CHECK(pcm) PCM_NOT_OPEN_CHECK_TYPED(pcm, int)
-	#define PCM_NOT_OPEN_CHECK_STRING(pcm) {std::cout<<"\t\tfunc: "<<__func__<<'\n'; if (!pcm) return "PCM not open error";}
+	#define PCM_NOT_OPEN_CHECK_STRING(pcm) {printf("\t\tfunc: %s\n",__func__); if (!pcm) return "PCM not open error";}
+
+	#define MIXER_NOT_OPEN_CHECK_NO_PRINT(handle, type) {if (!handle) return (type)ALSADebug().evaluateError(ALSA_MIXER_NOT_OPEN_ERROR);}
+	#define MIXER_NOT_OPEN_CHECK_TYPED(handle, type) {printf("\t\tfunc: %s\n",__func__); MIXER_NOT_OPEN_CHECK_NO_PRINT(handle, type)}
+	#define MIXER_NOT_OPEN_CHECK(handle) MIXER_NOT_OPEN_CHECK_TYPED(handle, int)
 
 	#define ALSA_DEFAULT_START_FS 48000
 	#define ALSA_DEFAULT_FORMAT SND_PCM_FORMAT_S16_LE
@@ -80,4 +88,5 @@ namespace ALSA {
 #include <ALSA/Playback.H>
 #include <ALSA/Capture.H>
 #include <ALSA/FullDuplex.H>
+#include <ALSA/Mixer.H>
 #endif // ALSA_H
