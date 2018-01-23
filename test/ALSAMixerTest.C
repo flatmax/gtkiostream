@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
 		return err;
 
 	mixer.scanMixer();
+	cout<<mixer<<endl;
 
 	if ((err=mixer.close())<0)
 		return err;

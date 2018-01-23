@@ -341,9 +341,12 @@ namespace ALSA {
       mixerElements.resize(0);
       for (snd_mixer_elem_t *elem = snd_mixer_first_elem(handle); elem; elem = snd_mixer_elem_next(elem))
         mixerElements.push_back(findCapabilities(elem));
+    }
 
-      for (int i=0; i<mixerElements.size(); i++)
-        std::cout<<mixerElements[i]<<std::endl;
+    friend std::ostream &operator<<(std::ostream &os, Mixer &m){
+      for (int i=0; i<m.mixerElements.size(); i++)
+        std::cout<<m.mixerElements[i]<<std::endl;
+      return os;
     }
   };
 }
