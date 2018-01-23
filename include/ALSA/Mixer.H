@@ -82,8 +82,9 @@ namespace ALSA {
   */
   class MixerElement {
   public:
-    std::string name;
-    unsigned int index;
+    std::string name; ///< The mixer element name
+    snd_mixer_elem_t *elem; ///< The pointer to the element
+    unsigned int index; ///< The mixer element index
     bool hasCommonVolume; ///< element has only one volume control for both playback and capture
     bool hasPlaybackVolume; ///< 0 if no control is present, 1 if it's present
     bool hasPlaybackVolumeJoined; ///< 0 if control is separated per channel, 1 if control acts on all channels together
@@ -110,6 +111,7 @@ namespace ALSA {
     MixerElement(){
       name="";
       index=0;
+      elem=NULL;
 
       playbackVolMax=playbackVolMin=0;
       playbackVolMaxDB=playbackVolMinDB=0.;
@@ -128,7 +130,8 @@ namespace ALSA {
       hasCaptureSwitchExclusive=false;
     }
 
-    MixerElement(snd_mixer_elem_t *elem){
+    MixerElement(snd_mixer_elem_t *e){
+      elem=e;
       name=snd_mixer_selem_get_name(elem);
       index=snd_mixer_selem_get_index(elem);
 
@@ -151,7 +154,7 @@ namespace ALSA {
 
       unsigned long chMask=1;
       for (int i=0; i<SND_MIXER_SCHN_LAST; i++)
-        if (snd_mixer_selem_has_playback_channel (elem, (snd_mixer_selem_channel_id_t)i)>0){
+        if (snd_mixer_selem_has_playback_channel(elem, (snd_mixer_selem_channel_id_t)i)>0){
           ChannelElement ce((snd_mixer_selem_channel_id_t)i);
           ce.getPlaybackLevels(elem);
           playbackVolumes.push_back(ce);
@@ -159,7 +162,7 @@ namespace ALSA {
 
       chMask=1;
       for (int i=0; i<SND_MIXER_SCHN_LAST; i++, chMask<<=1)
-        if (snd_mixer_selem_has_capture_channel (elem, (snd_mixer_selem_channel_id_t)i)>0){
+        if (snd_mixer_selem_has_capture_channel(elem, (snd_mixer_selem_channel_id_t)i)>0){
           ChannelElement ce((snd_mixer_selem_channel_id_t)i);
           ce.getCaptureLevels(elem);
           captureVolumes.push_back(ce);
@@ -171,8 +174,8 @@ namespace ALSA {
           long min, max;
           if (snd_mixer_selem_get_playback_dB_range(elem, &min, &max))
             ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "playback dB range");
-          playbackVolMinDB=ChannelElement((snd_mixer_selem_channel_id_t)0).toDB(min);
-          playbackVolMaxDB=ChannelElement((snd_mixer_selem_channel_id_t)0).toDB(max);
+          playbackVolMinDB=ChannelElement((snd_mixer_selem_channel_id_t)0).toDB(min); // dummy id
+          playbackVolMaxDB=ChannelElement((snd_mixer_selem_channel_id_t)0).toDB(max); // dummy id
         }
 
         if (hasCaptureVolume || hasCaptureVolumeJoined){
@@ -181,9 +184,85 @@ namespace ALSA {
           long min, max;
           if (snd_mixer_selem_get_capture_dB_range(elem, &min, &max))
             ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "capture dB range");
-          captureVolMinDB=ChannelElement((snd_mixer_selem_channel_id_t)0).toDB(min);
-          captureVolMaxDB=ChannelElement((snd_mixer_selem_channel_id_t)0).toDB(max);
+          captureVolMinDB=ChannelElement((snd_mixer_selem_channel_id_t)0).toDB(min); // dummy id
+          captureVolMaxDB=ChannelElement((snd_mixer_selem_channel_id_t)0).toDB(max); // dummy id
         }
+    }
+
+    /** Set the playback volume for all channels, returning the current playback volume
+    \param v The value to set
+    \return <0 on error or the current state of the volume
+    */
+    long setPlaybackVol(long v){
+      int err;
+      if (!hasPlaybackVolume || !hasPlaybackVolumeJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback volume and I tried to set it\n");
+      for (int i=0; i<playbackVolumes.size(); i++){
+        if ((err=snd_mixer_selem_set_playback_volume(elem, playbackVolumes[i].channel, v))<0)
+          return ALSADebug().evaluateError(err, name+" setting playback levels"+'\n');
+        if ((err=playbackVolumes[i].getPlaybackLevels(elem))<0) // refresh the playback level
+          return ALSADebug().evaluateError(err, name+" getting playback levels"+'\n');
+      }
+      return playbackVolumes[0].vol; // all channels have the same volume in this method
+    }
+
+    /** Set the playback volume for one channel, returning the current playback volume for that channel
+    \param channel The channel to set the volume on
+    \param v The value to set
+    \return <0 on error or the current state of the volume
+    */
+    long setPlaybackVol(snd_mixer_selem_channel_id_t channel, long v){
+      int err;
+      if (!hasPlaybackVolume || !hasPlaybackVolumeJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback volume and I tried to set it\n");
+      for (int i=0; i<playbackVolumes.size(); i++)
+        if (channel==playbackVolumes[i].channel){
+          if ((err=snd_mixer_selem_set_playback_volume (elem, playbackVolumes[i].channel, v))<0)
+            return ALSADebug().evaluateError(err, name+" setting playback level for this channel"+'\n');
+          if ((err=playbackVolumes[i].getPlaybackLevels(elem))<0) // refresh the playback level
+            return ALSADebug().evaluateError(err, name+" getting playback level for this channel"+'\n');
+          return playbackVolumes[i].vol; // all channels have the same volume in this method
+        }
+      return ALSADebug().evaluateError(ALSA_MIXER_NO_CHANNEL_ERROR, name+" channel not found");
+    }
+
+    /** Set the playback volume (in dB) for all channels, returning the current playback volume in dB
+    \param[in,out] dB The value to set and on return, then actual value
+    \return <0 on error - the current dB of the volume is returned in the parameter dB
+    */
+    int setPlaybackVolDB(double &dB){
+      int err;
+      if (!hasPlaybackVolume || !hasPlaybackVolumeJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback volume and I tried to set it\n");
+      for (int i=0; i<playbackVolumes.size(); i++){
+        if ((err=snd_mixer_selem_set_playback_dB(elem, playbackVolumes[i].channel, ChannelElement((snd_mixer_selem_channel_id_t)0).fromDB(dB), 1))<0)
+          return ALSADebug().evaluateError(err, name+" setting playback levels"+'\n');
+        if ((err=playbackVolumes[i].getPlaybackLevels(elem))<0) // refresh the playback level
+          return ALSADebug().evaluateError(err, name+" getting playback levels"+'\n');
+        dB=playbackVolumes[i].dB; // all channels have the same volume in this method
+      }
+      return 0;
+    }
+
+    /** Set the playback volume for one channel, returning the current playback volume for that channel
+    \param channel The channel to set the volume on
+    \param[in,out] dB The value to set and on return, then actual value
+    \return <0 on error - the current dB of the volume is returned in the parameter dB
+    */
+    long setPlaybackVolDB(snd_mixer_selem_channel_id_t channel, double dB){
+      int err;
+      if (!hasPlaybackVolume || !hasPlaybackVolumeJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback volume and I tried to set it\n");
+      for (int i=0; i<playbackVolumes.size(); i++)
+        if (channel==playbackVolumes[i].channel){
+          if ((err=snd_mixer_selem_set_playback_dB(elem, playbackVolumes[i].channel, ChannelElement((snd_mixer_selem_channel_id_t)0).fromDB(dB),1))<0) // dummy id
+            return ALSADebug().evaluateError(err, name+" setting playback level for this channel"+'\n');
+          if ((err=playbackVolumes[i].getPlaybackLevels(elem))<0) // refresh the playback level
+            return ALSADebug().evaluateError(err, name+" getting playback level for this channel"+'\n');
+          dB=playbackVolumes[0].dB; // all channels have the same volume in this method
+          return 0;
+        }
+      return ALSADebug().evaluateError(ALSA_MIXER_NO_CHANNEL_ERROR, name+" channel not found");
     }
 
     friend std::ostream &operator<<(std::ostream &os, MixerElement &me){
@@ -325,28 +404,52 @@ namespace ALSA {
       return err;
     }
 
-    /** Given a mixer element, find its capabilities and state
-    \param elem the ALSA mixer element
-    \return A populated MixerElement class
-    */
-    MixerElement findCapabilities(snd_mixer_elem_t *elem){
-      MixerElement me(elem);
-      return me;
-    }
-
     /** Scan the mixer to find capabilites and available controls.
     Upon completion, all playback and capture mixer elements are populated
     */
     void scanMixer(){
-      mixerElements.resize(0);
-      for (snd_mixer_elem_t *elem = snd_mixer_first_elem(handle); elem; elem = snd_mixer_elem_next(elem))
-        mixerElements.push_back(findCapabilities(elem));
+      if (!handle)
+        ALSADebug().evaluateError(ALSA_MIXER_NOT_OPEN_ERROR);
+      else {
+        mixerElements.resize(0);
+        for (snd_mixer_elem_t *elem = snd_mixer_first_elem(handle); elem; elem = snd_mixer_elem_next(elem))
+          mixerElements.push_back(MixerElement(elem));
+      }
     }
 
     friend std::ostream &operator<<(std::ostream &os, Mixer &m){
       for (int i=0; i<m.mixerElements.size(); i++)
         std::cout<<m.mixerElements[i]<<std::endl;
       return os;
+    }
+
+    /** Given a mixer element name, return the index of the element in the mixerElements
+    */
+    int getElementIndex(std::string name){
+      for (int i=0; i<mixerElements.size(); i++)
+        if (name.compare(mixerElements[i].name)==0)
+          return i;
+      return -1;
+    }
+
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    long setVol(std::string name, long v){
+      int i=getElementIndex(name);
+      return mixerElements[i].setPlaybackVol(v);
+    }
+
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    int setVolDB(std::string name, double &dB){
+      int i=getElementIndex(name);
+      return mixerElements[i].setPlaybackVolDB(dB);
     }
   };
 }

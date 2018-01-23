@@ -31,6 +31,15 @@ int main(int argc, char *argv[]) {
 	mixer.scanMixer();
 	cout<<mixer<<endl;
 
+	if ((err=mixer.setVol("Master", 50))<0)
+		return err;
+	cout<<"setting vol "<<err<<endl;
+	double dB=-10.;
+	cout<<"setting vol to "<<dB<<" dB"<<endl;
+	if ((err=mixer.setVolDB("Master", dB))<0)
+		return err;
+	cout<<"vol set to "<<dB<<" dB"<<endl;
+
 	if ((err=mixer.close())<0)
 		return err;
 	cout<<"exiting"<<endl;
