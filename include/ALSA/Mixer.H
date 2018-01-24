@@ -474,11 +474,35 @@ namespace ALSA {
     /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
     \param v The volume to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setVolJSON(std::string name, long v){
+      long val=setVol(name, v);
+      std::ostringstream ret;
+      ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
+      return ret.str();
+    }
+
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
     \return <0 on error otherwise, the current volume of the mixer element.
     */
     int setVolDB(std::string name, double &dB){
       int i=getElementIndex(name);
       return mixerElements[i].setPlaybackVolDB(dB);
+    }
+
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setVolDBJSON(std::string name, double &dB){
+      int err=setVolDB(name, dB);
+      std::ostringstream ret;
+      ret<<"{\"name\":\""<<name<<"\",\"val\":"<< ((err<0) ? err : dB) <<"}";
+      return ret.str();
     }
   };
 }

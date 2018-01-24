@@ -42,6 +42,10 @@ int main(int argc, char *argv[]) {
 		return err;
 	cout<<"vol set to "<<dB<<" dB"<<endl;
 
+	dB=-5;
+	string json=mixer.setVolDBJSON("Master", dB);
+	cout<<json<<endl;
+
 	if ((err=mixer.close())<0)
 		return err;
 	cout<<"exiting"<<endl;
