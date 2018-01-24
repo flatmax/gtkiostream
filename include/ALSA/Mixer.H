@@ -19,6 +19,7 @@
 
 #include <ALSA/ALSA.H>
 #include <string>
+#include <sstream>
 
 namespace ALSA {
 
@@ -440,6 +441,15 @@ namespace ALSA {
         os<<m.mixerElements[i]<< ((i<m.mixerElements.size()-1) ? ",\n" : "\n");
       os<<"]\n";
       return os;
+    }
+
+    /** Get the ALSA mixer information in a JSON string
+    \return Mixer state in a JSON string.
+    */
+    std::string getState(){
+      std::ostringstream oss;
+      oss<<*this;
+      return oss.str();
     }
 
     /** Given a mixer element name, return the index of the element in the mixerElements

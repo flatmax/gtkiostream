@@ -29,7 +29,9 @@ int main(int argc, char *argv[]) {
 		return err;
 
 	mixer.scanMixer();
-	cout<<mixer<<endl;
+	//	cout<<mixer<<endl;
+	string state=mixer.getState();
+	cout<<state<<endl;
 
 	if ((err=mixer.setVol("Master", 50))<0)
 		return err;
