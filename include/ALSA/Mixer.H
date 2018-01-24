@@ -25,6 +25,7 @@ namespace ALSA {
   /** Class to manage a channel volumes
   */
   class ChannelElement {
+  protected:
     long volDB;
   public:
     long vol;
@@ -37,6 +38,8 @@ namespace ALSA {
       channel=ch;
     }
 
+    virtual ~ChannelElement(){}
+
     double toDB(long v) const {
       return (double)v/100.;
     }
@@ -44,11 +47,25 @@ namespace ALSA {
       return (long)(d*100.);
     }
 
+    friend std::ostream &operator<<(std::ostream &os, ChannelElement &ce){
+      os<<"{\"channel\": "<<ce.channel<<", "<<"\"level\":"<<ce.vol<<", \"dB\":"<<ce.dB<<"}";
+      return os;
+    }
+  };
+
+  /** Class to manage a playback channel volumes
+  */
+  class ChannelPlaybackElement : public ChannelElement {
+  public:
+    ChannelPlaybackElement(snd_mixer_selem_channel_id_t ch) : ChannelElement(ch) {}
+
+    virtual ~ChannelPlaybackElement(){}
+
     /** Get the playback levels for this channel
     \param elem the mixer element to get playback levels for
     \return <0 on error
     */
-    int getPlaybackLevels(snd_mixer_elem_t *elem){
+    int getLevels(snd_mixer_elem_t *elem){
       int err=0;
       if ((err=snd_mixer_selem_get_playback_volume(elem, channel, &vol))<0)
         return ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "getting playback volume\n");
@@ -57,12 +74,20 @@ namespace ALSA {
       dB=toDB(volDB); // convert it to a dB value
       return 0;
     }
+  };
+
+  /** Class to manage a capture channel volumes
+  */
+  class ChannelCaptureElement : public ChannelElement {
+  public:
+    ChannelCaptureElement(snd_mixer_selem_channel_id_t ch) : ChannelElement(ch) {}
+    virtual ~ChannelCaptureElement(){}
 
     /** Get the capture levels for this channel
     \param elem the mixer element to get capture levels for
     \return <0 on error
     */
-    int getCaptureLevels(snd_mixer_elem_t *elem){
+    int getLevels(snd_mixer_elem_t *elem){
       int err=0;
       if ((err=snd_mixer_selem_get_capture_volume(elem, channel, &vol))<0)
         return ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "getting playback volume\n");
@@ -70,11 +95,6 @@ namespace ALSA {
         return ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "getting playback dB\n");
       dB=toDB(volDB); // convert it to a dB value
       return 0;
-    }
-
-    friend std::ostream &operator<<(std::ostream &os, ChannelElement &ce){
-      os<<"Channel "<<ce.channel<<'\t'<<"level = "<<ce.vol<<" dB = "<<ce.dB;
-      return os;
     }
   };
 
@@ -105,8 +125,8 @@ namespace ALSA {
     double captureVolMaxDB;
     double captureVolMinDB;
 
-    std::vector<ChannelElement> playbackVolumes; ///< Volume setting for each playback channel in this mixer element
-    std::vector<ChannelElement> captureVolumes; ///< Volume setting for each capture channel in this mixer element
+    std::vector<ChannelPlaybackElement> playbackVolumes; ///< Volume setting for each playback channel in this mixer element
+    std::vector<ChannelCaptureElement> captureVolumes; ///< Volume setting for each capture channel in this mixer element
   public:
     MixerElement(){
       name="";
@@ -155,17 +175,14 @@ namespace ALSA {
       unsigned long chMask=1;
       for (int i=0; i<SND_MIXER_SCHN_LAST; i++)
         if (snd_mixer_selem_has_playback_channel(elem, (snd_mixer_selem_channel_id_t)i)>0){
-          ChannelElement ce((snd_mixer_selem_channel_id_t)i);
-          ce.getPlaybackLevels(elem);
-          playbackVolumes.push_back(ce);
+          playbackVolumes.push_back(ChannelPlaybackElement((snd_mixer_selem_channel_id_t)i));
+          playbackVolumes[playbackVolumes.size()-1].getLevels(elem);
         }
 
-      chMask=1;
-      for (int i=0; i<SND_MIXER_SCHN_LAST; i++, chMask<<=1)
+      for (int i=0; i<SND_MIXER_SCHN_LAST; i++)
         if (snd_mixer_selem_has_capture_channel(elem, (snd_mixer_selem_channel_id_t)i)>0){
-          ChannelElement ce((snd_mixer_selem_channel_id_t)i);
-          ce.getCaptureLevels(elem);
-          captureVolumes.push_back(ce);
+          captureVolumes.push_back(ChannelCaptureElement((snd_mixer_selem_channel_id_t)i));
+          captureVolumes[captureVolumes.size()-1].getLevels(elem);
         }
 
         if (hasPlaybackVolume || hasPlaybackVolumeJoined){
@@ -189,6 +206,9 @@ namespace ALSA {
         }
     }
 
+    virtual ~MixerElement(){
+    }
+
     /** Set the playback volume for all channels, returning the current playback volume
     \param v The value to set
     \return <0 on error or the current state of the volume
@@ -200,7 +220,7 @@ namespace ALSA {
       for (int i=0; i<playbackVolumes.size(); i++){
         if ((err=snd_mixer_selem_set_playback_volume(elem, playbackVolumes[i].channel, v))<0)
           return ALSADebug().evaluateError(err, name+" setting playback levels"+'\n');
-        if ((err=playbackVolumes[i].getPlaybackLevels(elem))<0) // refresh the playback level
+        if ((err=playbackVolumes[i].getLevels(elem))<0) // refresh the playback level
           return ALSADebug().evaluateError(err, name+" getting playback levels"+'\n');
       }
       return playbackVolumes[0].vol; // all channels have the same volume in this method
@@ -219,7 +239,7 @@ namespace ALSA {
         if (channel==playbackVolumes[i].channel){
           if ((err=snd_mixer_selem_set_playback_volume (elem, playbackVolumes[i].channel, v))<0)
             return ALSADebug().evaluateError(err, name+" setting playback level for this channel"+'\n');
-          if ((err=playbackVolumes[i].getPlaybackLevels(elem))<0) // refresh the playback level
+          if ((err=playbackVolumes[i].getLevels(elem))<0) // refresh the playback level
             return ALSADebug().evaluateError(err, name+" getting playback level for this channel"+'\n');
           return playbackVolumes[i].vol; // all channels have the same volume in this method
         }
@@ -237,7 +257,7 @@ namespace ALSA {
       for (int i=0; i<playbackVolumes.size(); i++){
         if ((err=snd_mixer_selem_set_playback_dB(elem, playbackVolumes[i].channel, ChannelElement((snd_mixer_selem_channel_id_t)0).fromDB(dB), 1))<0)
           return ALSADebug().evaluateError(err, name+" setting playback levels"+'\n');
-        if ((err=playbackVolumes[i].getPlaybackLevels(elem))<0) // refresh the playback level
+        if ((err=playbackVolumes[i].getLevels(elem))<0) // refresh the playback level
           return ALSADebug().evaluateError(err, name+" getting playback levels"+'\n');
         dB=playbackVolumes[i].dB; // all channels have the same volume in this method
       }
@@ -257,7 +277,7 @@ namespace ALSA {
         if (channel==playbackVolumes[i].channel){
           if ((err=snd_mixer_selem_set_playback_dB(elem, playbackVolumes[i].channel, ChannelElement((snd_mixer_selem_channel_id_t)0).fromDB(dB),1))<0) // dummy id
             return ALSADebug().evaluateError(err, name+" setting playback level for this channel"+'\n');
-          if ((err=playbackVolumes[i].getPlaybackLevels(elem))<0) // refresh the playback level
+          if ((err=playbackVolumes[i].getLevels(elem))<0) // refresh the playback level
             return ALSADebug().evaluateError(err, name+" getting playback level for this channel"+'\n');
           dB=playbackVolumes[0].dB; // all channels have the same volume in this method
           return 0;
@@ -266,41 +286,35 @@ namespace ALSA {
     }
 
     friend std::ostream &operator<<(std::ostream &os, MixerElement &me){
-      os<<me.name<<'\n';
-      os<<me.index<<'\n';
+      os<<"{";
+      os<<"\"name\":\""<<me.name<<"\",\n";
+      os<<"\"index\":"<<me.index<<",\n";
+      os<<"\"hasCommonVolume\":"<<me.hasCommonVolume<<",\n";
+      os<<"\"hasPlaybackVolume\":"<<me.hasPlaybackVolume<<",\n";
+      os<<"\"hasPlaybackVolumeJoined\":"<<me.hasPlaybackVolumeJoined<<",\n";
+      os<<"\"hasCaptureVolume\":"<<me.hasCaptureVolume<<",\n";
+      os<<"\"hasCaptureVolumeJoined\":"<<me.hasCaptureVolumeJoined<<",\n";
+      os<<"\"hasCommonSwitch\":"<<me.hasCommonSwitch<<",\n";
+      os<<"\"hasPlaybackSwitch\":"<<me.hasPlaybackSwitch<<",\n";
+      os<<"\"hasPlaybackSwitchJoined\":"<<me.hasPlaybackSwitchJoined<<",\n";
+      os<<"\"hasCaptureSwitch\":"<<me.hasCaptureSwitch<<",\n";
+      os<<"\"hasCaptureSwitchJoined\":"<<me.hasCaptureSwitchJoined<<",\n";
+      os<<"\"hasCaptureSwitchExclusive\":"<<me.hasCaptureSwitchExclusive<<"\n";
 
-      if (me.hasCommonVolume)
-        os<<"Common Volume"<<'\n';
-      if (me.hasPlaybackVolume)
-        os<<"Playback Volume"<<'\n';
-      if (me.hasPlaybackVolumeJoined)
-        os<<"Playback Volume Joined"<<'\n';
-      if (me.hasCaptureVolume)
-        os<<"Capture Volume"<<'\n';
-      if (me.hasCaptureVolumeJoined)
-        os<<"Capture Volume Joined"<<'\n';
-      if (me.hasCommonSwitch)
-        os<<"Common Switch"<<'\n';
-      if (me.hasPlaybackSwitch)
-        os<<"Playback Switch"<<'\n';
-      if (me.hasPlaybackSwitchJoined)
-        os<<"Playback Switch Joined"<<'\n';
-      if (me.hasCaptureSwitch)
-        os<<"Capture Switch"<<'\n';
-      if (me.hasCaptureSwitchJoined)
-        os<<"Capture Switch Joined"<<'\n';
-      if (me.hasCaptureSwitchExclusive)
-        os<<"Capture Switch Exclusive"<<'\n';
+
       if (me.hasPlaybackVolume || me.hasPlaybackVolumeJoined){
-        os<<"Playback volume levels : "<<'\n';
+        os<<",\"playbackVolumes\":[\n";
         for (int i=0; i<me.playbackVolumes.size(); i++)
-          os<<me.playbackVolumes[i]<<'\n';
+          os<<me.playbackVolumes[i]<<((i<me.playbackVolumes.size()-1) ? ",\n" : "\n");
+        os<<"]\n";
       }
       if (me.hasCaptureVolume || me.hasCaptureVolumeJoined){
-        os<<"Capture volume levels : "<<'\n';
+        os<<",\"captureVolumes\":[\n";
         for (int i=0; i<me.captureVolumes.size(); i++)
-        os<<me.captureVolumes[i]<<'\n';
+          os<<me.captureVolumes[i]<<((i<me.captureVolumes.size()-1) ? ",\n" : "\n");
+        os<<"]\n";
       }
+      os<<"}";
       return os;
     }
   };
@@ -412,14 +426,19 @@ namespace ALSA {
         ALSADebug().evaluateError(ALSA_MIXER_NOT_OPEN_ERROR);
       else {
         mixerElements.resize(0);
-        for (snd_mixer_elem_t *elem = snd_mixer_first_elem(handle); elem; elem = snd_mixer_elem_next(elem))
+        for (snd_mixer_elem_t *elem = snd_mixer_first_elem(handle); elem; elem = snd_mixer_elem_next(elem)){
           mixerElements.push_back(MixerElement(elem));
+        }
       }
     }
 
+    /** output json data to an output stream
+    */
     friend std::ostream &operator<<(std::ostream &os, Mixer &m){
+      os<<"[\n";
       for (int i=0; i<m.mixerElements.size(); i++)
-        std::cout<<m.mixerElements[i]<<std::endl;
+        os<<m.mixerElements[i]<< ((i<m.mixerElements.size()-1) ? ",\n" : "\n");
+      os<<"]\n";
       return os;
     }
 
