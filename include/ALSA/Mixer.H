@@ -588,6 +588,10 @@ namespace ALSA {
       return 0;
     }
 
+    /** Open a card given the device name
+    \param card The device name
+    \return <0 on failure
+    */
     int openCard(std::string card){
       int err=0;
       if (handle)
@@ -670,7 +674,7 @@ namespace ALSA {
 
     /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
-    \param v The volume to set.
+    \param v The volume to set - updated on return to the actual value set.
     \return <0 on error otherwise, the current volume of the mixer element.
     */
     int setPlaybackVolDB(std::string name, double &dB){
@@ -678,12 +682,12 @@ namespace ALSA {
       return mixerElements[i].setPlaybackVolDB(dB);
     }
 
-    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned in a JSON format
     \param name The name of the mixer element to change
-    \param v The volume to set.
+    \param v The volume to set - not updated on return
     \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
     */
-    std::string setPlaybackVolDBJSON(std::string name, double &dB){
+    std::string setPlaybackVolDBJSON(std::string name, double dB){
       int err=setPlaybackVolDB(name, dB);
       std::ostringstream ret;
       ret<<"{\"name\":\""<<name<<"\",\"val\":"<< ((err<0) ? err : dB) <<"}";
@@ -692,8 +696,8 @@ namespace ALSA {
 
     /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
-    \param v The volume to set.
-    \return <0 on error otherwise, the current volume of the mixer element.
+    \param v The state to set.
+    \return <0 on error otherwise, the current state of the mixer element's switch.
     */
     int setPlaybackSwitch(std::string name, int v){
       int i=getElementIndex(name);
@@ -702,10 +706,10 @@ namespace ALSA {
 
     /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
-    \param v The switch state to set.
-    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    \param v The switch state to set - not updated on return
+    \return JSON object, with val<0 on error otherwise, the current state of the mixer element's switch
     */
-    std::string setPlaybackSwitchJSON(std::string name, int &v){
+    std::string setPlaybackSwitchJSON(std::string name, int v){
       int err=setPlaybackSwitch(name, v);
       std::ostringstream ret;
       ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
@@ -736,7 +740,7 @@ namespace ALSA {
 
     /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
-    \param v The volume to set.
+    \param v The volume to set - the value is updated on return
     \return <0 on error otherwise, the current volume of the mixer element.
     */
     int setCaptureVolDB(std::string name, double &dB){
@@ -744,12 +748,12 @@ namespace ALSA {
       return mixerElements[i].setCaptureVolDB(dB);
     }
 
-    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned in the JSON string
     \param name The name of the mixer element to change
-    \param v The volume to set.
+    \param v The volume to set - the value is not updated on return
     \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
     */
-    std::string setCaptureVolDBJSON(std::string name, double &dB){
+    std::string setCaptureVolDBJSON(std::string name, double dB){
       int err=setCaptureVolDB(name, dB);
       std::ostringstream ret;
       ret<<"{\"name\":\""<<name<<"\",\"val\":"<< ((err<0) ? err : dB) <<"}";
@@ -758,8 +762,8 @@ namespace ALSA {
 
     /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
-    \param v The volume to set.
-    \return <0 on error otherwise, the current volume of the mixer element.
+    \param v The switch state to set.
+    \return <0 on error otherwise, the current state of the mixer element's switch
     */
     int setCaptureSwitch(std::string name, int v){
       int i=getElementIndex(name);
@@ -769,9 +773,9 @@ namespace ALSA {
     /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
     \param v The switch state to set.
-    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    \return JSON object, with val<0 on error otherwise, the current state of the mixer element's swtich
     */
-    std::string setCaptureSwitchJSON(std::string name, int &v){
+    std::string setCaptureSwitchJSON(std::string name, int v){
       int err=setCaptureSwitch(name, v);
       std::ostringstream ret;
       ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
