@@ -33,17 +33,37 @@ int main(int argc, char *argv[]) {
 	string state=mixer.getState();
 	cout<<state<<endl;
 
-	if ((err=mixer.setVol("Master", 50))<0)
+	if ((err=mixer.setPlaybackVol("Master", 50))<0)
 		return err;
-	cout<<"setting vol "<<err<<endl;
 	double dB=-10.;
-	cout<<"setting vol to "<<dB<<" dB"<<endl;
-	if ((err=mixer.setVolDB("Master", dB))<0)
+	cout<<"setting playback vol to "<<dB<<" dB"<<endl;
+	if ((err=mixer.setPlaybackVolDB("Master", dB))<0)
 		return err;
 	cout<<"vol set to "<<dB<<" dB"<<endl;
 
-	dB=-5;
-	string json=mixer.setVolDBJSON("Master", dB);
+	dB=-5.;
+	cout<<"setting playback vol to "<<dB<<" dB"<<endl;
+	string json=mixer.setPlaybackVolDBJSON("Master", dB);
+	cout<<json<<endl;
+
+	dB=0.;
+	cout<<"setting capture vol to "<<dB<<" dB"<<endl;
+	json=mixer.setCaptureVolDBJSON("Capture", dB);
+	cout<<json<<endl;
+
+	int sw;
+	if ((sw=mixer.setPlaybackSwitch("Master", 0))<0)
+		return sw;
+	cout<<"Master switch = "<<sw<<endl;
+	sw=1;
+	json=mixer.setPlaybackSwitchJSON("Master", sw);
+	cout<<json<<endl;
+
+	if ((sw=mixer.setCaptureSwitch("Capture", 0))<0)
+		return sw;
+	cout<<"Capture switch = "<<sw<<endl;
+	sw=1;
+	json=mixer.setCaptureSwitchJSON("Capture", sw);
 	cout<<json<<endl;
 
 	if ((err=mixer.close())<0)

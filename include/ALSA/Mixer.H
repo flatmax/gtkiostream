@@ -27,10 +27,11 @@ namespace ALSA {
   */
   class ChannelElement {
   protected:
-    long volDB;
+    long volDB; ///< If the channel has a volume, this holds its state in 100*dB
   public:
-    long vol;
-    double dB;
+    long vol; ///< If the channel has a volume, this holds its state
+    double dB; ///< If the channel has a volume, this holds its state in dB
+    int sw; ///< If the channel has a switch, this holds its state
     snd_mixer_selem_channel_id_t channel;
 
     ChannelElement(snd_mixer_selem_channel_id_t ch){
@@ -44,13 +45,22 @@ namespace ALSA {
     double toDB(long v) const {
       return (double)v/100.;
     }
+
     long fromDB(double d) const {
       return (long)(d*100.);
     }
 
-    friend std::ostream &operator<<(std::ostream &os, ChannelElement &ce){
-      os<<"{\"channel\": "<<ce.channel<<", "<<"\"level\":"<<ce.vol<<", \"dB\":"<<ce.dB<<"}";
-      return os;
+    void outputLevel(std::ostream &os){
+      os<<"{\"channel\": "<<channel<<", "<<"\"level\":"<<vol<<", \"dB\":"<<dB<<"}";
+    }
+
+    void outputSwitch(std::ostream &os){
+      os<<"{\"channel\": "<<channel<<", "<<"\"switch\":"<<sw<<"}";
+    }
+
+    void outputLevelAndSwitch(std::ostream &os){
+      os<<"{\"channel\": "<<channel<<", "<<"\"level\":"<<vol<<", \"dB\":"<<dB
+            <<", "<<"\"switch\":"<<sw<<"}";
     }
   };
 
@@ -75,6 +85,17 @@ namespace ALSA {
       dB=toDB(volDB); // convert it to a dB value
       return 0;
     }
+
+    /** Get the switch state for this channel
+    \param elem the mixer element to get switch state for
+    \return <0 on error
+    */
+    int getSwitch(snd_mixer_elem_t *elem){
+      int err=0;
+      if ((err=snd_mixer_selem_get_playback_switch(elem, channel, &sw))<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "getting playback switch\n");
+      return 0;
+    }
   };
 
   /** Class to manage a capture channel volumes
@@ -91,10 +112,21 @@ namespace ALSA {
     int getLevels(snd_mixer_elem_t *elem){
       int err=0;
       if ((err=snd_mixer_selem_get_capture_volume(elem, channel, &vol))<0)
-        return ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "getting playback volume\n");
+        return ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "getting capture volume\n");
       if ((err=snd_mixer_selem_get_capture_dB(elem, channel, &volDB))<0)
-        return ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "getting playback dB\n");
+        return ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "getting capture dB\n");
       dB=toDB(volDB); // convert it to a dB value
+      return 0;
+    }
+
+    /** Get the switch state for this channel
+    \param elem the mixer element to get switch state for
+    \return <0 on error
+    */
+    int getSwitch(snd_mixer_elem_t *elem){
+      int err=0;
+      if ((err=snd_mixer_selem_get_capture_switch(elem, channel, &sw))<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_QUERY_ERROR, "getting catpure switch\n");
       return 0;
     }
   };
@@ -174,16 +206,23 @@ namespace ALSA {
       hasCaptureSwitchExclusive=snd_mixer_selem_has_capture_switch_exclusive(elem);
 
       unsigned long chMask=1;
-      for (int i=0; i<SND_MIXER_SCHN_LAST; i++)
+      for (int i=0; i<SND_MIXER_SCHN_LAST; i++){
         if (snd_mixer_selem_has_playback_channel(elem, (snd_mixer_selem_channel_id_t)i)>0){
           playbackVolumes.push_back(ChannelPlaybackElement((snd_mixer_selem_channel_id_t)i));
-          playbackVolumes[playbackVolumes.size()-1].getLevels(elem);
+          if (hasPlaybackVolume || hasPlaybackVolumeJoined)
+            playbackVolumes[playbackVolumes.size()-1].getLevels(elem);
+          if (hasCommonSwitch || hasPlaybackSwitch || hasPlaybackSwitchJoined)
+            playbackVolumes[playbackVolumes.size()-1].getSwitch(elem);
         }
+      }
 
       for (int i=0; i<SND_MIXER_SCHN_LAST; i++)
         if (snd_mixer_selem_has_capture_channel(elem, (snd_mixer_selem_channel_id_t)i)>0){
           captureVolumes.push_back(ChannelCaptureElement((snd_mixer_selem_channel_id_t)i));
-          captureVolumes[captureVolumes.size()-1].getLevels(elem);
+          if (hasCaptureVolume || hasCaptureVolumeJoined)
+            captureVolumes[captureVolumes.size()-1].getLevels(elem);
+          if (hasCommonSwitch || hasCaptureSwitch || hasCaptureSwitchJoined)
+            captureVolumes[captureVolumes.size()-1].getSwitch(elem);
         }
 
         if (hasPlaybackVolume || hasPlaybackVolumeJoined){
@@ -210,13 +249,30 @@ namespace ALSA {
     virtual ~MixerElement(){
     }
 
+    /** Set the playback switch state for all channels, returning the current playback switch state
+    \param v The value to set
+    \return <0 on error or the current state of the switch
+    */
+    int setPlaybackSwitch(int v){
+      int err;
+      if (!hasCommonSwitch && !hasPlaybackSwitch && !hasPlaybackSwitchJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback switch and I tried to set it\n");
+      for (int i=0; i<playbackVolumes.size(); i++){
+        if ((err=snd_mixer_selem_set_playback_switch(elem, playbackVolumes[i].channel, v))<0)
+          return ALSADebug().evaluateError(err, name+" setting playback switches"+'\n');
+        if ((err=playbackVolumes[i].getSwitch(elem))<0) // refresh the playback level
+          return ALSADebug().evaluateError(err, name+" getting playback switches"+'\n');
+      }
+      return playbackVolumes[0].sw; // all channels have the same volume in this method
+    }
+
     /** Set the playback volume for all channels, returning the current playback volume
     \param v The value to set
     \return <0 on error or the current state of the volume
     */
     long setPlaybackVol(long v){
       int err;
-      if (!hasPlaybackVolume || !hasPlaybackVolumeJoined)
+      if (!hasPlaybackVolume && !hasPlaybackVolumeJoined)
         return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback volume and I tried to set it\n");
       for (int i=0; i<playbackVolumes.size(); i++){
         if ((err=snd_mixer_selem_set_playback_volume(elem, playbackVolumes[i].channel, v))<0)
@@ -234,7 +290,7 @@ namespace ALSA {
     */
     long setPlaybackVol(snd_mixer_selem_channel_id_t channel, long v){
       int err;
-      if (!hasPlaybackVolume || !hasPlaybackVolumeJoined)
+      if (!hasPlaybackVolume && !hasPlaybackVolumeJoined)
         return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback volume and I tried to set it\n");
       for (int i=0; i<playbackVolumes.size(); i++)
         if (channel==playbackVolumes[i].channel){
@@ -253,7 +309,7 @@ namespace ALSA {
     */
     int setPlaybackVolDB(double &dB){
       int err;
-      if (!hasPlaybackVolume || !hasPlaybackVolumeJoined)
+      if (!hasPlaybackVolume && !hasPlaybackVolumeJoined)
         return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback volume and I tried to set it\n");
       for (int i=0; i<playbackVolumes.size(); i++){
         if ((err=snd_mixer_selem_set_playback_dB(elem, playbackVolumes[i].channel, ChannelElement((snd_mixer_selem_channel_id_t)0).fromDB(dB), 1))<0)
@@ -272,7 +328,7 @@ namespace ALSA {
     */
     long setPlaybackVolDB(snd_mixer_selem_channel_id_t channel, double dB){
       int err;
-      if (!hasPlaybackVolume || !hasPlaybackVolumeJoined)
+      if (!hasPlaybackVolume && !hasPlaybackVolumeJoined)
         return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback volume and I tried to set it\n");
       for (int i=0; i<playbackVolumes.size(); i++)
         if (channel==playbackVolumes[i].channel){
@@ -281,6 +337,99 @@ namespace ALSA {
           if ((err=playbackVolumes[i].getLevels(elem))<0) // refresh the playback level
             return ALSADebug().evaluateError(err, name+" getting playback level for this channel"+'\n');
           dB=playbackVolumes[0].dB; // all channels have the same volume in this method
+          return 0;
+        }
+      return ALSADebug().evaluateError(ALSA_MIXER_NO_CHANNEL_ERROR, name+" channel not found");
+    }
+
+    /** Set the capture switch state for all channels, returning the current capture switch state
+    \param v The value to set
+    \return <0 on error or the current state of the switch
+    */
+    int setCaptureSwitch(int v){
+      int err;
+      if (!hasCommonSwitch && !hasCaptureSwitch && !hasCaptureSwitchJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a capture switch and I tried to set it\n");
+      for (int i=0; i<captureVolumes.size(); i++){
+        if ((err=snd_mixer_selem_set_capture_switch(elem, captureVolumes[i].channel, v))<0)
+          return ALSADebug().evaluateError(err, name+" setting capture switches"+'\n');
+        if ((err=captureVolumes[i].getSwitch(elem))<0) // refresh the capture level
+          return ALSADebug().evaluateError(err, name+" getting capture switches"+'\n');
+      }
+      return captureVolumes[0].sw; // all channels have the same volume in this method
+    }
+
+    /** Set the capture volume for all channels, returning the current capture volume
+    \param v The value to set
+    \return <0 on error or the current state of the volume
+    */
+    long setCaptureVol(long v){
+      int err;
+      if (!hasCaptureVolume && !hasCaptureVolumeJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a capture volume and I tried to set it\n");
+      for (int i=0; i<captureVolumes.size(); i++){
+        if ((err=snd_mixer_selem_set_capture_volume(elem, captureVolumes[i].channel, v))<0)
+          return ALSADebug().evaluateError(err, name+" setting capture levels"+'\n');
+        if ((err=captureVolumes[i].getLevels(elem))<0) // refresh the capture level
+          return ALSADebug().evaluateError(err, name+" getting capture levels"+'\n');
+      }
+      return captureVolumes[0].vol; // all channels have the same volume in this method
+    }
+
+    /** Set the capture volume for one channel, returning the current capture volume for that channel
+    \param channel The channel to set the volume on
+    \param v The value to set
+    \return <0 on error or the current state of the volume
+    */
+    long setCaptureVol(snd_mixer_selem_channel_id_t channel, long v){
+      int err;
+      if (!hasCaptureVolume && !hasCaptureVolumeJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a capture volume and I tried to set it\n");
+      for (int i=0; i<captureVolumes.size(); i++)
+        if (channel==captureVolumes[i].channel){
+          if ((err=snd_mixer_selem_set_capture_volume (elem, captureVolumes[i].channel, v))<0)
+            return ALSADebug().evaluateError(err, name+" setting capture level for this channel"+'\n');
+          if ((err=captureVolumes[i].getLevels(elem))<0) // refresh the capture level
+            return ALSADebug().evaluateError(err, name+" getting capture level for this channel"+'\n');
+          return captureVolumes[i].vol; // all channels have the same volume in this method
+        }
+      return ALSADebug().evaluateError(ALSA_MIXER_NO_CHANNEL_ERROR, name+" channel not found");
+    }
+
+    /** Set the capture volume (in dB) for all channels, returning the current capture volume in dB
+    \param[in,out] dB The value to set and on return, then actual value
+    \return <0 on error - the current dB of the volume is returned in the parameter dB
+    */
+    int setCaptureVolDB(double &dB){
+      int err;
+      if (!hasCaptureVolume && !hasCaptureVolumeJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a capture volume and I tried to set it\n");
+      for (int i=0; i<captureVolumes.size(); i++){
+        if ((err=snd_mixer_selem_set_capture_dB(elem, captureVolumes[i].channel, ChannelElement((snd_mixer_selem_channel_id_t)0).fromDB(dB), 1))<0)
+          return ALSADebug().evaluateError(err, name+" setting capture levels"+'\n');
+        if ((err=captureVolumes[i].getLevels(elem))<0) // refresh the capture level
+          return ALSADebug().evaluateError(err, name+" getting capture levels"+'\n');
+        dB=captureVolumes[i].dB; // all channels have the same volume in this method
+      }
+      return 0;
+    }
+
+    /** Set the capture volume for one channel, returning the current capture volume for that channel
+    \param channel The channel to set the volume on
+    \param[in,out] dB The value to set and on return, then actual value
+    \return <0 on error - the current dB of the volume is returned in the parameter dB
+    */
+    long setCaptureVolDB(snd_mixer_selem_channel_id_t channel, double dB){
+      int err;
+      if (!hasCaptureVolume && !hasCaptureVolumeJoined)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a capture volume and I tried to set it\n");
+      for (int i=0; i<captureVolumes.size(); i++)
+        if (channel==captureVolumes[i].channel){
+          if ((err=snd_mixer_selem_set_capture_dB(elem, captureVolumes[i].channel, ChannelElement((snd_mixer_selem_channel_id_t)0).fromDB(dB),1))<0) // dummy id
+            return ALSADebug().evaluateError(err, name+" setting capture level for this channel"+'\n');
+          if ((err=captureVolumes[i].getLevels(elem))<0) // refresh the capture level
+            return ALSADebug().evaluateError(err, name+" getting capture level for this channel"+'\n');
+          dB=captureVolumes[0].dB; // all channels have the same volume in this method
           return 0;
         }
       return ALSADebug().evaluateError(ALSA_MIXER_NO_CHANNEL_ERROR, name+" channel not found");
@@ -302,19 +451,55 @@ namespace ALSA {
       os<<"\"hasCaptureSwitchJoined\":"<<me.hasCaptureSwitchJoined<<",\n";
       os<<"\"hasCaptureSwitchExclusive\":"<<me.hasCaptureSwitchExclusive<<"\n";
 
-
-      if (me.hasPlaybackVolume || me.hasPlaybackVolumeJoined){
+      if ((me.hasPlaybackVolume || me.hasPlaybackVolumeJoined) && (me.hasCommonSwitch || me.hasPlaybackSwitch || me.hasPlaybackSwitchJoined)){
         os<<",\"playbackVolumes\":[\n";
-        for (int i=0; i<me.playbackVolumes.size(); i++)
-          os<<me.playbackVolumes[i]<<((i<me.playbackVolumes.size()-1) ? ",\n" : "\n");
+        for (int i=0; i<me.playbackVolumes.size(); i++){
+          me.playbackVolumes[i].outputLevelAndSwitch(os);
+          os<<((i<me.playbackVolumes.size()-1) ? ",\n" : "\n");
+        }
         os<<"]\n";
-      }
-      if (me.hasCaptureVolume || me.hasCaptureVolumeJoined){
-        os<<",\"captureVolumes\":[\n";
-        for (int i=0; i<me.captureVolumes.size(); i++)
-          os<<me.captureVolumes[i]<<((i<me.captureVolumes.size()-1) ? ",\n" : "\n");
-        os<<"]\n";
-      }
+      } else
+          if (me.hasPlaybackVolume || me.hasPlaybackVolumeJoined){
+            os<<",\"playbackVolumes\":[\n";
+            for (int i=0; i<me.playbackVolumes.size(); i++){
+              me.playbackVolumes[i].outputLevel(os);
+              os<<((i<me.playbackVolumes.size()-1) ? ",\n" : "\n");
+            }
+            os<<"]\n";
+          } else
+            if (me.hasCommonSwitch || me.hasPlaybackSwitch || me.hasPlaybackSwitchJoined){
+              os<<",\"playbackVolumes\":[\n";
+              for (int i=0; i<me.playbackVolumes.size(); i++){
+                me.playbackVolumes[i].outputSwitch(os);
+                os<<((i<me.playbackVolumes.size()-1) ? ",\n" : "\n");
+              }
+              os<<"]\n";
+            }
+
+        if ((me.hasCaptureVolume || me.hasCaptureVolumeJoined) && (me.hasCommonSwitch || me.hasCaptureSwitch || me.hasCaptureSwitchJoined)){
+          os<<",\"captureVolumes\":[\n";
+          for (int i=0; i<me.captureVolumes.size(); i++){
+            me.captureVolumes[i].outputLevelAndSwitch(os);
+            os<<((i<me.captureVolumes.size()-1) ? ",\n" : "\n");
+          }
+          os<<"]\n";
+        } else
+            if (me.hasCaptureVolume || me.hasCaptureVolumeJoined){
+              os<<",\"captureVolumes\":[\n";
+              for (int i=0; i<me.captureVolumes.size(); i++){
+                me.captureVolumes[i].outputLevel(os);
+                os<<((i<me.captureVolumes.size()-1) ? ",\n" : "\n");
+              }
+              os<<"]\n";
+            } else
+              if (me.hasCommonSwitch || me.hasCaptureSwitch || me.hasCaptureSwitchJoined){
+                os<<",\"captureVolumes\":[\n";
+                for (int i=0; i<me.captureVolumes.size(); i++){
+                  me.captureVolumes[i].outputSwitch(os);
+                  os<<((i<me.captureVolumes.size()-1) ? ",\n" : "\n");
+                }
+                os<<"]\n";
+              }
       os<<"}";
       return os;
     }
@@ -466,7 +651,7 @@ namespace ALSA {
     \param v The volume to set.
     \return <0 on error otherwise, the current volume of the mixer element.
     */
-    long setVol(std::string name, long v){
+    long setPlaybackVol(std::string name, long v){
       int i=getElementIndex(name);
       return mixerElements[i].setPlaybackVol(v);
     }
@@ -476,8 +661,8 @@ namespace ALSA {
     \param v The volume to set.
     \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
     */
-    std::string setVolJSON(std::string name, long v){
-      long val=setVol(name, v);
+    std::string setPlaybackVolJSON(std::string name, long v){
+      long val=setPlaybackVol(name, v);
       std::ostringstream ret;
       ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
       return ret.str();
@@ -488,7 +673,7 @@ namespace ALSA {
     \param v The volume to set.
     \return <0 on error otherwise, the current volume of the mixer element.
     */
-    int setVolDB(std::string name, double &dB){
+    int setPlaybackVolDB(std::string name, double &dB){
       int i=getElementIndex(name);
       return mixerElements[i].setPlaybackVolDB(dB);
     }
@@ -498,12 +683,101 @@ namespace ALSA {
     \param v The volume to set.
     \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
     */
-    std::string setVolDBJSON(std::string name, double &dB){
-      int err=setVolDB(name, dB);
+    std::string setPlaybackVolDBJSON(std::string name, double &dB){
+      int err=setPlaybackVolDB(name, dB);
       std::ostringstream ret;
       ret<<"{\"name\":\""<<name<<"\",\"val\":"<< ((err<0) ? err : dB) <<"}";
       return ret.str();
     }
+
+    /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    int setPlaybackSwitch(std::string name, int v){
+      int i=getElementIndex(name);
+      return mixerElements[i].setPlaybackSwitch(v);
+    }
+
+    /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The switch state to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setPlaybackSwitchJSON(std::string name, int &v){
+      int err=setPlaybackSwitch(name, v);
+      std::ostringstream ret;
+      ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
+      return ret.str();
+    }
+
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    long setCaptureVol(std::string name, long v){
+      int i=getElementIndex(name);
+      return mixerElements[i].setCaptureVol(v);
+    }
+
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setCaptureVolJSON(std::string name, long v){
+      long val=setCaptureVol(name, v);
+      std::ostringstream ret;
+      ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
+      return ret.str();
+    }
+
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    int setCaptureVolDB(std::string name, double &dB){
+      int i=getElementIndex(name);
+      return mixerElements[i].setCaptureVolDB(dB);
+    }
+
+    /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setCaptureVolDBJSON(std::string name, double &dB){
+      int err=setCaptureVolDB(name, dB);
+      std::ostringstream ret;
+      ret<<"{\"name\":\""<<name<<"\",\"val\":"<< ((err<0) ? err : dB) <<"}";
+      return ret.str();
+    }
+
+    /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The volume to set.
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    int setCaptureSwitch(std::string name, int v){
+      int i=getElementIndex(name);
+      return mixerElements[i].setCaptureSwitch(v);
+    }
+
+    /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The switch state to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setCaptureSwitchJSON(std::string name, int &v){
+      int err=setCaptureSwitch(name, v);
+      std::ostringstream ret;
+      ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
+      return ret.str();
+    }
+
   };
 }
 #endif // MIXER_H_
