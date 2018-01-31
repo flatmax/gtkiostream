@@ -41,7 +41,6 @@ namespace ALSA {
 	#define ALSA_MIXER_NO_CHANNEL_ERROR -12+ALSA_ERROR_OFFSET ///< error when we can't find the prescribed channel
 	#define ALSA_MIXER_NO_PLAYBACK_VOL_ERROR -13+ALSA_ERROR_OFFSET ///< error this mixer element is not a playback element
 	#define ALSA_MIXER_NO_CAPTURE_VOL_ERROR -13+ALSA_ERROR_OFFSET ///< error this mixer element is not a playback element
-
 	class ALSADebug : public Debug {
 	public:
 		ALSADebug(void) {
@@ -55,7 +54,7 @@ namespace ALSA {
 			errors[ALSA_FORMAT_MISMATCH_ERROR]=std::string("The bits in the words don't match. ");
 			errors[ALSA_MIXER_NOT_OPEN_ERROR]=std::string("The mixer device isn't open, open first.");
 			errors[ALSA_MIXER_QUERY_ERROR]=std::string("The mixer query failed.");
-			errors[ALSA_MIXER_FIND_ELEMENT_ERROR]=std::string("Failed to fin the element.");
+			errors[ALSA_MIXER_FIND_ELEMENT_ERROR]=std::string("Failed to find the element.");
 			errors[ALSA_MIXER_WRONG_ELEMENT_ERROR]=std::string("The two mixer elements are different.");
 			errors[ALSA_MIXER_NO_CHANNEL_ERROR]=std::string("That channel couldn't be found.");
 			errors[ALSA_MIXER_NO_PLAYBACK_VOL_ERROR]=std::string("That mixer element doesn't have a playback vol control.");

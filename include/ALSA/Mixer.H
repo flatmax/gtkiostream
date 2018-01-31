@@ -657,6 +657,8 @@ namespace ALSA {
     */
     long setPlaybackVol(std::string name, long v){
       int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
       return mixerElements[i].setPlaybackVol(v);
     }
 
@@ -668,7 +670,10 @@ namespace ALSA {
     std::string setPlaybackVolJSON(std::string name, long v){
       long val=setPlaybackVol(name, v);
       std::ostringstream ret;
-      ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
+      if (val<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< val <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
       return ret.str();
     }
 
@@ -679,6 +684,8 @@ namespace ALSA {
     */
     int setPlaybackVolDB(std::string name, double &dB){
       int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
       return mixerElements[i].setPlaybackVolDB(dB);
     }
 
@@ -690,7 +697,10 @@ namespace ALSA {
     std::string setPlaybackVolDBJSON(std::string name, double dB){
       int err=setPlaybackVolDB(name, dB);
       std::ostringstream ret;
-      ret<<"{\"name\":\""<<name<<"\",\"val\":"<< ((err<0) ? err : dB) <<"}";
+      if (err<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"val\":"<< dB <<"}";
       return ret.str();
     }
 
@@ -701,6 +711,8 @@ namespace ALSA {
     */
     int setPlaybackSwitch(std::string name, int v){
       int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
       return mixerElements[i].setPlaybackSwitch(v);
     }
 
@@ -712,7 +724,10 @@ namespace ALSA {
     std::string setPlaybackSwitchJSON(std::string name, int v){
       int err=setPlaybackSwitch(name, v);
       std::ostringstream ret;
-      ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
+      if (err<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
       return ret.str();
     }
 
@@ -723,6 +738,8 @@ namespace ALSA {
     */
     long setCaptureVol(std::string name, long v){
       int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
       return mixerElements[i].setCaptureVol(v);
     }
 
@@ -734,7 +751,10 @@ namespace ALSA {
     std::string setCaptureVolJSON(std::string name, long v){
       long val=setCaptureVol(name, v);
       std::ostringstream ret;
-      ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
+      if (val<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< val <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
       return ret.str();
     }
 
@@ -745,6 +765,8 @@ namespace ALSA {
     */
     int setCaptureVolDB(std::string name, double &dB){
       int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
       return mixerElements[i].setCaptureVolDB(dB);
     }
 
@@ -756,7 +778,10 @@ namespace ALSA {
     std::string setCaptureVolDBJSON(std::string name, double dB){
       int err=setCaptureVolDB(name, dB);
       std::ostringstream ret;
-      ret<<"{\"name\":\""<<name<<"\",\"val\":"<< ((err<0) ? err : dB) <<"}";
+      if (err<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"val\":"<< dB <<"}";
       return ret.str();
     }
 
@@ -767,6 +792,8 @@ namespace ALSA {
     */
     int setCaptureSwitch(std::string name, int v){
       int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
       return mixerElements[i].setCaptureSwitch(v);
     }
 
@@ -778,7 +805,10 @@ namespace ALSA {
     std::string setCaptureSwitchJSON(std::string name, int v){
       int err=setCaptureSwitch(name, v);
       std::ostringstream ret;
-      ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
+      if (err<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
       return ret.str();
     }
 
