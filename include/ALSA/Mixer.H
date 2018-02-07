@@ -451,6 +451,20 @@ namespace ALSA {
       os<<"\"hasCaptureSwitchJoined\":"<<me.hasCaptureSwitchJoined<<",\n";
       os<<"\"hasCaptureSwitchExclusive\":"<<me.hasCaptureSwitchExclusive<<"\n";
 
+      if (me.hasPlaybackVolume || me.hasPlaybackVolumeJoined){
+        os<<",\"playbackVolMax\":"<<me.playbackVolMax<<"\n";
+        os<<",\"playbackVolMin\":"<<me.playbackVolMin<<"\n";
+        os<<",\"playbackVolMaxDB\":"<<me.playbackVolMaxDB<<"\n";
+        os<<",\"playbackVolMinDB\":"<<me.playbackVolMinDB<<"\n";
+      }
+
+      if (me.hasCaptureVolume || me.hasCaptureVolumeJoined){
+        os<<",\"captureVolMax\":"<<me.captureVolMax<<"\n";
+        os<<",\"captureVolMin\":"<<me.captureVolMin<<"\n";
+        os<<",\"captureVolMaxDB\":"<<me.captureVolMaxDB<<"\n";
+        os<<",\"captureVolMinDB\":"<<me.captureVolMinDB<<"\n";
+      }
+
       if ((me.hasPlaybackVolume || me.hasPlaybackVolumeJoined) && (me.hasCommonSwitch || me.hasPlaybackSwitch || me.hasPlaybackSwitchJoined)){
         os<<",\"playbackVolumes\":[\n";
         for (int i=0; i<me.playbackVolumes.size(); i++){
