@@ -41,9 +41,25 @@ int main(int argc, char *argv[]) {
 		return err;
 	cout<<"vol set to "<<dB<<" dB"<<endl;
 
+	long val=10;
+	cout<<"setting PCM channel 1 vol to "<<val<<endl;
+	if ((err=mixer.setPlaybackChVol("PCM", (snd_mixer_selem_channel_id_t)1, val))<0)
+		return err;
+	cout<<"PCM channel 1 vol is now "<<val<<endl;
+	dB=-10.;
+	cout<<"setting PCM ch 0 playback vol to "<<dB<<" dB"<<endl;
+	if ((err=mixer.setPlaybackChVolDB("PCM", (snd_mixer_selem_channel_id_t)0, dB))<0)
+		return err;
+	cout<<"vol set to "<<dB<<" dB"<<endl;
+
 	dB=-5.;
 	cout<<"setting playback vol to "<<dB<<" dB"<<endl;
 	string json=mixer.setPlaybackVolDBJSON("Master", dB);
+	cout<<json<<endl;
+
+	dB=-5.1;
+	cout<<"setting PCM playback ch 1 vol to "<<dB<<" dB"<<endl;
+	json=mixer.setPlaybackChVolDBJSON("PCM", (snd_mixer_selem_channel_id_t)1, dB);
 	cout<<json<<endl;
 
 	dB=0.;

@@ -326,7 +326,7 @@ namespace ALSA {
     \param[in,out] dB The value to set and on return, then actual value
     \return <0 on error - the current dB of the volume is returned in the parameter dB
     */
-    long setPlaybackVolDB(snd_mixer_selem_channel_id_t channel, double dB){
+    long setPlaybackVolDB(snd_mixer_selem_channel_id_t channel, double &dB){
       int err;
       if (!hasPlaybackVolume && !hasPlaybackVolumeJoined)
         return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback volume and I tried to set it\n");
@@ -336,7 +336,7 @@ namespace ALSA {
             return ALSADebug().evaluateError(err, name+" setting playback level for this channel"+'\n');
           if ((err=playbackVolumes[i].getLevels(elem))<0) // refresh the playback level
             return ALSADebug().evaluateError(err, name+" getting playback level for this channel"+'\n');
-          dB=playbackVolumes[0].dB; // all channels have the same volume in this method
+          dB=playbackVolumes[i].dB; // all channels have the same volume in this method
           return 0;
         }
       return ALSADebug().evaluateError(ALSA_MIXER_NO_CHANNEL_ERROR, name+" channel not found");
@@ -419,7 +419,7 @@ namespace ALSA {
     \param[in,out] dB The value to set and on return, then actual value
     \return <0 on error - the current dB of the volume is returned in the parameter dB
     */
-    long setCaptureVolDB(snd_mixer_selem_channel_id_t channel, double dB){
+    long setCaptureVolDB(snd_mixer_selem_channel_id_t channel, double &dB){
       int err;
       if (!hasCaptureVolume && !hasCaptureVolumeJoined)
         return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a capture volume and I tried to set it\n");
@@ -429,7 +429,7 @@ namespace ALSA {
             return ALSADebug().evaluateError(err, name+" setting capture level for this channel"+'\n');
           if ((err=captureVolumes[i].getLevels(elem))<0) // refresh the capture level
             return ALSADebug().evaluateError(err, name+" getting capture level for this channel"+'\n');
-          dB=captureVolumes[0].dB; // all channels have the same volume in this method
+          dB=captureVolumes[i].dB; // all channels have the same volume in this method
           return 0;
         }
       return ALSADebug().evaluateError(ALSA_MIXER_NO_CHANNEL_ERROR, name+" channel not found");
@@ -676,6 +676,19 @@ namespace ALSA {
       return mixerElements[i].setPlaybackVol(v);
     }
 
+    /** Set the volume of a mixer element's channel, given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set.
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    long setPlaybackChVol(std::string name, snd_mixer_selem_channel_id_t channel, long v){
+      int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
+      return mixerElements[i].setPlaybackVol(channel, v);
+    }
+
     /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
     \param v The volume to set.
@@ -683,6 +696,22 @@ namespace ALSA {
     */
     std::string setPlaybackVolJSON(std::string name, long v){
       long val=setPlaybackVol(name, v);
+      std::ostringstream ret;
+      if (val<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< val <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
+      return ret.str();
+    }
+
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setPlaybackChVolJSON(std::string name, snd_mixer_selem_channel_id_t channel, long v){
+      long val=setPlaybackChVol(name, channel, v);
       std::ostringstream ret;
       if (val<0)
         ret<<"{\"name\":\""<<name<<"\",\"error\":"<< val <<"}";
@@ -703,6 +732,19 @@ namespace ALSA {
       return mixerElements[i].setPlaybackVolDB(dB);
     }
 
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set - updated on return to the actual value set.
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    int setPlaybackChVolDB(std::string name, snd_mixer_selem_channel_id_t channel, double &dB){
+      int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
+      return mixerElements[i].setPlaybackVolDB(channel, dB);
+    }
+
     /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned in a JSON format
     \param name The name of the mixer element to change
     \param v The volume to set - not updated on return
@@ -710,6 +752,22 @@ namespace ALSA {
     */
     std::string setPlaybackVolDBJSON(std::string name, double dB){
       int err=setPlaybackVolDB(name, dB);
+      std::ostringstream ret;
+      if (err<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"val\":"<< dB <<"}";
+      return ret.str();
+    }
+
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned in a JSON format
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set - not updated on return
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setPlaybackChVolDBJSON(std::string name, snd_mixer_selem_channel_id_t channel, double dB){
+      int err=setPlaybackChVolDB(name, channel, dB);
       std::ostringstream ret;
       if (err<0)
         ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
@@ -757,6 +815,19 @@ namespace ALSA {
       return mixerElements[i].setCaptureVol(v);
     }
 
+    /** Set the volume of a mixer element's channel, given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set.
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    long setCaptureVol(std::string name, snd_mixer_selem_channel_id_t channel, long v){
+      int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
+      return mixerElements[i].setCaptureVol(channel, v);
+    }
+
     /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
     \param v The volume to set.
@@ -764,6 +835,22 @@ namespace ALSA {
     */
     std::string setCaptureVolJSON(std::string name, long v){
       long val=setCaptureVol(name, v);
+      std::ostringstream ret;
+      if (val<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< val <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
+      return ret.str();
+    }
+
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setCaptureChVolJSON(std::string name, snd_mixer_selem_channel_id_t channel, long v){
+      long val=setCaptureVol(name, channel, v);
       std::ostringstream ret;
       if (val<0)
         ret<<"{\"name\":\""<<name<<"\",\"error\":"<< val <<"}";
@@ -784,6 +871,19 @@ namespace ALSA {
       return mixerElements[i].setCaptureVolDB(dB);
     }
 
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set - the value is updated on return
+    \return <0 on error otherwise, the current volume of the mixer element.
+    */
+    int setCaptureChVolDB(std::string name, snd_mixer_selem_channel_id_t channel, double &dB){
+      int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
+      return mixerElements[i].setCaptureVolDB(channel, dB);
+    }
+
     /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned in the JSON string
     \param name The name of the mixer element to change
     \param v The volume to set - the value is not updated on return
@@ -791,6 +891,22 @@ namespace ALSA {
     */
     std::string setCaptureVolDBJSON(std::string name, double dB){
       int err=setCaptureVolDB(name, dB);
+      std::ostringstream ret;
+      if (err<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"val\":"<< dB <<"}";
+      return ret.str();
+    }
+
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned in the JSON string
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set - the value is not updated on return
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setCaptureChVolDBJSON(std::string name, snd_mixer_selem_channel_id_t channel, double dB){
+      int err=setCaptureChVolDB(name, channel, dB);
       std::ostringstream ret;
       if (err<0)
         ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
