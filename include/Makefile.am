@@ -42,7 +42,7 @@ nobase_oldinclude_HEADERS = mffm/BST.H mffm/HeapTreeType.H mffm/HeapTree.H mffm/
                             IIO/IIO.H IIO/IIODevice.H IIO/IIOChannel.H IIO/IIOThreaded.H IIO/IIOThreadedQ.H IIO/IIOMMap.H posixForMicrosoft/dirent.h \
                             ALSA/ALSA.H ALSA/ALSAExternalPlugin.H ALSA/FullDuplex.H ALSA/PCM.H ALSA/Software.H \
 														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H DSP/IIR.H DSP/IIRCascade.H DSP/FIR.H \
-                            ALSA/Mixer.H ALSA/MixerElement.H
+                            ALSA/Mixer.H ALSA/MixerElement.H ALSA/ALSADebug.H
 
 nobase_oldinclude_HEADERS += xpm/play.xpm
 
