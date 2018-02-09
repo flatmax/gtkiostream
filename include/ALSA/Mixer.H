@@ -156,6 +156,20 @@ namespace ALSA {
       return oss.str();
     }
 
+    /** Get the ALSA mixer information in a JSON string
+    \param name The name of the mixer element to get the state of
+    \return Mixer state in a JSON string.
+    */
+    std::string getElementState(std::string name){
+      int i=getElementIndex(name);
+      std::ostringstream oss;
+      if (i<0)
+        oss<<"{\"name\":\""<<name<<"\",\"error\":"<< ALSA_MIXER_FIND_ELEMENT_ERROR <<"}";
+      else
+        oss<<mixerElements[i];
+      return oss.str();
+    }
+
     /** Given a mixer element name, return the index of the element in the mixerElements
     */
     int getElementIndex(std::string name){

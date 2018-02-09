@@ -51,6 +51,8 @@ int main(int argc, char *argv[]) {
 	if ((err=mixer.setPlaybackChVolDB("PCM", (snd_mixer_selem_channel_id_t)0, dB))<0)
 		return err;
 	cout<<"vol set to "<<dB<<" dB"<<endl;
+	cout<<"\n mixer PCM state is now : "<<endl;
+	cout << mixer.getElementState("PCM")<<endl;
 
 	dB=-5.;
 	cout<<"setting playback vol to "<<dB<<" dB"<<endl;
