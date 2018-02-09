@@ -714,10 +714,20 @@ namespace ALSA {
       long val=setPlaybackChVol(name, channel, v);
       std::ostringstream ret;
       if (val<0)
-        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< val <<"}";
+        ret<<"{\"name\":\""<<name<<"\",\"channel\":"<< channel<<",\"error\":"<< val <<"}";
       else
-        ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
+        ret<<"{\"name\":\""<<name<<"\",\"channel\":"<< channel<<",\"val\":"<<val<<"}";
       return ret.str();
+    }
+
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setPlaybackChVolJSON(std::string name, int channel, long v){
+      return setPlaybackChVolJSON(name, (snd_mixer_selem_channel_id_t) channel, v);
     }
 
     /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
@@ -770,10 +780,20 @@ namespace ALSA {
       int err=setPlaybackChVolDB(name, channel, dB);
       std::ostringstream ret;
       if (err<0)
-        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
+        ret<<"{\"name\":\""<<name<<"\",\"channel\":"<< channel<<",\"error\":"<< err <<"}";
       else
-        ret<<"{\"name\":\""<<name<<"\",\"val\":"<< dB <<"}";
+        ret<<"{\"name\":\""<<name<<"\",\"channel\":"<< channel<<",\"val\":"<< dB <<"}";
       return ret.str();
+    }
+
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned in a JSON format
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set - not updated on return
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setPlaybackChVolDBJSON(std::string name, int channel, double dB){
+      return setPlaybackChVolDBJSON(name, (snd_mixer_selem_channel_id_t) channel, dB);
     }
 
     /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
@@ -853,10 +873,20 @@ namespace ALSA {
       long val=setCaptureVol(name, channel, v);
       std::ostringstream ret;
       if (val<0)
-        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< val <<"}";
+        ret<<"{\"name\":\""<<name<<"\",\"channel\":"<< channel<<",\"error\":"<< val <<"}";
       else
-        ret<<"{\"name\":\""<<name<<"\",\"val\":"<<val<<"}";
+        ret<<"{\"name\":\""<<name<<"\",\"channel\":"<< channel<<",\"val\":"<<val<<"}";
       return ret.str();
+    }
+
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set.
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setCaptureChVolJSON(std::string name, int channel, long v){
+      return setCaptureChVolJSON(name, (snd_mixer_selem_channel_id_t) channel, v);
     }
 
     /** Set the volume of a mixer element given the name. The resulting state of the mixer element is returned
@@ -909,12 +939,21 @@ namespace ALSA {
       int err=setCaptureChVolDB(name, channel, dB);
       std::ostringstream ret;
       if (err<0)
-        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
+        ret<<"{\"name\":\""<<name<<"\",\"channel\":"<< channel<<",\"error\":"<< err <<"}";
       else
-        ret<<"{\"name\":\""<<name<<"\",\"val\":"<< dB <<"}";
+        ret<<"{\"name\":\""<<name<<"\",\"channel\":"<< channel<<",\"val\":"<< dB <<"}";
       return ret.str();
     }
 
+    /** Set the volume of a mixer element's channel given the name. The resulting state of the mixer element is returned in the JSON string
+    \param name The name of the mixer element to change
+    \param channel The channel to set the volume on
+    \param v The volume to set - the value is not updated on return
+    \return JSON object, with val<0 on error otherwise, the current volume of the mixer element.
+    */
+    std::string setCaptureChVolDBJSON(std::string name, int channel, double dB){
+      return setCaptureChVolDBJSON(name, (snd_mixer_selem_channel_id_t) channel, dB);
+    }
     /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
     \param name The name of the mixer element to change
     \param v The switch state to set.
@@ -941,7 +980,6 @@ namespace ALSA {
         ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
       return ret.str();
     }
-
   };
 }
 #endif // MIXER_H_
