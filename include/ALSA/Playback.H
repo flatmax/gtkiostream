@@ -111,8 +111,6 @@ namespace ALSA {
 			if (ret==-EAGAIN)
 					ret=0;
 			while ((len-=ret) > 0) {
-				if (ret==-EAGAIN)
-						ret=0;
 				if ((ret>=0 && ret<len) && block!=0)
 					wait(1);
 				if (ret<0)
@@ -123,6 +121,8 @@ namespace ALSA {
 				bufferIn += ret*bytes_per_frame;
 
 				ret = snd_pcm_writei(getPCM(), (void *)bufferIn, len);
+				if (ret==-EAGAIN)
+						ret=0;
 			}
 			return 0;
 		}

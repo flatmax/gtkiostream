@@ -112,8 +112,8 @@ int main(int argc, char *argv[]) {
 #ifndef USE_INTERLEAVED
     playBack.writeBufN(buffer);
 #else
-// playBack<<buffer; // play the audio data
-playBack.writeBuf(buffer); // play the audio data
+    playBack<<buffer; // play the audio data
+    //playBack.writeBuf(buffer); // play the audio data
 #endif
     totalWritten+=buffer.rows();
   }
