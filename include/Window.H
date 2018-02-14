@@ -263,7 +263,7 @@ public:
 
  This distribution also ships with many examples of how to use the various classes contained within.
 
-# <a href="http://www.audioinjector.net/rpi-shop">Support this project by purchasing our hardware.</a>
+# <a href="http://www.audioinjector.net/">Support this project by purchasing our hardware.</a>
 
 \verbatim
    _____                              _      __                            __ _
