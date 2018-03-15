@@ -44,7 +44,10 @@ if HAVE_GTK
 EXTRA_LIBS += $(GTK_LIBS)
 EXTRA_CFLAGS += $(GTK_CFLAGS)
 if HAVE_JACK
-bin_PROGRAMS += WSOLAJackGTK JackPortMonitorGui
+bin_PROGRAMS += JackPortMonitorGui
+if HAVE_SOX
+bin_PROGRAMS += WSOLAJackGTK
+endif
 endif
 endif
 
@@ -55,7 +58,9 @@ endif
 
 if HAVE_OCTAVE
 if HAVE_JACK
+if HAVE_SOX
 bin_PROGRAMS += MixerTester
+endif
 endif
 endif
 

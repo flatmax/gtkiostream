@@ -303,7 +303,10 @@ DeBoorTest_LDADD = $(top_builddir)/src/deBoor/libSpline.la $(LDADD)
 # $(FFTW3_LIBS)
 
 if HAVE_ALSA
-noinst_PROGRAMS += ALSAPlaybackTest ALSACaptureTest ALSAFullDuplexTest ALSAMixerTest
+noinst_PROGRAMS += ALSAMixerTest
+if HAVE_SOX
+noinst_PROGRAMS += ALSAPlaybackTest ALSACaptureTest ALSAFullDuplexTest
+endif
 
 ALSAPlaybackTest_SOURCES = ALSAPlaybackTest.C
 ALSAPlaybackTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
