@@ -15,9 +15,10 @@
    along with GTK+ IOStream
 */
 
-#include <Sox.H>
-
 #include "DSP/FIR.H"
+
+#ifdef HAVE_SOX
+#include <Sox.H>
 
 int FIR::loadTimeDomainCoefficients(const std::string fileName){
   int ret=NO_ERROR;
@@ -33,6 +34,7 @@ int FIR::loadTimeDomainCoefficients(const std::string fileName){
   }
   return ret;
 }
+#endif
 
 void FIR::loadTimeDomainCoefficients(const Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> hIn){
   h=hIn;

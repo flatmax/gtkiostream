@@ -80,12 +80,14 @@ public:
     */
     void init(unsigned int blockSize);
 
+#ifdef HAVE_SOX
     /** Method to read time domain coefficients from file, convert to the Fourier domain and Construct the necessary data types.
     You may pass any audio file which can be read by the class Sox - it can read a very large number of audio file formats.
     \param fileName The name of the file to load the time domain coefficients from
     \return Negative value on error.
     */
     int loadTimeDomainCoefficients(const std::string fileName);
+#endif
 
     /** Method to load time domain coefficients from Matrix, convert to the Fourier domain and Construct the necessary data types.
     \param h The Matrix with time domain coefficients. Each column is a different channel
