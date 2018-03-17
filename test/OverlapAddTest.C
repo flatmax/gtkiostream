@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
     else
         if (cnt>0)
             cout<<"OverlapAdd couldn't read in the last "<<cnt << " samples";
-    overlapAdd.dump();
+    cout<<overlapAdd.getDataCopy().transpose()<<endl;
     sox.closeRead();
 
     fileName="/tmp/OverlapAddTest.wav";

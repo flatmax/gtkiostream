@@ -65,7 +65,7 @@ class OverlapAdd {
     */
     void init(float factor) {
         if (factor >= 1.) {
-            cerr<<"OverlapAdd::init The specified factor "<<factor<<" is >= 1. This is not allowed : ERROR : exiting."<<endl;
+          fprintf(stderr, "OverlapAdd::init The specified factor %f is >= 1. This is not allowed : ERROR : exiting.",factor);
             exit(OVERLAPADD_FACTOR_TOO_LARGE_ERROR);
         }
         overlapFactor=factor;
@@ -133,9 +133,9 @@ public:
 
         //cout<<15.-(float)sampleCount/(float)windowSize/(1.-overlapFactor)<<endl;
         uint windowCnt=(int)(ceil((float)((float)sampleCount/(float)windowSize/(1.-overlapFactor)))); // find the number of full segments
-        cout<<"sampleCount="<<sampleCount<<endl;
-        cout<<"windowCnt="<<windowCnt<<'\t'<<15.-windowCnt<<endl;
-        cout<<"windowSize="<<windowSize<<endl;
+        // printf("sampleCount=%d\n",sampleCount);
+        // printf("windowCnt=%d \t %f\n",windowCnt,15.-windowCnt);
+        // printf("windowSize=%d\n",windowSize);
 
         if (data.cols()!=windowSize || data.rows()!=windowCnt)
             data.resize(windowSize, windowCnt);
@@ -180,7 +180,6 @@ public:
     \param sox An open sox audiofile, positioned to the point to start writing to.
     */
     int unloadData(Sox<float> &sox) {
-        cout<<"OverlapAdd::unloadData"<<endl;
         int ret=NO_ERROR;
         if ((ret=sox.getChCntOut())<0) // check whether the file is opened
             return ret;
@@ -218,7 +217,7 @@ public:
             if (windowSize-2*N > 0) // if we are underlapping, copy any extra unwindowed data over (NOTE: windowSize-2N = M-N)
                 audioData.block(N, 0, M-N, 1)=data.block(N, i, M-N, 1); // copy the
 
-            cout<<audioData.transpose()<<endl;
+            //cout<<audioData.transpose()<<endl;
 
             wndData=data.block(windowSize-N, i, N, 1).array()*wndBack;
 
@@ -237,7 +236,7 @@ public:
 
             if (i==windowCnt-1) { // last window so copy the last block out.
                 audioData=data.block(windowSize-N, i, N, 1);
-            cout<<audioData.transpose()<<endl;
+            //cout<<audioData.transpose()<<endl;
                 cnt=sox.write(audioData);
                 if (cnt!=audioData.rows())
                     return SoxDebug().evaluateError(cnt);
@@ -269,10 +268,15 @@ public:
         return data.cols();
     }
 
-    /** Method to print the contents window by window to stdout.
-    */
-    void dump(void) {
-        cout<<data.transpose()<<endl;
+    // NOTE : removed due to requirement of <iostream>
+    // /* Method to print the contents window by window to stdout.
+    // */
+    // void dump() {
+    //     cout<<data.transpose()<<endl;
+    // }
+
+    Eigen::Matrix<TYPE, Eigen::Dynamic, Eigen::Dynamic> getDataCopy(){
+      return data;
     }
 
     /** Get the absolute maximum value from the data.
