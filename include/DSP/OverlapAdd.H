@@ -69,7 +69,7 @@ class OverlapAdd {
             exit(OVERLAPADD_FACTOR_TOO_LARGE_ERROR);
         }
         overlapFactor=factor;
-        data.resize(WINDOWSIZE_DEFAULT,2); // ensure that the default window size is reasonable
+        data.resize(WINDOWSIZE_DEFAULT,0); // ensure that the default window size is reasonable
     }
 
 protected:
