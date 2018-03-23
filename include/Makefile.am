@@ -43,7 +43,7 @@ nobase_oldinclude_HEADERS = mffm/BST.H mffm/HeapTreeType.H mffm/HeapTree.H mffm/
                             ALSA/ALSA.H ALSA/ALSAExternalPlugin.H ALSA/FullDuplex.H ALSA/PCM.H ALSA/Software.H \
 														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H DSP/IIR.H DSP/IIRCascade.H DSP/FIR.H \
                             ALSA/Mixer.H ALSA/MixerElement.H ALSA/ALSADebug.H
-
+nobase_oldinclude_HEADERS += DSP/Hankel.H
 nobase_oldinclude_HEADERS += xpm/play.xpm
 
 EXTRA_DIST = Examples.H
