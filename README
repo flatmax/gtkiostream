@@ -30,6 +30,7 @@ If you just want to use GTK GUI stuff, then no need to build the project, simply
 
 If you want to make and install, then like so :
 
+install some prerequisites : g++ automake libtool pkg-config
 ./configure
 make
 make install
@@ -49,7 +50,7 @@ Run make install : make install
 
 That should install it in a suitable directory.
 
-= The original git repo lives on sf =
+= The original repo (before git) lives on sf =
 
 https://sourceforge.net/projects/gtkiostream/
 
