@@ -84,9 +84,9 @@ CrossoverTester_SOURCES = CrossoverTester.C
 CrossoverTester_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
 CrossoverTester_LDADD = $(top_builddir)/src/libdsp.la  $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(top_builddir)/src/libgtkIOStream.la  $(JACK_LIBS) $(FFTW3_LIBS) $(EXTRA_LIBS) -lpthread
 
-JackFullDuplex_SOURCES = JackFullDuplex.C
-JackFullDuplex_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
-JackFullDuplex_LDADD = $(top_builddir)/src/libdsp.la  $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(top_builddir)/src/libgtkIOStream.la  $(JACK_LIBS) $(FFTW3_LIBS) $(EXTRA_LIBS) -lpthread
+#JackFullDuplex_SOURCES = JackFullDuplex.C
+#JackFullDuplex_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+#JackFullDuplex_LDADD = $(top_builddir)/src/libdsp.la  $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(top_builddir)/src/libgtkIOStream.la  $(JACK_LIBS) $(FFTW3_LIBS) $(EXTRA_LIBS) -lpthread
 
 I2SEndianTest_SOURCES = I2SEndianTest.C
 I2SEndianTest_CPPFLAGS = -I$(top_srcdir)/include $(JACK_CFLAGS) $(EXTRA_CFLAGS)

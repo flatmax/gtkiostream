@@ -36,7 +36,7 @@ if HAVE_GTKDATABOX
 noinst_PROGRAMS += PlotTest PlotTest2 NeuralNetworkFnTest
 PlotTest_SOURCES = PlotTest.C
 PlotTest2_SOURCES = PlotTest2.C
-PlotTest3_SOURCES = PlotTest3.C
+#PlotTest3_SOURCES = PlotTest3.C
 
 EXTRA_LIBS += $(GTKDATABOX_LIBS)
 EXTRA_CFLAGS += $(GTKDATABOX_CFLAGS)
@@ -152,9 +152,9 @@ JackClientTest_SOURCES = JackClientTest.C
 JackClientTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(JACK_CFLAGS) $(EXTRA_CFLAGS)
 JackClientTest_LDADD =  $(JACK_LIBS)
 
-JackOverRailTest_SOURCES = JackOverRailTest.C
-JackOverRailTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(JACK_CFLAGS) $(EXTRA_CFLAGS)
-JackOverRailTest_LDADD =  $(JACK_LIBS)
+#JackOverRailTest_SOURCES = JackOverRailTest.C
+#JackOverRailTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(JACK_CFLAGS) $(EXTRA_CFLAGS)
+#JackOverRailTest_LDADD =  $(JACK_LIBS)
 
 JackPortMonitorTest_SOURCES = JackPortMonitorTest.C
 JackPortMonitorTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EXTRA_CFLAGS)
@@ -221,9 +221,9 @@ AudioMaskerExample_SOURCES = AudioMaskerExample.C
 AudioMaskerExample_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
 AudioMaskerExample_LDADD = $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
 
-DecompositionTest_SOURCES = DecompositionTest.C
-DecompositionTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)#-fopenmp
-DecompositionTest_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
+#DecompositionTest_SOURCES = DecompositionTest.C
+#DecompositionTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)#-fopenmp
+#DecompositionTest_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
 
 OverlapAddTest_SOURCES = OverlapAddTest.C
 OverlapAddTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
@@ -300,11 +300,11 @@ BitStreamTest6_SOURCES = BitStreamTest6.C
 BitStreamTest6_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) -fpermissive $(EXTRA_CFLAGS)
 BitStreamTest6_LDADD = $(top_builddir)/src/libgtkIOStream.la $(LDADD) $(FFTW3_LIBS)
 
-DeBoorTest_SOURCES = DeBoorTest.C
-DeBoorTest_CPPFLAGS = -I$(abs_top_srcdir)/include
-#$(EIGEN_CFLAGS) -fpermissive $(EXTRA_CFLAGS)
-DeBoorTest_LDADD = $(top_builddir)/src/deBoor/libSpline.la $(LDADD)
-# $(FFTW3_LIBS)
+#DeBoorTest_SOURCES = DeBoorTest.C
+#DeBoorTest_CPPFLAGS = -I$(abs_top_srcdir)/include
+##$(EIGEN_CFLAGS) -fpermissive $(EXTRA_CFLAGS)
+#DeBoorTest_LDADD = $(top_builddir)/src/deBoor/libSpline.la $(LDADD)
+## $(FFTW3_LIBS)
 
 if HAVE_ALSA
 noinst_PROGRAMS += ALSAMixerTest
