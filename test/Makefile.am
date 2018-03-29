@@ -24,7 +24,7 @@ EXTRA_CFLAGS =
 noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest
 noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6 FileWatchThreadedTest
 noinst_PROGRAMS += FileWatchThreadedTest2
-noinst_PROGRAMS += IIRTest2 FIRTest HankelTest
+noinst_PROGRAMS += IIRTest2 HankelTest
 #noinst_PROGRAMS += DSFStreamTest
 if !HAVE_EMSCRIPTEN
 noinst_PROGRAMS += FutexTest FutexVsPThreadTest
@@ -93,7 +93,7 @@ ScrollingTest_SOURCES = ScrollingTest.C
 FrameTest_SOURCES = FrameTest.C
 
 if HAVE_OCTAVE
-noinst_PROGRAMS += RealFFTExample Real2DFFTExample ComplexFFTExample OctaveTest
+noinst_PROGRAMS += RealFFTExample Real2DFFTExample ComplexFFTExample OctaveTest FIRTest
 noinst_PROGRAMS += AudioMaskerExample IIRTest IIRCascadeTest
 
 EXTRA_LIBS += $(MKOCTFILE_LIBPATH) $(MKOCTFILE_LIBS)
