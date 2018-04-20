@@ -129,5 +129,10 @@ public:
       }
       const_cast< Eigen::DenseBase<DerivedOther>& >(output)=y.topRows(N);
     }
+
+    /** Get the number of channels in h
+    \return The number of channels (columns) in h.
+    */
+    int getChannelCnt(){return h.cols();}
 };
 #endif // FIR_H
