@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
     y.setZero(x.rows(), x.cols());
 
     // instantiate the FIR object
-    FIR fir;
+    FIR<double> fir;
     fir.init(Mx);
     fir.loadTimeDomainCoefficients(h);
     for (int i=0; i<Nx/Mx; i++) // apply the filter in windows of N samples

@@ -20,7 +20,8 @@
 #ifdef HAVE_SOX
 #include <Sox.H>
 
-int FIR::loadTimeDomainCoefficients(const std::string fileName){
+template<typename FP_TYPE>
+int FIR<FP_TYPE><FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName){
   int ret=NO_ERROR;
   Sox<FP_TYPE> sox; // use sox to try to read the filter from file
   if ((ret=sox.openRead(string(fileName)))<0 && ret!=SOX_READ_MAXSCALE_ERROR) // try to open the file
@@ -36,12 +37,14 @@ int FIR::loadTimeDomainCoefficients(const std::string fileName){
 }
 #endif
 
-void FIR::loadTimeDomainCoefficients(const Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> hIn){
+template<typename FP_TYPE>
+void FIR<FP_TYPE>::loadTimeDomainCoefficients(const Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> hIn){
   h=hIn;
   resetDFT();
 }
 
-void FIR::resetDFT(){
+template<typename FP_TYPE>
+void FIR<FP_TYPE>::resetDFT(){
   // only reset the DFT if both block size and filter h are defined.
   if (N==0 || h.rows()<=0 || h.cols() <=0)
     return;
@@ -58,7 +61,11 @@ void FIR::resetDFT(){
     fft.fwd(H.col(i).data(), hNew.col(i).data(), hNew.rows());
 }
 
-void FIR::init(unsigned int blockSize){
+template<typename FP_TYPE>
+void FIR<FP_TYPE>::init(unsigned int blockSize){
   N=blockSize;
   resetDFT();
 }
+
+template class FIR<float>;
+template class FIR<double>;

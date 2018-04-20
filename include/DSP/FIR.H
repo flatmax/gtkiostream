@@ -45,10 +45,6 @@ errors[FIR_CHANNEL_MISMATCH_ERROR]=std::string("The input, output and h columns 
     }
 };
 
-#ifndef FP_TYPE
-typedef double FP_TYPE; ///< Internal processing type
-#endif
-
 /** An FIR filter implemented using the overlap add algorithm.
 
 You need to load the time domain coefficients using (loadTimeDomainCoefficients).
@@ -58,13 +54,14 @@ window size (block size) as the time domain coefficients.
 Call the filter method with input to convolve with h to produce the output.
 \example FIRTest.C
 */
+template<typename FP_TYPE>
 class FIR {
   Eigen::FFT<FP_TYPE> fft; ///< The fast Fourier transform
-  Eigen::Array<Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, Eigen::Dynamic> H; ///< The DFT of the FIR coefficients
+  Eigen::Array<typename Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, Eigen::Dynamic> H; ///< The DFT of the FIR coefficients
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> h; ///< the time domain representation of the filter
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> x; ///< the time domain signal for filtering
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, 1> yTemp; ///< the time domain signal for filtering
-  Eigen::Array<Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, 1> Y; ///< the time domain filter output and also the DFT of one col of x
+  Eigen::Array<typename Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, 1> Y; ///< the time domain filter output and also the DFT of one col of x
 
   /** Resets the H matrix once N or h is changed.
   */
