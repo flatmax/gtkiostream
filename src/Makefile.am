@@ -45,7 +45,7 @@ libgtkIOStream_la_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(GTKDATABO
 libgtkIOStream_la_LDFLAGS =  -rdynamic -version-info $(LT_CURRENT) $(GTKDATABOX_LIBS) -release $(LT_RELEASE)
 
 lib_LTLIBRARIES += libdsp.la
-libdsp_la_SOURCES = DSP/IIR.C DSP/IIRCascade.C DSP/FIR.C
+libdsp_la_SOURCES = DSP/IIR.C DSP/IIRCascade.C DSP/FIR.C DSP/ImpulseBandLimited.C
 libdsp_la_CPPFLAGS = -I$(top_srcdir)/include $(FFTW3_CFLAGS) $(EIGEN_CFLAGS) -DMFILE_PATH1=\"mFiles\" -DMFILE_PATH2=\"$(DESTDIR)$(docdir)/mFiles\"
 libdsp_la_LDFLAGS =  -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(LT_RELEASE)
 
