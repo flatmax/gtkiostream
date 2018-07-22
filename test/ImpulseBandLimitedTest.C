@@ -28,6 +28,6 @@ int main(int argc, char *argv[]){
 
   ImpulseBandLimited<int> ibl;
   int ret = ibl.generateImpulse(s, fs, fi, fa);
-
+  ibl.saveToFile("/tmp/test.wav", fs);
   return ret;
 }

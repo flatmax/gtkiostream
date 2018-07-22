@@ -26,7 +26,7 @@
 #include <Eigen/Dense>
 #include <unsupported/Eigen/FFT>
 #pragma GCC diagnostic pop
-
+#include "config.h"
 // #define FIR_BLOCKSIZE_MISMATCH_ERROR FIR_ERROR_OFFSET-1
 // #define FIR_H_EMPTY_ERROR FIR_ERROR_OFFSET-2
 // #define FIR_CHANNEL_MISMATCH_ERROR FIR_ERROR_OFFSET-3
@@ -63,12 +63,12 @@ public:
   */
   int generateImpulse(float s, float fs, float fi, float fa);
 
-// #ifdef HAVE_SOX
-//     /** Save the impulse to file
-//     \param fileName The name of the file to load the time domain coefficients from
-//     \return Negative value on error.
-//     */
-//     int saveToFile(const std::string fileName);
-// #endif
+#ifdef HAVE_SOX
+    /** Save the impulse to file
+    \param fileName The name of the file to load the time domain coefficients from
+    \return Negative value on error.
+    */
+    int saveToFile(const std::string fileName, float fs);
+#endif
 };
 #endif // IMPULSEBANDLIMITED_H

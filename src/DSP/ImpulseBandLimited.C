@@ -18,19 +18,20 @@
 #include "DSP/ImpulseBandLimited.H"
 #include <limits>
 
-// #ifdef HAVE_SOX
-// #include <Sox.H>
-//
-// template<typename FP_TYPE>
-// int FIR<FP_TYPE><FP_TYPE>::saveToFile(const std::string fileName){
-//   Sox<FP_TYPE> sox; // use sox to try to read the filter from file
-//   if ((ret=sox.openRead(string(fileName)))<0 && ret!=SOX_READ_MAXSCALE_ERROR) // try to open the file
-//       return SoxDebug().evaluateError(ret, fileName);
-//   else
-//     return sox.save
-//   return ret;
-// }
-// #endif
+#ifdef HAVE_SOX
+#include <Sox.H>
+
+template<typename FP_TYPE>
+int ImpulseBandLimited<FP_TYPE>::saveToFile(const std::string fileName, float fs){
+  Sox<FP_TYPE> sox; // use sox to write to file
+  int ret;
+  if (ret=sox.openWrite(fileName, fs, this->cols(), this->abs().maxCoeff())<0) // try to open the file
+      return SoxDebug().evaluateError(ret, fileName);
+  else
+    return sox.write(*this);
+  return ret;
+}
+#endif
 
 template<typename FP_TYPE>
 int ImpulseBandLimited<FP_TYPE>::generateImpulse(float s, float fs, float fi, float fa){
