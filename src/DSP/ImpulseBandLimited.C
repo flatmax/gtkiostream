@@ -69,6 +69,7 @@ int ImpulseBandLimited<FP_TYPE>::generateImpulse(float s, float fs, float fi, fl
   return 0;
 }
 
+template class ImpulseBandLimited<short int>;
 template class ImpulseBandLimited<int>;
 // template class ImpulseBandLimited<unsigned int>;
 // template class ImpulseBandLimited<float>;

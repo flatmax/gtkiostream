@@ -16,7 +16,7 @@
 
 # Author Matt Flax <flatmax@flatmax.org>
 
-bin_PROGRAMS =
+bin_PROGRAMS = LatencyTester
 
 EXTRA_LIBS =
 EXTRA_CFLAGS =
@@ -107,6 +107,10 @@ MixerTester_LDADD = $(top_builddir)/src/libdsp.la  $(top_builddir)/src/libAudioM
 HexToSox_SOURCES = HexToSox.C
 HexToSox_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
 HexToSox_LDADD = $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS)
+
+LatencyTester_SOURCES = LatencyTester.C
+LatencyTester_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+LatencyTester_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound
 
 #AM_CPPFLAGS             = -I$(top_srcdir)/include $(GTKDATABOX_CFLAGS)
 #LDADD                   = $(GTKDATABOX_LIBS)
