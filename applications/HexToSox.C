@@ -105,18 +105,10 @@ int main(int argc, char *argv[]) {
     msg<<" for "<<duration<<" s";
 
     int byteCnt=ceil(fs*duration/N)*N;
-    byteCnt=ceil(byteCnt/sizeof(sox_sample_t))*sizeof(sox_sample_t);
+    byteCnt=ceil(byteCnt/sizeof(sox_sample_t))*sizeof(sox_sample_t)*sizeof(sox_sample_t);
 
     cout<<msg.str()<<endl;
 
-/*    // break the type info up into parameters.
-    bool isLittleEndian=false;
-    std::string token(10,'\0'); // check the endian-ness
-    std::stringstream typeInfo;
-    typeInfo.getline((char*)token.c_str(), 10, ':');
-    if (token.find("le")!=std::string::npos)
-        isLittleEndian=true;
-*/
     bool switchEndian=false;
     dummy=op.getArg<int>("s", argc, argv, dummy, i=0);
     if (dummy!=0){
@@ -139,7 +131,7 @@ int main(int argc, char *argv[]) {
     for (int i=0; i<size/2; i++){
         hexString>>charMSB;
         hexString>>charLSB;
-//        cout<<"0x"<<charMSB<<charLSB<<"  ";
+        // cout<<"0x"<<charMSB<<charLSB<<"  ";
         if (charMSB<87) charMSB+=87;
         if (charLSB<87) charLSB+=87;
         charTogether=(((charMSB-87)<<4)&0xf0)|((charLSB-87)&0xf);
@@ -147,7 +139,6 @@ int main(int argc, char *argv[]) {
         charString<<charTogether;
     }
 
-//    cout<<charString.str().c_str()<<endl;
     Eigen::Matrix<sox_sample_t, Eigen::Dynamic, Eigen::Dynamic> audio(byteCnt/sizeof(sox_sample_t),outChCnt); ///< The first channel is the same data sent over each output channel, then the output channels, then the input channels
     for (int i=0; i<outChCnt; i++)
         memcpy(audio.col(i).data(), charString.str().c_str(), byteCnt);
