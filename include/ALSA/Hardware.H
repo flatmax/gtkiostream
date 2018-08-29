@@ -281,7 +281,11 @@ namespace ALSA {
 		\return >= 0 on success
 		*/
 		int getPeriodSize(snd_pcm_uframes_t *p, int *dir=NULL) {
-			return snd_pcm_hw_params_get_period_size(hParams, p, dir);
+			int err=snd_pcm_hw_params_get_period_size(hParams, p, dir);
+			if (err<0)
+				return err;
+			else
+				return *p;
 		}
 
 		/** Get the period size
