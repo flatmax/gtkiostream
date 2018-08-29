@@ -187,6 +187,14 @@ namespace ALSA {
 			return ret;
 		}
 
+		/** Set the sample type
+		\param format is the sample type string(PCM sample format name (case insensitive))
+		\return >= 0 on success
+		*/
+		int setFormat(std::string format) {
+			return setFormat(snd_pcm_format_value(format.c_str()));
+		}
+
 		/** Get the format from a configuration space
 		\param params Configuration space
 		\param format returned format

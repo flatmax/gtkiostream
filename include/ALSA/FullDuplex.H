@@ -190,6 +190,16 @@ protected:
 			return Capture::setFormat(format);
 		}
 
+		/** @see Hardware::setFormat
+		Set the word format of the hardware
+		*/
+		int setFormat(std::string format) {
+			int ret=0;
+			if (ret=Playback::setFormat(format)<0)
+				return ret;
+			return Capture::setFormat(format);
+		}
+
 		/** @see Hardware::setAccess
 		Set the interleaving of the hardware.
 		*/
