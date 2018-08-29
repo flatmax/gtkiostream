@@ -149,9 +149,9 @@ public:
     	return size;
 	}
 
-    /** This method creates the external plugin
-    */
-    int create(const char *name, snd_config_t * root, snd_pcm_stream_t stream, int mode){
+  /** This method creates the external plugin
+  */
+  int create(const char *name, snd_config_t * root, snd_pcm_stream_t stream, int mode){
 		if (!slaveConf) {
 			std::ostringstream oss;
 			oss<<"No slave configuration for "<<name<<" : "<<extplug.name<<" external plugin";
@@ -161,10 +161,10 @@ public:
 		return snd_pcm_extplug_create(&extplug, name, root, slaveConf, stream, mode);
 	}
 
-    /** Parse the snd_config_t passed to the plugin
-    \return 0 on success, < 0 on failure
-    */
-    virtual int parseConfig(const char *name, snd_config_t *conf, snd_pcm_stream_t stream, int mode){
+  /** Parse the snd_config_t passed to the plugin
+  \return 0 on success, < 0 on failure
+  */
+  virtual int parseConfig(const char *name, snd_config_t *conf, snd_pcm_stream_t stream, int mode){
     	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
 		snd_config_iterator_t i, next;
 		snd_config_for_each(i, next, conf) {
@@ -188,8 +188,8 @@ public:
 			SNDERR(oss.str().c_str());
 			return -EINVAL;
 		}
-        return 0;
-    }
+    return 0;
+  }
 
 	/** This method returns the pcm struct
 	\return The pcm struct
