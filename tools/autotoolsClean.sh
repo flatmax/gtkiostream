@@ -25,5 +25,6 @@ find . -name '.deps' | xargs rm -rf
 find . -name '.libs' | xargs rm -rf
 find . -name 'octave-core' | xargs rm -f
 find . -name 'Makefile.in' | xargs rm
+find . -name '.dirstamp' | xargs rm
 rm -f compile
 #rm -rf config.log config.h Makefile
