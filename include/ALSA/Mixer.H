@@ -20,7 +20,14 @@
 #include <ALSA/MixerElement.H>
 
 namespace ALSA {
-  /** Class to alter the ALSA hardware mixer
+  /** Class to alter the ALSA hardware mixer.
+  This class holds all of the mixer controls. You can set mixer element values, like for example volume or volume in dB :
+  \code
+  mixer.setPlaybackVol("Master", 50)
+  mixer.setPlaybackVolDB("Master", dB)
+  \endcode
+
+  You can also setup callbacks to monitor changes to elements.
   */
   class Mixer {
     snd_mixer_t *handle;

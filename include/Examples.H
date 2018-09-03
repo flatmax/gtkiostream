@@ -78,6 +78,7 @@
 \example ALSAFullDuplexTest.C
 \example ALSAPlaybackTest.C
 \example ALSACaptureTest.C
+\example ALSAMixerTest.C
 \example IIRTest.C
 \example IIRCascadeTest.C
 \example FIRTest.C
