@@ -32,33 +32,53 @@ namespace ALSA {
     long vol; ///< If the channel has a volume, this holds its state
     double dB; ///< If the channel has a volume, this holds its state in dB
     int sw; ///< If the channel has a switch, this holds its state
-    snd_mixer_selem_channel_id_t channel;
+    snd_mixer_selem_channel_id_t channel; ///< The ALSA channel ID
 
+    /** Constructor taking the channel ID
+    Sets levels and dB to 0.
+    */
     ChannelElement(snd_mixer_selem_channel_id_t ch){
       vol=volDB=0;
       dB=0.;
       channel=ch;
     }
 
-    virtual ~ChannelElement(){}
+    virtual ~ChannelElement(){} ///< Destructor
 
+    /** Convert from ALSA dB representation to dB
+    \param v The ALSA representation
+    \return v/100 The dB equivalent.
+    */
     double toDB(long v) const {
       return (double)v/100.;
     }
 
+    /** Convert from dB to ALSA representation (*100)
+    \param d The dB to convert
+    \return d*100
+    */
     long fromDB(double d) const {
       return (long)(d*100.);
     }
 
-    void outputLevel(std::ostream &os){
+    /** Form a JSON structure of the channel, level and dB states
+    \param os The output stream to load.
+    */
+    void stringifyLevel(std::ostream &os){
       os<<"{\"channel\": "<<channel<<", "<<"\"level\":"<<vol<<", \"dB\":"<<dB<<"}";
     }
 
-    void outputSwitch(std::ostream &os){
+    /** Form a JSON structure of the channel and switch state
+    \param os The output stream to load.
+    */
+    void stringifySwitch(std::ostream &os){
       os<<"{\"channel\": "<<channel<<", "<<"\"switch\":"<<sw<<"}";
     }
 
-    void outputLevelAndSwitch(std::ostream &os){
+    /** Form a JSON structure of the channel level, dB and switch state
+    \param os The output stream to load.
+    */
+    void stringifyLevelAndSwitch(std::ostream &os){
       os<<"{\"channel\": "<<channel<<", "<<"\"level\":"<<vol<<", \"dB\":"<<dB
             <<", "<<"\"switch\":"<<sw<<"}";
     }
@@ -468,7 +488,7 @@ namespace ALSA {
       if ((me.hasPlaybackVolume || me.hasPlaybackVolumeJoined) && (me.hasCommonSwitch || me.hasPlaybackSwitch || me.hasPlaybackSwitchJoined)){
         os<<",\"playbackVolumes\":[\n";
         for (int i=0; i<me.playbackVolumes.size(); i++){
-          me.playbackVolumes[i].outputLevelAndSwitch(os);
+          me.playbackVolumes[i].stringifyLevelAndSwitch(os);
           os<<((i<me.playbackVolumes.size()-1) ? ",\n" : "\n");
         }
         os<<"]\n";
@@ -476,7 +496,7 @@ namespace ALSA {
           if (me.hasPlaybackVolume || me.hasPlaybackVolumeJoined){
             os<<",\"playbackVolumes\":[\n";
             for (int i=0; i<me.playbackVolumes.size(); i++){
-              me.playbackVolumes[i].outputLevel(os);
+              me.playbackVolumes[i].stringifyLevel(os);
               os<<((i<me.playbackVolumes.size()-1) ? ",\n" : "\n");
             }
             os<<"]\n";
@@ -484,7 +504,7 @@ namespace ALSA {
             if (me.hasCommonSwitch || me.hasPlaybackSwitch || me.hasPlaybackSwitchJoined){
               os<<",\"playbackVolumes\":[\n";
               for (int i=0; i<me.playbackVolumes.size(); i++){
-                me.playbackVolumes[i].outputSwitch(os);
+                me.playbackVolumes[i].stringifySwitch(os);
                 os<<((i<me.playbackVolumes.size()-1) ? ",\n" : "\n");
               }
               os<<"]\n";
@@ -493,7 +513,7 @@ namespace ALSA {
         if ((me.hasCaptureVolume || me.hasCaptureVolumeJoined) && (me.hasCommonSwitch || me.hasCaptureSwitch || me.hasCaptureSwitchJoined)){
           os<<",\"captureVolumes\":[\n";
           for (int i=0; i<me.captureVolumes.size(); i++){
-            me.captureVolumes[i].outputLevelAndSwitch(os);
+            me.captureVolumes[i].stringifyLevelAndSwitch(os);
             os<<((i<me.captureVolumes.size()-1) ? ",\n" : "\n");
           }
           os<<"]\n";
@@ -501,7 +521,7 @@ namespace ALSA {
             if (me.hasCaptureVolume || me.hasCaptureVolumeJoined){
               os<<",\"captureVolumes\":[\n";
               for (int i=0; i<me.captureVolumes.size(); i++){
-                me.captureVolumes[i].outputLevel(os);
+                me.captureVolumes[i].stringifyLevel(os);
                 os<<((i<me.captureVolumes.size()-1) ? ",\n" : "\n");
               }
               os<<"]\n";
@@ -509,7 +529,7 @@ namespace ALSA {
               if (me.hasCommonSwitch || me.hasCaptureSwitch || me.hasCaptureSwitchJoined){
                 os<<",\"captureVolumes\":[\n";
                 for (int i=0; i<me.captureVolumes.size(); i++){
-                  me.captureVolumes[i].outputSwitch(os);
+                  me.captureVolumes[i].stringifySwitch(os);
                   os<<((i<me.captureVolumes.size()-1) ? ",\n" : "\n");
                 }
                 os<<"]\n";
