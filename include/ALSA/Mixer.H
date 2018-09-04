@@ -26,8 +26,6 @@ namespace ALSA {
   mixer.setPlaybackVol("Master", 50)
   mixer.setPlaybackVolDB("Master", dB)
   \endcode
-
-  You can also setup callbacks to monitor changes to elements.
   */
   class Mixer {
     snd_mixer_t *handle;
@@ -46,7 +44,7 @@ namespace ALSA {
     /** Acquire the mixer handle.
     \return 0 on success, otherwise the error.
     */
-    int open(){
+    virtual int open(){
       int err;
       if ((err = snd_mixer_open(&handle, 0)) < 0) {
         handle=NULL;
@@ -58,7 +56,7 @@ namespace ALSA {
     /** Free the mixer handle.
     \return 0 on success, otherwise the error.
     */
-    int close(){
+    virtual int close(){
       MIXER_NOT_OPEN_CHECK(handle)
       int err;
       if ((err = snd_mixer_close(handle)) < 0) {
@@ -73,7 +71,7 @@ namespace ALSA {
     \param card The card to open, e.g. default, hw:0, etc.
     \return 0 on success, otherwise the error.
     */
-    int attach(std::string card){
+    virtual int attach(std::string card){
       MIXER_NOT_OPEN_CHECK(handle)
       int err;
       if ((err = snd_mixer_attach(handle, card.c_str())) < 0) {

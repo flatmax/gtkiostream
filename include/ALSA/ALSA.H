@@ -34,6 +34,10 @@ namespace ALSA {
 	#define MIXER_NOT_OPEN_CHECK_TYPED(handle, type) {printf("\t\tfunc: %s\n",__func__); MIXER_NOT_OPEN_CHECK_NO_PRINT(handle, type)}
 	#define MIXER_NOT_OPEN_CHECK(handle) MIXER_NOT_OPEN_CHECK_TYPED(handle, int)
 
+	#define CONTROL_NOT_OPEN_CHECK_NO_PRINT(ctl, type) {if (!ctl) return (type)ALSADebug().evaluateError(ALSA_CONTROL_NOT_OPEN_ERROR);}
+	#define CONTROL_NOT_OPEN_CHECK_TYPED(ctl, type) {printf("\t\tfunc: %s\n",__func__); CONTROL_NOT_OPEN_CHECK_NO_PRINT(ctl, type)}
+	#define CONTROL_NOT_OPEN_CHECK(ctl) CONTROL_NOT_OPEN_CHECK_TYPED(ctl, int)
+
 	#define ALSA_DEFAULT_START_FS 48000
 	#define ALSA_DEFAULT_FORMAT SND_PCM_FORMAT_S16_LE
 	#define ALSA_DEFAULT_CHANNELS 2
@@ -48,4 +52,5 @@ namespace ALSA {
 #include <ALSA/Capture.H>
 #include <ALSA/FullDuplex.H>
 #include <ALSA/Mixer.H>
+#include <ALSA/Control.H>
 #endif // ALSA_H
