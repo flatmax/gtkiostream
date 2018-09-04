@@ -25,73 +25,19 @@ using namespace ALSA;
 int main(int argc, char *argv[]) {
 	int err=0;
 	Control control;
-	if ((err=control.attach("hw:0"))<0)
+	if ((err=control.openCard("hw:0"))<0)
 		return err;
 
-	control.run();
-	cout<<"Control thread started"<<endl;
-	// if ((err=control.openCard("hw:0"))<0)
-	// 	return err;
+	control.scanMixer();
 
-	// control.scanMixer();
-	// //	cout<<mixer<<endl;
-	// string state=mixer.getState();
-	// cout<<state<<endl;
-	//
-	// if ((err=mixer.setPlaybackVol("Master", 50))<0)
-	// 	return err;
-	// double dB=-10.;
-	// cout<<"setting playback vol to "<<dB<<" dB"<<endl;
-	// if ((err=mixer.setPlaybackVolDB("Master", dB))<0)
-	// 	return err;
-	// cout<<"vol set to "<<dB<<" dB"<<endl;
-	//
-	// long val=10;
-	// cout<<"setting PCM channel 1 vol to "<<val<<endl;
-	// if ((err=mixer.setPlaybackChVol("PCM", (snd_mixer_selem_channel_id_t)1, val))<0)
-	// 	return err;
-	// cout<<"PCM channel 1 vol is now "<<val<<endl;
-	// dB=-10.;
-	// cout<<"setting PCM ch 0 playback vol to "<<dB<<" dB"<<endl;
-	// if ((err=mixer.setPlaybackChVolDB("PCM", (snd_mixer_selem_channel_id_t)0, dB))<0)
-	// 	return err;
-	// cout<<"vol set to "<<dB<<" dB"<<endl;
-	// cout<<"\n mixer PCM state is now : "<<endl;
-	// cout << mixer.getElementState("PCM")<<endl;
-	//
-	// dB=-5.;
-	// cout<<"setting playback vol to "<<dB<<" dB"<<endl;
-	// string json=mixer.setPlaybackVolDBJSON("Master", dB);
-	// cout<<json<<endl;
-	//
-	// dB=-5.1;
-	// cout<<"setting PCM playback ch 1 vol to "<<dB<<" dB"<<endl;
-	// json=mixer.setPlaybackChVolDBJSON("PCM", (snd_mixer_selem_channel_id_t)1, dB);
-	// cout<<json<<endl;
-	//
-	// dB=0.;
-	// cout<<"setting capture vol to "<<dB<<" dB"<<endl;
-	// json=mixer.setCaptureVolDBJSON("Capture", dB);
-	// cout<<json<<endl;
-	//
-	// int sw;
-	// if ((sw=mixer.setPlaybackSwitch("Master", 0))<0)
-	// 	return sw;
-	// cout<<"Master switch = "<<sw<<endl;
-	// sw=1;
-	// json=mixer.setPlaybackSwitchJSON("Master", sw);
-	// cout<<json<<endl;
-	//
-	// if ((sw=mixer.setCaptureSwitch("Capture", 0))<0)
-	// 	return sw;
-	// cout<<"Capture switch = "<<sw<<endl;
-	// sw=1;
-	// json=mixer.setCaptureSwitchJSON("Capture", sw);
-	// cout<<json<<endl;
+	if ((err=control.setPlaybackVol("Master", 50))<0)
+		return err;
+	sleep(1);
 
-	while(1)
-		sleep(1);
+	double dB=-5.;
+	string json=control.setPlaybackVolDBJSON("Master", dB);
 
+	sleep(1);
 	if ((err=control.close())<0)
 		return err;
 	cout<<"exiting"<<endl;

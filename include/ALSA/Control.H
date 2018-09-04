@@ -27,7 +27,7 @@ namespace ALSA {
 
   This class opens one control.
   */
-  class Control : public PollThreaded { //public Mixer,
+  class Control : public Mixer, public PollThreaded {
     snd_ctl_t *ctl; ///< The control pointer
 
     /** Poll found events, handle events.
@@ -37,15 +37,27 @@ namespace ALSA {
       unsigned short revents;
       snd_ctl_poll_descriptors_revents(ctl, &fds, 1, &revents);
       if (revents & POLLIN){
-        printf("Contraol::processPollEvents : revents with POLLIN\n");
         snd_ctl_event_t *event;
         snd_ctl_event_alloca(&event);
         int err = snd_ctl_read(ctl, event);
         if (err < 0)
-          return ALSADebug().evaluateError(err, "snd_ctl_read error when handling poll events\n");;
+          return ALSADebug().evaluateError(err, "snd_ctl_read error when handling poll events\n");
+        if (snd_ctl_event_get_type(event) != SND_CTL_EVENT_ELEM)
+		      return 0;
+        std::string elemName(snd_ctl_event_elem_get_name(event));
+        MixerElement *me=getElement(elemName.substr(0, elemName.find(' ')));
+        return processEvent(*me);
       }
 
       //   print_event(show_cards ? i : -1, ctls[i]);
+      return 0;
+    }
+
+    /** Overloadable event which is called once a mixer element is changed.
+    \param me The mixer element which is altered.
+    */
+    virtual int processEvent(MixerElement &me){
+      std::cout<<me<<std::endl;
       return 0;
     }
 
@@ -62,6 +74,7 @@ namespace ALSA {
     \return <0 on error.
     */
     virtual int attach(std::string card){
+      Mixer::attach(card);
       detach(); // close if any open
       int err = snd_ctl_open(&ctl, card.c_str(), SND_CTL_READONLY);
       if (err < 0)
@@ -72,6 +85,8 @@ namespace ALSA {
       }
 
       snd_ctl_poll_descriptors(ctl, &fds, 1); // get the polling file descriptors
+
+      run(); // start the polling thread
       return err;
     }
 
@@ -79,6 +94,8 @@ namespace ALSA {
     \return 0 on success, otherwise the error.
     */
     int detach(){
+      if (running()) // if the thread is running
+        stop(); // stop the polling thread
       if (ctl)
     		snd_ctl_close(ctl);
       ctl=NULL;
