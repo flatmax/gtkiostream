@@ -43,7 +43,6 @@ int ImpulseBandLimited<FP_TYPE>::generateImpulse(float s, float fs, float fi, fl
     return Debug().evaluateError(EINVAL, "Minimum frequency is incorrect, ensure fs/2>=fi>=0");
   if (fa>fs/2. || fa<0)
     return Debug().evaluateError(EINVAL, "Maximum frequency is incorrect, ensure fs/2>=fa>=0");
-
   int N=round(s*fs); // the number of samples
   Eigen::Array<double, Eigen::Dynamic, 1> x(N,1);
   x.setZero(); // initialise the impulse
@@ -72,4 +71,5 @@ int ImpulseBandLimited<FP_TYPE>::generateImpulse(float s, float fs, float fi, fl
 template class ImpulseBandLimited<short int>;
 template class ImpulseBandLimited<int>;
 // template class ImpulseBandLimited<unsigned int>;
-// template class ImpulseBandLimited<float>;
+template class ImpulseBandLimited<float>;
+template class ImpulseBandLimited<double>;

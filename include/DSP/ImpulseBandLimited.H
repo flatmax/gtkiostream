@@ -59,7 +59,7 @@ class ImpulseBandLimited : public Eigen::Array<FP_TYPE, Eigen::Dynamic, 1> {
 public:
 
   /** Generate the band limited impulse response.
-  \param s The duration in seconde
+  \param s The duration in seconds
   \param fs The sample rate in Hz
   \param fi The minimum frequency to keep (lower bound)
   \param fa The maximum frequency to keep (upper bound)

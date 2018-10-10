@@ -23,7 +23,7 @@ otherinclude_HEADERS = Alignment.H Container.H GtkUtils.H OptionParser.H Selecti
                        TextView.H colourWheel.H Frame.H ProgressBar.H Thread.H ComboBoxText.H gtkDialog.H NeuralNetwork.H Scales.H Widget.H \
                        commonTimeCodeX.H gtkInterface.H Octave.H Scrolling.H WSOLA.H WSOLAJack.H Surface.H SelectionArea.H CairoBox.H DirectoryScanner.H BlockBuffer.H \
                        DragNDrop.H CairoArc.H CairoCircle.H JackBase.H JackPortMonitor.H BitStream.H FileDialog.H Window.H \
-                       FileWatchThreaded.H Futex.H
+                       FileWatchThreaded.H Futex.H PollThreaded.H
 
 if CYGWIN
 otherinclude_HEADERS += TimeTools.H
@@ -42,7 +42,7 @@ nobase_oldinclude_HEADERS = mffm/BST.H mffm/HeapTreeType.H mffm/HeapTree.H mffm/
                             IIO/IIO.H IIO/IIODevice.H IIO/IIOChannel.H IIO/IIOThreaded.H IIO/IIOThreadedQ.H IIO/IIOMMap.H posixForMicrosoft/dirent.h \
                             ALSA/ALSA.H ALSA/ALSAExternalPlugin.H ALSA/FullDuplex.H ALSA/PCM.H ALSA/Software.H \
 														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H DSP/IIR.H DSP/IIRCascade.H DSP/FIR.H \
-                            ALSA/Mixer.H ALSA/MixerElement.H ALSA/ALSADebug.H
+                            ALSA/Mixer.H ALSA/MixerElement.H ALSA/ALSADebug.H ALSA/Control.H DSP/ImpulseBandLimited.H
 nobase_oldinclude_HEADERS += DSP/Hankel.H
 nobase_oldinclude_HEADERS += xpm/play.xpm
 
