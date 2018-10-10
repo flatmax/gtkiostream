@@ -184,25 +184,25 @@ namespace ALSA {
       return -1;
     }
 
-    /** Given a mixer element name, return the index of the element in the mixerElements
-    */
-    int getElementIndex(unsigned int id){
-      for (int i=0; i<mixerElements.size(); i++)
-      if (mixerElements[i].id==id)
-        return i;
-      return -1;
-    }
-
-    /** Given an element ID, return a pointer to the element.
-    \param id The mixer element ID
-    \return NULL on error, or a pointer to the element on success.
-    */
-    MixerElement* getElement(unsigned int id){
-      int i=getElementIndex(id);
-      if (i>=0 && i<mixerElements.size())
-        return &mixerElements[i];
-      return NULL;
-    }
+    // /** Given a mixer element name, return the index of the element in the mixerElements
+    // */
+    // int getElementIndex(unsigned int id){
+    //   for (int i=0; i<mixerElements.size(); i++)
+    //   if (mixerElements[i].id==id)
+    //     return i;
+    //   return -1;
+    // }
+    //
+    // /** Given an element ID, return a pointer to the element.
+    // \param id The mixer element ID
+    // \return NULL on error, or a pointer to the element on success.
+    // */
+    // MixerElement* getElement(unsigned int id){
+    //   int i=getElementIndex(id);
+    //   if (i>=0 && i<mixerElements.size())
+    //     return &mixerElements[i];
+    //   return NULL;
+    // }
 
     /** Given an element ID, return a pointer to the element.
     \param name The mixer element name
