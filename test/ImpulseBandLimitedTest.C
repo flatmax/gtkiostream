@@ -28,6 +28,8 @@ int main(int argc, char *argv[]){
 
   ImpulseBandLimited<int> ibl;
   int ret = ibl.generateImpulse(s, fs, fi, fa);
+#ifdef HAVE_SOX
   ibl.saveToFile("/tmp/test.wav", fs);
+#endif
   return ret;
 }

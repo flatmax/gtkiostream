@@ -16,10 +16,14 @@
 
 # Author Matt Flax <flatmax@flatmax.org>
 
-bin_PROGRAMS = LatencyTester
+bin_PROGRAMS = 
 
 EXTRA_LIBS =
 EXTRA_CFLAGS =
+
+if HAVE_ALSA
+bin_PROGRAMS += LatencyTester
+endif
 
 if HAVE_SOX
 bin_PROGRAMS += WSOLA audioMasker HexToSox
