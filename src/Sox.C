@@ -35,8 +35,8 @@ template<typename FP_TYPE_>
 Sox<FP_TYPE_>::Sox() {
     sox_globals.output_message_handler = output_message; // setup the message handler
     sox_globals.verbosity = 1;
-
-    assert(sox_init() == SOX_SUCCESS); // init the sox library
+    // we aren't using effects here so don't init.
+    // assert(sox_init() == SOX_SUCCESS); // init the sox library effects
     in=out=NULL;
 }
 
@@ -44,7 +44,7 @@ template<typename FP_TYPE_>
 Sox<FP_TYPE_>::~Sox() {
     close(in); // ensure all memory is destroyed as required
     close(out);
-    sox_quit();
+    // sox_quit(); // not initted, so don't quit.
 }
 
 template<typename FP_TYPE_>
