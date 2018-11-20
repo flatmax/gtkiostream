@@ -41,7 +41,6 @@ public:
 };
 
 #include <Eigen/Dense>
-#include <strstream>
 
 /** An IIR filter. The Direct Form II algorithm doesn't suit signals which get large, i.e. 1e12. Best to use this direct form II
 for signal which are bounded small, such as acoustic signals -1<=x<=1
