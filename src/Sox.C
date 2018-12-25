@@ -265,11 +265,9 @@ void Sox<FP_TYPE_>::printFormats(){
   printf("\n");
 }
 
-#ifndef HAVE_EMSCRIPTEN
-template class Sox<short int>;
 template class Sox<int>;
+template class Sox<short int>;
 template class Sox<float>;
-#endif
 template class Sox<double>;
 
 #ifdef HAVE_EMSCRIPTEN

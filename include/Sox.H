@@ -47,7 +47,7 @@
 #include <vector>
 using namespace std;
 
-#include "config.h"
+#include "gtkiostream_config.h"
 
 /** Debug class for Sox
 */

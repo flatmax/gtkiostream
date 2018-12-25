@@ -18,7 +18,7 @@
 #define ORB_H_
 
 #ifndef _MSC_VER
-#include "config.h" // generated as part of autotools
+#include "gtkiostream_config.h" // generated as part of autotools
 #endif
 
 #ifndef ZEROC_ICE_EMBEDDED

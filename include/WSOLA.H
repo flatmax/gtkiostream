@@ -17,7 +17,7 @@
 #ifndef WSOLA_H_
 #define WSOLA_H_
 
-#include "config.h"
+#include "gtkiostream_config.h"
 #ifdef HAVE_EMSCRIPTEN
 #include <emscripten/bind.h>
 #endif

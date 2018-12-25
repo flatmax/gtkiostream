@@ -28,7 +28,7 @@ AC_PREREQ([2.69])
 AC_INIT( gtkIOStream, [gtkiostream_version], [ https://github.com/flatmax/gtkiostream/issues ])
 AM_INIT_AUTOMAKE([dist-xz tar-ustar subdir-objects])
 AC_CONFIG_SRCDIR([include/Box.H])
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([gtkiostream_config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_PREFIX_DEFAULT(/usr)
 LT_INIT

@@ -70,7 +70,7 @@ void RealFFT::invTransform() {
         fftw_execute(invPlan);
 }
 
-#include "config.h"
+#include "gtkiostream_config.h"
 #ifdef HAVE_EMSCRIPTEN
 #include <emscripten/bind.h>
 EMSCRIPTEN_BINDINGS(RealFFT_ex) {

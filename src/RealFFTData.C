@@ -224,7 +224,7 @@ void RealFFTData::dumpOut(){
   printf("\n");
 }
 
-#include "config.h"
+#include "gtkiostream_config.h"
 #ifdef HAVE_EMSCRIPTEN
 #include <emscripten/bind.h>
 EMSCRIPTEN_BINDINGS(RealFFTData_ex) {

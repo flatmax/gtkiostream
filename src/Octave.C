@@ -15,7 +15,7 @@
    along with GTK+ IOStream
 */
 
-#include <octave/config.h>
+#include <octave/gtkiostream_config.h>
 #include <octave/octave.h>
 #include <octave/oct-obj.h>
 #include <octave/oct-map.h>

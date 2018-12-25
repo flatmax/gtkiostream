@@ -23,7 +23,7 @@ otherinclude_HEADERS = Alignment.H Container.H GtkUtils.H OptionParser.H Selecti
                        TextView.H colourWheel.H Frame.H ProgressBar.H Thread.H ComboBoxText.H gtkDialog.H NeuralNetwork.H Scales.H Widget.H \
                        commonTimeCodeX.H gtkInterface.H Octave.H Scrolling.H WSOLA.H WSOLAJack.H Surface.H SelectionArea.H CairoBox.H DirectoryScanner.H BlockBuffer.H \
                        DragNDrop.H CairoArc.H CairoCircle.H JackBase.H JackPortMonitor.H BitStream.H FileDialog.H Window.H \
-                       FileWatchThreaded.H Futex.H PollThreaded.H
+                       FileWatchThreaded.H Futex.H PollThreaded.H ../gtkiostream_config.h
 
 if CYGWIN
 otherinclude_HEADERS += TimeTools.H
