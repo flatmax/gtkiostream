@@ -68,17 +68,14 @@ public:
         for (int c=0; c<x.cols(); c++){
           xTemp=x.col(c). template cast<FRAME_TYPE>();
           fft.fwd(X.data(), xTemp.data(), x.rows()); // find the DFT of x : X=dft(x)
+          unsigned int N=floor((float)y.rows()/2.)+1;
           if (y.rows()>x.rows()){ // y is larger then x
             Y.setZero(); // this can be made more efficient by limiting the zeroing to only the samplres which require zeroing.
-            unsigned int N=floor((float)x.rows()/2.)+1;
-            Y.topRows(N)=X.topRows(N);
-            Y.bottomRows(N-1)=X.bottomRows(N-1);
-          } else { // y is smaller then x
-            unsigned int N=floor((float)y.rows()/2.)+1;
-            Y.topRows(N)=X.topRows(N);
-            Y.bottomRows(N-1)=X.bottomRows(N-1);
-            // Y(N,0)*=2.;
+            N=floor((float)x.rows()/2.)+1;
           }
+          Y.topRows(N)=X.topRows(N);
+          Y.bottomRows(N-1)=X.bottomRows(N-1);
+          // Y(N,0)*=2.; // is this necessary for the decimation case ?
           fft.inv(yTemp.col(c).data(), Y.data(), Y.rows()); // take back to the time domain
         }
       const_cast< Eigen::DenseBase<DerivedOther>& >(y)=yTemp;
