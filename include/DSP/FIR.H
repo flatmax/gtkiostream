@@ -18,7 +18,6 @@
 #ifndef FIR_H
 #define FIR_H
 
-// Debug
 #include "Debug.H"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wignored-attributes"
