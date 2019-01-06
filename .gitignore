@@ -41,3 +41,4 @@ m4/lt~obsolete.m4
 a.out*
 LatencyTester
 gtkiostream-config.h
+*~

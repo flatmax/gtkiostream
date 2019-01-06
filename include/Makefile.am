@@ -38,12 +38,12 @@ endif
 oldincludedir = $(includedir)/gtkIOStream
 nobase_oldinclude_HEADERS = mffm/BST.H mffm/HeapTreeType.H mffm/HeapTree.H mffm/LinkList.H fft/ComplexFFTData.H fft/ComplexFFT.H fft/FFTCommon.H fft/Real2DFFTData.H \
                             fft/Real2DFFT.H fft/RealFFTData.H fft/RealFFT.H AudioMask/AudioMasker.H AudioMask/AudioMask.H AudioMask/depukfb.H AudioMask/fastDepukfb.H \
-                            AudioMask/MooreSpread.H AudioMask/AudioMaskCommon.H DSP/Decomposition.H  DSP/OverlapAdd.H \
+                            AudioMask/MooreSpread.H AudioMask/AudioMaskCommon.H \
                             IIO/IIO.H IIO/IIODevice.H IIO/IIOChannel.H IIO/IIOThreaded.H IIO/IIOThreadedQ.H IIO/IIOMMap.H posixForMicrosoft/dirent.h \
                             ALSA/ALSA.H ALSA/ALSAExternalPlugin.H ALSA/FullDuplex.H ALSA/PCM.H ALSA/Software.H \
-														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H DSP/IIR.H DSP/IIRCascade.H DSP/FIR.H \
-                            ALSA/Mixer.H ALSA/MixerElement.H ALSA/ALSADebug.H ALSA/Control.H DSP/ImpulseBandLimited.H
-nobase_oldinclude_HEADERS += DSP/Hankel.H
+														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H  \
+                            ALSA/Mixer.H ALSA/MixerElement.H ALSA/ALSADebug.H ALSA/Control.H
+nobase_oldinclude_HEADERS += DSP/IIR.H DSP/IIRCascade.H DSP/FIR.H DSP/Decomposition.H DSP/OverlapAdd.H DSP/ImpulseBandLimited.H DSP/Hankel.H DSP/Resampler.H
 nobase_oldinclude_HEADERS += xpm/play.xpm
 
 EXTRA_DIST = Examples.H
