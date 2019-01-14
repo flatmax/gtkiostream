@@ -19,12 +19,14 @@
 #include <stdlib.h>
 
 WSOLA::WSOLA() {
+    outSizePow2=false;
     fs=FS_DEFAULT; // set the sample rate to default
     init();
     reset(DEFAULT_CH_CNT);
 }
 
-WSOLA::WSOLA(int chCnt){
+WSOLA::WSOLA(int chCnt, bool outSizePow2_){
+    outSizePow2=outSizePow2_;
     fs=FS_DEFAULT; // set the sample rate to default
     init();
     reset(chCnt);
@@ -35,6 +37,8 @@ WSOLA::~WSOLA() {
 
 void WSOLA::init(void){
     N=(int)(2.*floor((fs*TAU)/2.)); // audio samples in one window - an even number
+    if (outSizePow2)
+      N=(int)pow(2.,ceil(log2((float)N)));
     NO2=N/2; // half the window size
     M=M_DEFAULT; // vectors of NO2 audio samples
     if ((M*N)%2)

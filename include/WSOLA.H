@@ -97,6 +97,8 @@ class WSOLA {
 
     Array<FP_TYPE, Dynamic, Dynamic> simComp; ///< Temporary vector used for computation
 
+    bool outSizePow2; ///< Whether to force the output buffer to be a power of 2 or not
+
     /** Find the most similar vector in a buffer of vectors to the input reference.
     \param buffer The matrix of vectors to compare against the reference
     \tparam Derived The CRTP class operated on.
@@ -148,8 +150,9 @@ public:
 
     /** Constructor, initialises the window size and buffer.
     int chCnt The number of channels to use.
+    bllo outSizePow2 Whether to enforce the output buffer size to be a power of 2 or not
     */
-    WSOLA(int chCnt);
+    WSOLA(int chCnt, bool outSizePow2_=false);
 
     virtual ~WSOLA(); ///< Destructor
 
