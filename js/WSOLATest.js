@@ -16,7 +16,7 @@
    along with GTK+ IOStream
  */
 
-libgtkIOStream = require('../src/.libs/libgtkIOStream.js');
+libgtkIOStream = require('../src/.libs/libgtkIOStreamNode');
 
 chCnt=2;
 WSOLA = new libgtkIOStream.WSOLA(chCnt);
@@ -52,6 +52,5 @@ for (i=0; i<10; i++){
 	console.log('We need '+chCnt+' channels of '+WSOLA.getOutputSize()+' audio samples each to be unloaded');
 	for (m=0; m<chCnt; m++)
 		for (n=0; n<WSOLA.getOutputSize(); n++)
-			outputAudio[m][n]=WSOLA.unloadOutput(n, m);	
+			outputAudio[m][n]=WSOLA.unloadOutput(n, m);
 }
-
