@@ -16,13 +16,13 @@
 
 # Author Matt Flax <flatmax@flatmax.org>
 
-bin_PROGRAMS = 
+bin_PROGRAMS =
 
 EXTRA_LIBS =
 EXTRA_CFLAGS =
 
 if HAVE_ALSA
-bin_PROGRAMS += LatencyTester
+bin_PROGRAMS += LatencyTester ALSAControlMonitor
 endif
 
 if HAVE_SOX
@@ -115,6 +115,10 @@ HexToSox_LDADD = $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS)
 LatencyTester_SOURCES = LatencyTester.C
 LatencyTester_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
 LatencyTester_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound
+
+ALSAControlMonitor_SOURCES = ALSAControlMonitor.C
+ALSAControlMonitor_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+ALSAControlMonitor_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound  -lpthread
 
 #AM_CPPFLAGS             = -I$(top_srcdir)/include $(GTKDATABOX_CFLAGS)
 #LDADD                   = $(GTKDATABOX_LIBS)
