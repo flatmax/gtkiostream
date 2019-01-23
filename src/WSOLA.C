@@ -174,7 +174,7 @@ void WSOLA::setFS(float fsIn){
 EMSCRIPTEN_BINDINGS(WSOLA_ex) {
   emscripten::class_<WSOLA>("WSOLA")
     .constructor()
-    .constructor<int>()
+    .constructor<int, bool>()
     .function("loadInput", &WSOLA::loadInput)
     .function("unloadOutput", &WSOLA::unloadOutput)
     .function("getSamplesRequired", &WSOLA::getSamplesRequired)

@@ -19,7 +19,8 @@
 libgtkIOStream = require('../src/.libs/libgtkIOStreamNode');
 
 chCnt=2;
-WSOLA = new libgtkIOStream.WSOLA(chCnt);
+outSizePow2_=true; // force power of two output buffer sizing
+WSOLA = new libgtkIOStream.WSOLA(chCnt, outSizePow2_);
 
 // The system sample rate - get it from the audio system
 fs=48000;
