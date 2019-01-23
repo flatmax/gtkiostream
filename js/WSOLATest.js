@@ -52,6 +52,6 @@ for (i=0; i<10; i++){
 	// unload the audio data here
 	console.log('We need '+chCnt+' channels of '+WSOLA.getOutputSize()+' audio samples each to be unloaded');
 	for (m=0; m<chCnt; m++)
-		for (n=0; n<WSOLA.getOutputSize(); n++)
-			outputAudio[m][n]=WSOLA.unloadOutput(n, m);
+	 	for (n=0; n<WSOLA.getOutputSize(); n++)
+	 		outputAudio[m][n]=WSOLA.unloadOutput(m, n);
 }
