@@ -188,7 +188,7 @@ public:
 
         // shift on by the ratio of N/2
 //        cout<<"rem "<<rem<<endl;
-        double shiftOn=timeScale*NO2+rem;
+        double shiftOn=timeScale*(FP_TYPE)NO2+rem;
 //        cout<<"shiftOn "<<shiftOn<<endl;
         inputSamplesRequired=static_cast<int>(round(shiftOn));
 //        cout<<"inputSamplesRequired "<<inputSamplesRequired<<endl;

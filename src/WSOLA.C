@@ -38,7 +38,8 @@ WSOLA::~WSOLA() {
 void WSOLA::init(void){
     N=(int)(2.*floor((fs*TAU)/2.)); // audio samples in one window - an even number
     if (outSizePow2)
-      N=(int)pow(2.,ceil(log2((float)N)));
+      N=((int)pow(2.,ceil(log2((float)N))))/2;
+      //N=(int)pow(2.,ceil(log2((float)N)));
     NO2=N/2; // half the window size
     M=M_DEFAULT; // vectors of NO2 audio samples
     if ((M*N)%2)
@@ -48,7 +49,7 @@ void WSOLA::init(void){
 void WSOLA::OLAWnd(void) {
     int chCnt=buffer.rows();
     wnd.resize(chCnt,N);
-    wnd.row(0)=Array<FP_TYPE, 1, Dynamic>::LinSpaced(N,0.,M_PI-M_PI/N).sin().square();
+    wnd.row(0)=Array<FP_TYPE, 1, Dynamic>::LinSpaced(N,0.,M_PI-M_PI/(FP_TYPE)N).sin().square();
     for (int i=1; i<chCnt; i++)
         wnd.row(i)=wnd.row(0);
 //    cout<<"wnd "<<endl;
@@ -63,7 +64,7 @@ int WSOLA::findSimilarityInBuffer(const DenseBase<Derived> &buffer) {
 //    cout<<buffer.block(0,0,1,N)*wnd<<endl;
 //    cout<<"similarity "<<nextOutput-buffer.block(0,0,1,N)*wnd<<endl;
 
-    FP_TYPE bestMeasure=3e8;
+    FP_TYPE bestMeasure=(FP_TYPE)3.e8;
     int bestI=0;
 //    for (int i=0; i<M; i++) {
 //        FP_TYPE measureTest=findSimilarity(buffer.block(0,i*NO2,1,N));
