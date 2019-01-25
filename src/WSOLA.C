@@ -38,7 +38,7 @@ WSOLA::~WSOLA() {
 void WSOLA::init(void){
     N=(int)(2.*floor((fs*TAU)/2.)); // audio samples in one window - an even number
     if (outSizePow2)
-      N=((int)pow(2.,ceil(log2((float)N))))/2;
+      N=((int)pow(2.,ceil(log2((float)N))));
       //N=(int)pow(2.,ceil(log2((float)N)));
     NO2=N/2; // half the window size
     M=M_DEFAULT; // vectors of NO2 audio samples
