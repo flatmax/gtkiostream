@@ -17,7 +17,6 @@
 #ifndef MIXERELEMENT_H_
 #define MIXERELEMENT_H_
 
-#include <ALSA/ALSA.H>
 #include <string>
 #include <sstream>
 
