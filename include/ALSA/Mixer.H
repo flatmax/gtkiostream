@@ -20,6 +20,10 @@
 #include <ALSA/MixerElement.H>
 
 namespace ALSA {
+  #define MIXER_NOT_OPEN_CHECK_NO_PRINT(handle, type) {if (!handle) return (type)ALSADebug().evaluateError(ALSA_MIXER_NOT_OPEN_ERROR);}
+	#define MIXER_NOT_OPEN_CHECK_TYPED(handle, type) {printf("\t\tfunc: %s\n",__func__); MIXER_NOT_OPEN_CHECK_NO_PRINT(handle, type)}
+	#define MIXER_NOT_OPEN_CHECK(handle) MIXER_NOT_OPEN_CHECK_TYPED(handle, int)
+
   /** Class to alter the ALSA hardware mixer.
   This class holds all of the mixer controls. You can set mixer element values, like for example volume or volume in dB :
   \code

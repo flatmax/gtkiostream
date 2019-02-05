@@ -30,10 +30,6 @@ namespace ALSA {
 	#define PCM_NOT_OPEN_CHECK(pcm) PCM_NOT_OPEN_CHECK_TYPED(pcm, int)
 	#define PCM_NOT_OPEN_CHECK_STRING(pcm) {printf("\t\tfunc: %s\n",__func__); if (!pcm) return "PCM not open error";}
 
-	#define MIXER_NOT_OPEN_CHECK_NO_PRINT(handle, type) {if (!handle) return (type)ALSADebug().evaluateError(ALSA_MIXER_NOT_OPEN_ERROR);}
-	#define MIXER_NOT_OPEN_CHECK_TYPED(handle, type) {printf("\t\tfunc: %s\n",__func__); MIXER_NOT_OPEN_CHECK_NO_PRINT(handle, type)}
-	#define MIXER_NOT_OPEN_CHECK(handle) MIXER_NOT_OPEN_CHECK_TYPED(handle, int)
-
 	#define CONTROL_NOT_OPEN_CHECK_NO_PRINT(ctl, type) {if (!ctl) return (type)ALSADebug().evaluateError(ALSA_CONTROL_NOT_OPEN_ERROR);}
 	#define CONTROL_NOT_OPEN_CHECK_TYPED(ctl, type) {printf("\t\tfunc: %s\n",__func__); CONTROL_NOT_OPEN_CHECK_NO_PRINT(ctl, type)}
 	#define CONTROL_NOT_OPEN_CHECK(ctl) CONTROL_NOT_OPEN_CHECK_TYPED(ctl, int)
