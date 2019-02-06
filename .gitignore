@@ -42,3 +42,4 @@ a.out*
 LatencyTester
 gtkiostream_config.h*
 *~
+ALSAControlMonitor
