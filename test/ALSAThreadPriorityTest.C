@@ -21,11 +21,7 @@ using namespace std;
 using namespace ALSA;
 
 int main(int argc, char *argv[]) {
-  const string deviceName="hw:0,0";
-  Playback playBack(deviceName.c_str());
-  cout<<"opened the device "<<playBack.getDeviceName()<<endl;
-
-  int res=playBack.changeThreadPriority(-1);
+  int res=changeThreadPriority(-1);
   if (res<0)
     printf("Error changing the thread priority\n");
   return 0;
