@@ -194,8 +194,8 @@ int main(int argc, char *argv[]){
     sleep(2); // wait for the waiting thread to complete
 
     ForeverThread ft1;
-    cout<<"running forever thread"<<endl;
-    ft1.run(sched_get_priority_max(SCHED_FIFO));
+    cout<<"running forever thread ft1 with priority = "<<ft1.getMaxPriority()<<endl;
+    ft1.run(ft1.getMaxPriority());
     ft1.getPriority();
     //ft1.run(10);
     sleep(2);

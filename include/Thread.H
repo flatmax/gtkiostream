@@ -67,6 +67,7 @@ class Thread {
     GError *threadErrorPtr; ///< The thread error pointer
 #else
     pthread_t thread; ///< The thread structure
+    int policy; ///< The thread policy, e.g. SCHED_FIFO
 #endif
 
 public:
@@ -78,6 +79,7 @@ public:
         threadErrorPtr=NULL;
 #else
         thread=0;
+        policy = SCHED_FIFO;
 #endif
     }
 
@@ -134,19 +136,20 @@ public:
         pthread_attr_init(&attr);
         int threadResp=0;
 
-        printf("entering set priority\n");
         if (priority>0)
           if (threadResp=setPriority(&attr, priority))
             return threadResp;
-        printf("exited set priority\n");
 
         if (threadResp=pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE))
           return ThreadDebug().evaluateError(threadResp, "Thread::run : Thread setting detatch state failed.");
 //    int pthread_setcanceltype(int type, int *oldtype);
 
-          printf("create\n");
-        if (threadResp=pthread_create(&thread, &attr, start_routine, data))
-          return ThreadDebug().evaluateError(threadResp, "Thread::run : Thread creation failed.");
+        if (threadResp=pthread_create(&thread, &attr, start_routine, data)){
+          if (priority>0)
+            return ThreadDebug().evaluateError(threadResp, "Thread::run : Thread creation failed. Check you have su or user permissions to create a thread with a specific priority.\n");
+          else
+            return ThreadDebug().evaluateError(threadResp, "Thread::run : Thread creation failed.\n");
+        }
 
         pthread_attr_destroy(&attr);
 
@@ -157,6 +160,21 @@ public:
     }
 
 #ifndef USE_GLIB_THREADS
+  /** Method to find the p_thread policy
+  \return the policy (e.g. SCHED_FIFO)
+  */
+  int getPolicy(){return policy;}
+
+  /** Method to get the maximum scheduling priority for this thread's policy
+  \return the maximum priority or a negative vlue on error
+  */
+  int getMaxPriority(){return sched_get_priority_max(getPolicy());}
+
+  /** Method to get the minimum scheduling priority for this thread's policy
+  \return the minimum priority or a negative vlue on error
+  */
+  int getMinPriority(){return sched_get_priority_min(getPolicy());}
+
   int setPriority(pthread_attr_t *attributes, int priority){
     int res=0;
     if ((res = pthread_attr_setinheritsched(attributes, PTHREAD_EXPLICIT_SCHED)))
@@ -165,12 +183,13 @@ public:
     if ((res = pthread_attr_setscope(attributes, PTHREAD_SCOPE_SYSTEM)))
       return ThreadDebug().evaluateError(res, "Cannot set scheduling scope for thread");
 
-    if ((res = pthread_attr_setschedpolicy(attributes, SCHED_FIFO)))
+    if ((res = pthread_attr_setschedpolicy(attributes, getPolicy())))
       return ThreadDebug().evaluateError(res, "Cannot request schedule policy for thread");
 
     struct sched_param rt_param;
     memset(&rt_param, 0, sizeof(rt_param));
     rt_param.sched_priority = priority;
+
     if ((res = pthread_attr_setschedparam(attributes, &rt_param)))
       return ThreadDebug().evaluateError(res, "Cannot set scheduling priority for thread");
 
@@ -181,11 +200,11 @@ public:
     int res;
     struct sched_param rt_param;
     memset(&rt_param, 0, sizeof(rt_param));
-    int policy;
-    if ((res=pthread_getschedparam(thread, &policy, &rt_param)) != 0)
+    int policyLocal;
+    if ((res=pthread_getschedparam(thread, &policyLocal, &rt_param)) != 0)
       return ThreadDebug().evaluateError(res," Getting sched param.");
-    printf("Thread policy is %d priority is %d\n",policy, rt_param.sched_priority);
-    if (policy != SCHED_FIFO)
+    printf("Thread policy is %d priority is %d\n",policyLocal, rt_param.sched_priority);
+    if (policyLocal != SCHED_FIFO)
       return ThreadDebug().evaluateError(THREAD_SCHED_ERROR, "Scheduling is NOT SCHED_FIFO!\n");
     return rt_param.sched_priority;
   }
