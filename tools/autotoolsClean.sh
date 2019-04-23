@@ -24,7 +24,7 @@ find . -name '*~' | xargs rm -f
 find . -name '.deps' | xargs rm -rf
 find . -name '.libs' | xargs rm -rf
 find . -name 'octave-core' | xargs rm -f
-find . -name 'Makefile.in' | xargs rm
-find . -name '.dirstamp' | xargs rm
+find . -name 'Makefile.in' | xargs rm -f
+find . -name '.dirstamp' | xargs rm -f
 rm -f compile
 #rm -rf config.log gtkiostream_config.h Makefile

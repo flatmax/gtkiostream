@@ -37,6 +37,8 @@ namespace ALSA {
 	#define ALSA_MIXER_NO_PLAYBACK_VOL_ERROR -13+ALSA_ERROR_OFFSET ///< error this mixer element is not a playback element
 	#define ALSA_MIXER_NO_CAPTURE_VOL_ERROR -14+ALSA_ERROR_OFFSET ///< error this mixer element is not a playback element
 	#define ALSA_CONTROL_NOT_OPEN_ERROR -15+ALSA_ERROR_OFFSET ///< error when ctls pointer is null
+	#define ALSA_SCHED_PRIORITY_ERROR -16+ALSA_ERROR_OFFSET ///< error when sched. priority is out of bounds
+	#define ALSA_SCHED_POLICY_ERROR -17+ALSA_ERROR_OFFSET ///< error relating to the scheduler priority
 	class ALSADebug : public Debug {
 	public:
 		ALSADebug(void) {
@@ -56,6 +58,8 @@ namespace ALSA {
 			errors[ALSA_MIXER_NO_PLAYBACK_VOL_ERROR]=std::string("That mixer element doesn't have a playback vol control.");
 			errors[ALSA_MIXER_NO_CAPTURE_VOL_ERROR]=std::string("That mixer element doesn't have a capture vol control.");
 			errors[ALSA_CONTROL_NOT_OPEN_ERROR]=std::string("The control device isn't open, open first.");
+			errors[ALSA_SCHED_PRIORITY_ERROR]=std::string("When setting the thread priority.");
+			errors[ALSA_SCHED_POLICY_ERROR]=std::string("When setting the thread policy.");
 
 			#endif
 		}
