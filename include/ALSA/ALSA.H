@@ -50,39 +50,40 @@ namespace ALSA {
 #include <ALSA/Mixer.H>
 #include <ALSA/Control.H>
 
-/** Set the current thread's priority
-\param priority <0 implies maximum priority, otherwise must be between sched_get_priority_max and sched_get_priority_min
-\return 0 on success, error code otherwise
-*/
-static int changeThreadPriority(int priority){
-	int ret;
-	pthread_t thisThread = pthread_self(); // get the current thread
-	struct sched_param origParams, params;
-	int origPolicy, policy = SCHED_FIFO, newPolicy=0;
+namespace ALSA {
+	/** Set the current thread's priority
+	\param priority <0 implies maximum priority, otherwise must be between sched_get_priority_max and sched_get_priority_min
+	\return 0 on success, error code otherwise
+	*/
+	static int changeThreadPriority(int priority){
+		int ret;
+		pthread_t thisThread = pthread_self(); // get the current thread
+		struct sched_param origParams, params;
+		int origPolicy, policy = SCHED_FIFO, newPolicy=0;
 
-	if ((ret = pthread_getschedparam(thisThread, &origPolicy, &origParams))!=0)
-		return ALSA::ALSADebug().evaluateError(ret, "when trying to pthread_getschedparam\n");
-	printf("ALSA::Stream::changeThreadPriority : Current thread policy %d and priority %d\n", origPolicy, origParams.sched_priority);
+		if ((ret = pthread_getschedparam(thisThread, &origPolicy, &origParams))!=0)
+			return ALSA::ALSADebug().evaluateError(ret, "when trying to pthread_getschedparam\n");
+		printf("ALSA::Stream::changeThreadPriority : Current thread policy %d and priority %d\n", origPolicy, origParams.sched_priority);
 
-	if (priority<0) //maximum priority
-		params.sched_priority = sched_get_priority_max(policy);
-	else
-		params.sched_priority = priority;
+		if (priority<0) //maximum priority
+			params.sched_priority = sched_get_priority_max(policy);
+		else
+			params.sched_priority = priority;
 
-	if (params.sched_priority>sched_get_priority_max(policy))
-		return ALSA::ALSADebug().evaluateError(ALSA_SCHED_PRIORITY_ERROR, "requested priority is too high\n");
-	if (params.sched_priority<sched_get_priority_min(policy))
-		return ALSA::ALSADebug().evaluateError(ALSA_SCHED_PRIORITY_ERROR, "requested priority is too low\n");
+		if (params.sched_priority>sched_get_priority_max(policy))
+			return ALSA::ALSADebug().evaluateError(ALSA_SCHED_PRIORITY_ERROR, "requested priority is too high\n");
+		if (params.sched_priority<sched_get_priority_min(policy))
+			return ALSA::ALSADebug().evaluateError(ALSA_SCHED_PRIORITY_ERROR, "requested priority is too low\n");
 
-	if ((ret = pthread_setschedparam(thisThread, policy, &params))!=0)
-		return ALSA::ALSADebug().evaluateError(ret, "when trying to pthread_setschedparam - are you su or do you have permission to set this priority?\n");
-	if ((ret = pthread_getschedparam(thisThread, &newPolicy, &params))!=0)
-		return ALSA::ALSADebug().evaluateError(ret, "when trying to pthread_getschedparam\n");
-	if(policy != newPolicy)
-		return ALSA::ALSADebug().evaluateError(ALSA_SCHED_POLICY_ERROR, "requested scheduler policy is not correctly set\n");
-	printf("ALSA::Stream::changeThreadPriority : New thread priority changed to %d\n", params.sched_priority);
+		if ((ret = pthread_setschedparam(thisThread, policy, &params))!=0)
+			return ALSA::ALSADebug().evaluateError(ret, "when trying to pthread_setschedparam - are you su or do you have permission to set this priority?\n");
+		if ((ret = pthread_getschedparam(thisThread, &newPolicy, &params))!=0)
+			return ALSA::ALSADebug().evaluateError(ret, "when trying to pthread_getschedparam\n");
+		if(policy != newPolicy)
+			return ALSA::ALSADebug().evaluateError(ALSA_SCHED_POLICY_ERROR, "requested scheduler policy is not correctly set\n");
+		printf("ALSA::Stream::changeThreadPriority : New thread priority changed to %d\n", params.sched_priority);
 
-	return 0;
+		return 0;
+	}
 }
-
 #endif // ALSA_H

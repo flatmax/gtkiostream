@@ -18,10 +18,9 @@ along with GTK+ IOStream
 #include "ALSA/ALSA.H"
 #include <iostream>
 using namespace std;
-using namespace ALSA;
 
 int main(int argc, char *argv[]) {
-  int res=changeThreadPriority(-1);
+  int res=ALSA::changeThreadPriority(-1);
   if (res<0)
     printf("Error changing the thread priority\n");
   return 0;
