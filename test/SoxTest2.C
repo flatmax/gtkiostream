@@ -28,7 +28,7 @@
 using namespace std;
 int main(int argc, char *argv[]) {
 
-  ifstream file("/tmp/ramps.wav", std::ios::binary | std::ios::ate);
+  ifstream file("/tmp/soxTest.wav", std::ios::binary | std::ios::ate);
   std::streamsize size = file.tellg();
   file.seekg(0, std::ios::beg);
 
