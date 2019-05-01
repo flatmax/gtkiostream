@@ -2,7 +2,7 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
 /**
  * `sox-audio`
- *
+ * Webcomponent using sox for audio decoding
  *
  * @customElement
  * @polymer
@@ -16,12 +16,11 @@ class SoxAudio extends PolymerElement {
           display: block;
         }
       </style>
-      <h2>Hello [[prop1]]!</h2>
     `;
   }
   static get properties() {
     return {
-      url: {
+      url: { // url for fetching the audio
         type: String,
         value: null,
         observer: 'decodeURL'
@@ -34,7 +33,7 @@ class SoxAudio extends PolymerElement {
     };
   }
 
-  /** When ready get the WASM loaded and compiling.
+  /** When ready define the moduleName based on the module file name
   */
   connectedCallback(){
     super.connectedCallback();
@@ -47,9 +46,9 @@ class SoxAudio extends PolymerElement {
       this.moduleName = this.moduleName.slice(idx+1, this.moduleName.length);
   }
 
+  /** Load the WASM module
+  */
   scriptNameChange(){
-    console.log(this.moduleName)
-    console.log('scriptNameChange : '+this.scriptName);
     let script = document.createElement('script');
     script.src = this.scriptName;
     document.head.appendChild(script);
@@ -76,13 +75,19 @@ class SoxAudio extends PolymerElement {
     return Nb;
   }
 
+  /** Given a heap variable name, free the data.
+  @param heapName The name of the variable to free
+  */
   freeHEAP(heapName){
-    eval(this.moduleName)._free(this[heapName]);
-    this[heapName+'Size']=null;
+    if (this[heapName])
+      eval(this.moduleName)._free(this[heapName]);
+    if (this[heapName+'Size'])
+      this[heapName+'Size']=null;
   }
 
+  /** Fetch the url and attempt to decode the audio from the binary data using Sox
+  */
   decodeURL(){
-    console.log()
     if (this.url == null)
       return;
     fetch(this.url).then((response) => {
@@ -113,6 +118,7 @@ class SoxAudio extends PolymerElement {
         for (let n=0; n<N; n++)
           this.audio[c][n]=this.sox.getSample(n, c);
       }
+      console.log(this.url+' loaded');
     }).catch((err) => {
       console.log(err)
     })
