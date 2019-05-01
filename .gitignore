@@ -43,3 +43,4 @@ LatencyTester
 gtkiostream_config.h*
 *~
 ALSAControlMonitor
+/node_modules/

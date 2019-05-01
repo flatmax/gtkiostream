@@ -99,7 +99,7 @@ int Sox<FP_TYPE_>::openRead(intptr_t buffer, size_t len){
   //   std::cout<<(int)((char*)buffer)[i]<<'\t';
   // std::cout<<std::endl;
   for (int i=0; i<150; i++)
-    printf("%c",((char*)buffer)[i]);
+    printf("%x\n",((char*)buffer)[i]);
   printf("\n");
   in = sox_open_mem_read((void*)buffer, len, NULL, NULL, NULL);
   if (!in)
@@ -312,6 +312,7 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("getCols", &Sox<double>::getCols)
   .function("openRead", emscripten::select_overload<int(intptr_t, size_t)>(&Sox<double>::openRead), emscripten::allow_raw_pointers())
   .function("read", &Sox<double>::readJS)
+  .function("setMaxVal", &Sox<double>::setMaxVal)
   ;
 }
 #endif

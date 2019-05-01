@@ -41,9 +41,35 @@ function mallocHEAP(byteLength, chCnt, heapName){
   return Nb;
 }
 
-let data = fs.readFileSync('../test/testVectors/11.Neutral.44k.wav');
-let N = mallocHEAP(data.length, 1, 'audio'); // resize the heap
+let data = fs.readFileSync('test/testVectors/11.Neutral.44k.wav');
+let Nmem = mallocHEAP(data.length, 1, 'audio'); // resize the heap
 libgtkIOStream.HEAPU8.set(data, audio);
 let Sox = new libgtkIOStream.Sox;
 // Sox.printFormats();
 let ret=Sox.openRead(audio, audioSize);
+if (ret!=-40026) {
+    throw Error('error in opening');
+}
+Sox.setMaxVal(1);
+ret=Sox.read(0); // read all of the audio
+if (ret!=0) {
+    throw Error('error reading');
+}
+
+let ch=Sox.getCols();
+let N=Sox.getRows();
+console.log(''+ch+' channels')
+console.log(''+N+' frames')
+audio=[];
+for (let c=0; c<ch; c++){
+  audio.push(new Float32Array(N));
+  for (let n=0; n<N; n++)
+    audio[c][n]=Sox.getSample(n, c);
+}
+
+for (let n=0; n<N; n++){
+  let str='';
+  for (let c=0; c<ch; c++)
+    str+=audio[c][n]+' ';
+  console.log(str)
+}
