@@ -110,8 +110,10 @@ class SoxAudio extends PolymerElement {
 
       let ch=this.sox.getCols();
       let N=this.sox.getRows();
+      let _fs=this.sox.getFSIn();
       console.log(''+ch+' channels')
       console.log(''+N+' frames')
+      console.log('fs='+_fs+' Hz')
       this.audio=[];
       for (let c=0; c<ch; c++){
         this.audio.push(new Float32Array(N));

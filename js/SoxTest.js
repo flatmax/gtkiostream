@@ -58,8 +58,10 @@ if (ret!=0) {
 
 let ch=Sox.getCols();
 let N=Sox.getRows();
+let _fs=Sox.getFSIn();
 console.log(''+ch+' channels')
 console.log(''+N+' frames')
+console.log('fs='+_fs+' Hz')
 audio=[];
 for (let c=0; c<ch; c++){
   audio.push(new Float32Array(N));

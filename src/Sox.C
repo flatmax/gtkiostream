@@ -313,6 +313,8 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("openRead", emscripten::select_overload<int(intptr_t, size_t)>(&Sox<double>::openRead), emscripten::allow_raw_pointers())
   .function("read", &Sox<double>::readJS)
   .function("setMaxVal", &Sox<double>::setMaxVal)
+  .function("getFSIn", &Sox<double>::getFSIn)
+
   ;
 }
 #endif
