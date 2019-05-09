@@ -98,8 +98,10 @@ all-local: libgtkIOStream.la libfft.la libdsp.la
 	@emcc --bind -s ALLOW_MEMORY_GROWTH=1 --llvm-lto 1 -s WASM=0 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
 	mv .libs/libgtkIOStream.js .libs/libgtkIOStreamNode.js
 	@emcc --bind --llvm-lto 1 --memory-init-file 0 --pre-js ../webcomponents/pre.js -s MODULARIZE_INSTANCE=1 -s "MODULARIZE=1" -s EXPORT_NAME="'libgtkIOStream'" -s SINGLE_FILE=1 -s "BINARYEN_METHOD='native-wasm'" -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
+	cp .libs/libgtkIOStreamNode.js .libs/libgtkIOStream.js ../webcomponents/gtkiostream
+	cp ../test/testVectors/11.Neutral.44k.wav ../js/SoxTest.js ../webcomponents/gtkiostream/test
 install-exec-hook:
-	cp .libs/libfft.js .libs/libfft.wasm .libs/libgtkIOStream.js .libs/libgtkIOStream.wasm $(DESTDIR)$(libdir) #.libs/libfft.node
+	cp .libs/libfft.js .libs/libfft.wasm .libs/libgtkIOStream.js $(DESTDIR)$(libdir) #.libs/libfft.node
 clean-local:
-	@rm -f .libs/libfft.node .libs/libfft.js .libs/libfft.wasm .libs/libgtkIOStream.js .libs/libgtkIOStream.wasm
+	@rm -f .libs/libfft.node .libs/libfft.js .libs/libfft.wasm .libs/libgtkIOStream.js
 endif
