@@ -1,0 +1,19 @@
+{
+  "name": "gtkiostream",
+  "version": "1.7.0a",
+  "description": "The gtkiostream WASM modules for nodejs and the browser",
+  "main": "libgtkIOStreamNode.js",
+  "scripts": {
+    "test": "test/SoxTest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flatmax/gtkiostream.git"
+  },
+  "author": "Matt Flax",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/flatmax/gtkiostream/issues"
+  },
+  "homepage": "https://github.com/flatmax/gtkiostream#readme"
+}
