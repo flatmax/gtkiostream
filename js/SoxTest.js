@@ -17,7 +17,7 @@
  */
 
 var fs = require('fs');
-var libgtkIOStream = require('../src/.libs/libgtkIOStreamNode');
+var libgtkIOStream = require('./libgtkIOStreamNode');
 
 /** Taken from : https://github.com/flatmax/WASMAudio
 malloc a WASM heap based on an audio matrix size. If the audio buffer
@@ -41,7 +41,7 @@ function mallocHEAP(byteLength, chCnt, heapName){
   return Nb;
 }
 
-let data = fs.readFileSync('test/testVectors/11.Neutral.44k.wav');
+let data = fs.readFileSync('11.Neutral.44k.wav');
 let Nmem = mallocHEAP(data.length, 1, 'audio'); // resize the heap
 libgtkIOStream.HEAPU8.set(data, audio);
 let Sox = new libgtkIOStream.Sox;
