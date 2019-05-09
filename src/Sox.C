@@ -98,9 +98,9 @@ int Sox<FP_TYPE_>::openRead(intptr_t buffer, size_t len){
   // for (int i=0;i<len;i++)
   //   std::cout<<(int)((char*)buffer)[i]<<'\t';
   // std::cout<<std::endl;
-  for (int i=0; i<150; i++)
-    printf("%x\n",((char*)buffer)[i]);
-  printf("\n");
+  // for (int i=0; i<150; i++)
+  //   printf("%x\n",((char*)buffer)[i]);
+  // printf("\n");
   in = sox_open_mem_read((void*)buffer, len, NULL, NULL, NULL);
   if (!in)
       return SOX_READ_FILE_OPEN_ERROR;
