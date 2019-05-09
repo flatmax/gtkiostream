@@ -44,3 +44,7 @@ gtkiostream_config.h*
 *~
 ALSAControlMonitor
 node_modules
+js/libgtkIOStreamNode.js
+webcomponents/gtkiostream/libgtkIOStream.js
+webcomponents/gtkiostream/libgtkIOStreamNode.js
+webcomponents/gtkiostream/test
