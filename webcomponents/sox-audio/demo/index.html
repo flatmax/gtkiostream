@@ -32,6 +32,11 @@
       </demo-snippet>
     </div>
     <script type="text/javascript">
+    window.addEventListener('libgtkIOStream::initialised', (e)=>{
+      console.log('sox-audio demo starting');
+      setURL();
+    })
+
       function setURL(){
         var soxAudio = document.querySelector('sox-audio');
         soxAudio.url="11.Neutral.44k.wav";

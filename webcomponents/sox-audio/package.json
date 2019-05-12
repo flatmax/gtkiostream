@@ -2,7 +2,8 @@
   "name": "sox-audio",
   "main": "sox-audio.js",
   "dependencies": {
-    "@polymer/polymer": "^3.0.0"
+    "@polymer/polymer": "^3.0.0",
+    "gtkiostream": "^1.7.0-a"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.1.0",

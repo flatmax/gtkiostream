@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import {libgtkIOStreamElement} from './libgtkiostream-element.js';
 
 /**
  * `sox-audio`
@@ -8,16 +8,7 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
  * @polymer
  * @demo demo/index.html
  */
-class SoxAudio extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
-        :host {
-          display: block;
-        }
-      </style>
-    `;
-  }
+class SoxAudio extends libgtkIOStreamElement {
   static get properties() {
     return {
       url: { // url for fetching the audio
@@ -25,64 +16,7 @@ class SoxAudio extends PolymerElement {
         value: null,
         observer: 'decodeURL'
       },
-      scriptName: { // The name of the script to load : for example stripNAme.js
-        type: String,
-        value: '../libgtkIOStream.js',
-        observer: 'scriptNameChange'
-      },
     };
-  }
-
-  /** When ready define the moduleName based on the module file name
-  */
-  connectedCallback(){
-    super.connectedCallback();
-    let idx = this.scriptName.indexOf(".js");
-    if (idx==-1)
-      return console.log("Error : the script name you provided doesn't end with .js");
-    this.moduleName = this.scriptName.slice(0, idx);
-    idx = this.moduleName.indexOf("/"); // strip any path from the modle name - needs fixing if the path is larger then one node
-    if (idx)
-      this.moduleName = this.moduleName.slice(idx+1, this.moduleName.length);
-  }
-
-  /** Load the WASM module
-  */
-  scriptNameChange(){
-    let script = document.createElement('script');
-    script.src = this.scriptName;
-    document.head.appendChild(script);
-  }
-
-  /** malloc a WASM heap based on an audio matrix size. If the audio buffer
-  channel count or frame count is changed, then free and malloc again.
-  We remember size here to check if the heap frame count is different.
-  \param byteLength The number of bytes in each channel
-  \param chCnt The number of channels
-  \param heapName For example 'inBufs'
-  */
-  mallocHEAP(byteLength, chCnt, heapName){
-    let Nb=byteLength; // number of bytes
-    let M=chCnt; // number of channels
-    let N=M*Nb; // total byte count
-    // resize memory if required
-    if (this[heapName]==null || this[heapName+'Size']!=N){
-      if (this[heapName]!=null)
-        eval(this.moduleName)._free(this[heapName]);
-      this[heapName] = eval(this.moduleName)._malloc(N);
-      this[heapName+'Size']=N;
-    }
-    return Nb;
-  }
-
-  /** Given a heap variable name, free the data.
-  @param heapName The name of the variable to free
-  */
-  freeHEAP(heapName){
-    if (this[heapName])
-      eval(this.moduleName)._free(this[heapName]);
-    if (this[heapName+'Size'])
-      this[heapName+'Size']=null;
   }
 
   /** Fetch the url and attempt to decode the audio from the binary data using Sox

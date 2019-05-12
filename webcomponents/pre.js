@@ -16,4 +16,4 @@
  */
 
 
-Module['onRuntimeInitialized'] = function(){console.log('WASM initalised')};
+Module['onRuntimeInitialized'] = function(){window.dispatchEvent(new CustomEvent('libgtkIOStream::initialised'));console.log('WASM initalised')};
