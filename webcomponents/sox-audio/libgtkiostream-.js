@@ -7,7 +7,7 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
  * @customElement
  * @polymer
  */
-export class libgtkIOStreamElement extends PolymerElement {
+export class LibgtkIOStream extends PolymerElement {
 
 //   static get properties() {
 //     return {
@@ -60,4 +60,4 @@ export class libgtkIOStreamElement extends PolymerElement {
   }
 }
 
-window.customElements.define('libgtkiostream-element', libgtkIOStreamElement);
+window.customElements.define('libgtkiostream-', LibgtkIOStream);

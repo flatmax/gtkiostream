@@ -1,4 +1,4 @@
-import {libgtkIOStreamElement} from './libgtkiostream-element.js';
+import {LibgtkIOStream} from './libgtkiostream-.js';
 
 /**
  * `sox-audio`
@@ -8,7 +8,7 @@ import {libgtkIOStreamElement} from './libgtkiostream-element.js';
  * @polymer
  * @demo demo/index.html
  */
-class SoxAudio extends libgtkIOStreamElement {
+class SoxAudio extends LibgtkIOStream {
   static get properties() {
     return {
       url: { // url for fetching the audio
