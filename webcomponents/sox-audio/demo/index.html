@@ -32,10 +32,11 @@
       </demo-snippet>
     </div>
     <script type="text/javascript">
-    window.addEventListener('libgtkIOStream::initialised', (e)=>{
-      console.log('sox-audio demo starting');
-      setURL();
-    })
+      // once the WASM is compiled and ready, fire off this function
+      window.addEventListener('libgtkIOStream::initialised', (e)=>{
+        console.log('sox-audio demo starting');
+        setURL();
+      })
 
       function setURL(){
         var soxAudio = document.querySelector('sox-audio');

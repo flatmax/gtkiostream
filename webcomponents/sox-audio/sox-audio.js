@@ -2,7 +2,7 @@ import {LibgtkIOStream} from 'gtkiostream/libgtkiostream-.js';
 
 /**
  * `sox-audio`
- * Webcomponent using sox for audio decoding
+ * Webcomponent using gtkiostream and sox for audio decoding
  *
  * @customElement
  * @polymer

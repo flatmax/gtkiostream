@@ -9,14 +9,6 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
  */
 export class LibgtkIOStream extends PolymerElement {
 
-//   static get properties() {
-//     return {
-//       moduleName: { // the module name once loaded
-//         type: String,
-//         value: 'libgtkIOStream'
-//       }
-//     };
-// }
   /** When ready define the moduleName based on the module file name
   */
   connectedCallback(){
