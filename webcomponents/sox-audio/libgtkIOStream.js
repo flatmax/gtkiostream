@@ -1,1 +1,0 @@
-../../src/.libs/libgtkIOStream.js

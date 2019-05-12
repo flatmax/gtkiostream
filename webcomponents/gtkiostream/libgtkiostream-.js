@@ -23,7 +23,7 @@ export class LibgtkIOStream extends PolymerElement {
     super.connectedCallback();
     this.moduleName = 'libgtkIOStream';
     let script = document.createElement('script');
-    script.src = './libgtkIOStream.js';
+    script.src = 'libgtkIOStream.js';
     document.head.appendChild(script);
   }
 
