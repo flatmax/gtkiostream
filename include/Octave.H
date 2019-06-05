@@ -243,7 +243,7 @@ public:
 
     /** Clear everything.
     */
-    void clearAll(void);
+    // void clearAll(void);
 
     /** Convert a std::string to a matrix.
     \param str The std::string.

@@ -15,9 +15,10 @@
    along with GTK+ IOStream
 */
 
-#include <octave/gtkiostream_config.h>
+#include <octave/parse.h>
+#include <octave/octave-config.h>
 #include <octave/octave.h>
-#include <octave/oct-obj.h>
+// #include <octave/oct-obj.h>
 #include <octave/oct-map.h>
 #include <octave/symtab.h>
 //#include <octave/ov-scalar.h>
@@ -35,8 +36,8 @@ typedef void (*octave_exit_func) (int);
 extern OCTINTERP_API octave_exit_func octave_exit;
 extern OCTINTERP_API void clean_up_and_exit (int, bool);
 
-extern OCTINTERP_API octave_value_list
-feval (const string& name, const octave_value_list& args = octave_value_list (), int nargout = 0);
+// extern OCTINTERP_API octave_value_list
+// feval (const string& name, const octave_value_list& args = octave_value_list (), int nargout = 0);
 
 //extern void do_octave_atexit (void);
 //extern void clean_up_and_exit (int retval);
@@ -374,6 +375,6 @@ void Octave::deleteMatrix(Matrix *m){
     delete m;
 }
 
-void Octave::clearAll(void){
-    symbol_table::clear_all();
-}
+// void Octave::clearAll(void){
+//     symbol_table::clear_all();
+// }
