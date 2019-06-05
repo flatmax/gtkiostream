@@ -1,5 +1,7 @@
 {
-  "name": "sox-audio",
+  "name": "sox-element",
+  "version": "1.7.0c",
+  "description": "The gtkiostream sox class as a webcompoenent",
   "main": "sox-audio.js",
   "dependencies": {
     "@polymer/polymer": "^3.0.0",
@@ -12,5 +14,15 @@
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "wct-mocha": "^1.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flatmax/gtkiostream.git"
+  },
+  "author": "Matt Flax",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/flatmax/gtkiostream/issues"
+  },
+  "homepage": "http://shop.audioinjector.net"
 }
