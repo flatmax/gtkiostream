@@ -112,6 +112,15 @@ limitHalfPowerSpec(double lim){
   return bin;
 }
 
+std::complex<fftw_real> RealFFTData::getComplexCoeff(const unsigned int k){
+  if (k>=getHalfSize()) // conjugate for frequencies > Nyquist
+    if (k==getHalfSize() && !(getSize()%2)) // Complex coeff. at Nyquist is zero for even length
+      return std::complex<fftw_real>(out[getSize()-k], 0.);
+    else
+      return std::conj(std::complex<fftw_real>(out[getSize()-k], out[k])); // above Nyquist or odd length at Nyquist
+  return std::complex<fftw_real>(out[k], out[getSize()-k]); // below Nyquist
+}
+
 
 int RealFFTData::
 compPowerSpec(){

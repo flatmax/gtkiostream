@@ -24,7 +24,7 @@ EXTRA_CFLAGS =
 noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest
 noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6 FileWatchThreadedTest
 noinst_PROGRAMS += FileWatchThreadedTest2
-noinst_PROGRAMS += IIRTest2 HankelTest ImpulseBandLimitedTest ResamplerTest
+noinst_PROGRAMS += IIRTest2 HankelTest ImpulseBandLimitedTest ResamplerTest RealFFTExampleGD
 #noinst_PROGRAMS += DSFStreamTest
 if !HAVE_EMSCRIPTEN
 noinst_PROGRAMS += FutexTest FutexVsPThreadTest
@@ -176,7 +176,7 @@ ${MG}/%.C : %.ice
 clean-local:
 	-rm -rf ${MG}
 
-EXTRA_DIST = AlignmentTest.C BSTTest.C ButtonsFontTest.C ButtonsTest2.C ButtonsTest.C CairoArrowTest.C colourWheelTest.C ComboBoxTextTest.C DrawingAreaTest.C HeapTreeSort.C InlineTest.C JackClientTest.C LabelsTest2.C LabelsTest3.C LabelsTest.C MessageDialogTest.C NeuralNetworkFnTest.C NeuralNetworkTest.C OctaveTest.C OptionParserTest.C PangoTest2.C PangoTest.C PlotTest2.C PlotTest3.C PlotTest.C ProgressBarTest.C ScaleTest.C SelectionTest2.C SelectionTest3.C SelectionTest.C SeparatorTest.C TableTest.C TextViewTest.C ThreadTest.C CairoBoxTest.C SelectionAreaTest.C RealFFTExample.C Real2DFFTExample.C ComplexFFTExample.C ComplexFFTExample.C AudioMaskerExample.C OverlapAddTest.C DirectoryScannerTest.C IIOTest.C ScrollingTest.C #DecompositionTest.C
+EXTRA_DIST = AlignmentTest.C BSTTest.C ButtonsFontTest.C ButtonsTest2.C ButtonsTest.C CairoArrowTest.C colourWheelTest.C ComboBoxTextTest.C DrawingAreaTest.C HeapTreeSort.C InlineTest.C JackClientTest.C LabelsTest2.C LabelsTest3.C LabelsTest.C MessageDialogTest.C NeuralNetworkFnTest.C NeuralNetworkTest.C OctaveTest.C OptionParserTest.C PangoTest2.C PangoTest.C PlotTest2.C PlotTest3.C PlotTest.C ProgressBarTest.C ScaleTest.C SelectionTest2.C SelectionTest3.C SelectionTest.C SeparatorTest.C TableTest.C TextViewTest.C ThreadTest.C CairoBoxTest.C SelectionAreaTest.C RealFFTExample.C RealFFTExampleGD.C Real2DFFTExample.C ComplexFFTExample.C ComplexFFTExample.C AudioMaskerExample.C OverlapAddTest.C DirectoryScannerTest.C IIOTest.C ScrollingTest.C #DecompositionTest.C
 
 if HAVE_ZEROC_ICE
 #noinst_PROGRAMS += ORBTest
@@ -198,6 +198,10 @@ OctaveTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS)
 RealFFTExample_SOURCES = RealFFTExample.C
 RealFFTExample_CPPFLAGS = -I$(abs_top_srcdir)/include  $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
 RealFFTExample_LDADD = $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libfft.la $(EXTRA_LIBS) $(FFTW3_LIBS)
+
+RealFFTExampleGD_SOURCES = RealFFTExampleGD.C
+RealFFTExampleGD_CPPFLAGS = -I$(abs_top_srcdir)/include  $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
+RealFFTExampleGD_LDADD = $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libfft.la $(EXTRA_LIBS) $(FFTW3_LIBS)
 
 Real2DFFTExample_SOURCES = Real2DFFTExample.C
 Real2DFFTExample_CPPFLAGS = -I$(abs_top_srcdir)/include  $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)

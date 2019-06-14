@@ -18,7 +18,7 @@
 #define REALFFTDATA_H_
 
 #include "fft/FFTCommon.H"
-//#include "fft/RealFFT.H"
+#include <complex>
 
 /// class RealFFTData controls and manipulates fft data
 class RealFFTData {
@@ -64,6 +64,12 @@ public:
 
   /// This function zeros the output data array (out)
   void zeroFFTData(void);
+
+  /** Get the complex representation of the coefficient at index k
+  \param k The index to get a complex coefficient representation of.
+  \return The complex coefficient at index k (k<=getSize())
+  */
+  std::complex<fftw_real> getComplexCoeff(const unsigned int k);
 
   /** load the input data.
   \param i The index to load into.
