@@ -50,6 +50,8 @@ int main (void){
     // forward transform :
     rfft.fwdTransform();
 
+    RealFFTData gd=rfft.groupDelay(fftData);
+
     // cout<<"y=["<<endl;
     // fftData.dumpOut();
     // cout<<"];"<<endl;
@@ -60,9 +62,19 @@ int main (void){
     }
     cout<<"];"<<endl;
 
+    cout<<"gd=[";
+    for (unsigned int i=0; i<N; i++){
+      cout<<gd.in[i]<<' ';
+    }
+    cout<<"];"<<endl;
+
     cout<<"XHAT=fft(x);"<<endl;
     cout<<"[X; XHAT]"<<endl;
-    cout<<"sum(X-XHAT)/length(X)"<<endl;
+    cout<<"complexError=sum(X-XHAT)/length(X)"<<endl;
+
+    cout<<"gdHat=grpdelay(x,1,"<<N<<",'whole')';"<<endl;
+    cout<<"[gd; gdHat]"<<endl;
+    cout<<"gdError=sum(gd-gdHat)/length(X)"<<endl;
 
     // cout<<"\""<<endl;
   return 0;

@@ -57,6 +57,13 @@ public:
 
     /// Inverse transform the data (out to in)
     void invTransform();
+
+    /** Find the group delay of a real fft object
+    Uses the Smith algorithm for computing the group delay.
+    \param rfd The DFT data to find the group delay of
+    \returns The group delay in the form of a RealFFTData object where the RealFFTData::in variable is the group delay
+    */
+    RealFFTData groupDelay(RealFFTData &rfd);
 };
 /** \example RealFFTExample.C
  * This is an example of how to use the class.

@@ -70,6 +70,17 @@ void RealFFT::invTransform() {
         fftw_execute(invPlan);
 }
 
+RealFFTData RealFFT::groupDelay(RealFFTData &rfd){
+  RealFFTData gd(rfd.getSize()); // correctly size the group delay object
+  for (int i=0; i<rfd.getSize(); i++)
+    gd.in[i]=rfd.in[i]*i;
+  switchData(gd); // derive the DFT coefficients
+  fwdTransform();
+  for (int i=0; i<rfd.getSize(); i++)
+    gd.in[i]=(gd.getComplexCoeff(i)/rfd.getComplexCoeff(i)).real();
+  return gd;
+}
+
 #include "gtkiostream_config.h"
 #ifdef HAVE_EMSCRIPTEN
 #include <emscripten/bind.h>
