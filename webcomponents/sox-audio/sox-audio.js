@@ -8,7 +8,7 @@ import {LibgtkIOStream} from 'gtkiostream/libgtkiostream-.js';
  * @polymer
  * @demo demo/index.html
  */
-class SoxAudio extends LibgtkIOStream {
+export class SoxAudio extends LibgtkIOStream {
   static get properties() {
     return {
       url: { // url for fetching the audio
