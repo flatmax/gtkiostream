@@ -78,9 +78,14 @@ public:
   void load(const unsigned int i, const fftw_real val);
   /** unload the output data.
   \param i The index to load into.
-  \return The value to load into out[i]
+  \return The value to unloaded from out[i]
   */
   fftw_real unload(const unsigned int i);
+  /** unload the grou pdelay data form the in array.
+  \param i The index to unload from.
+  \return The value to unloaded from in[i]
+  */
+  fftw_real unloadGD(const unsigned int i);
   /** unload the power_spectrum data.
   \param i The index to load into.
   \return The value to load into power_spectrum[i]

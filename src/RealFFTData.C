@@ -215,6 +215,12 @@ fftw_real RealFFTData::unload(const unsigned int i){
   return 0./0.; // on error return NaN
 }
 
+fftw_real RealFFTData::unloadGD(const unsigned int i){
+  if (i<getSize())
+    return in[i];
+  return 0./0.; // on error return NaN
+}
+
 fftw_real RealFFTData::unloadPS(const unsigned int i){
   if (i<=getSize()/2+1)
     return power_spectrum[i];
@@ -250,6 +256,7 @@ EMSCRIPTEN_BINDINGS(RealFFTData_ex) {
     .function("zeroFFTData", &RealFFTData::zeroFFTData)
     .function("load", &RealFFTData::load)
     .function("unload", &RealFFTData::unload)
+    .function("unloadGD", &RealFFTData::unloadGD)
     .function("unloadPS", &RealFFTData::unloadPS)
     .function("dumpIn", &RealFFTData::dumpIn)
     .function("dumpOut", &RealFFTData::dumpOut)

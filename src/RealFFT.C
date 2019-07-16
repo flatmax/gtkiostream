@@ -90,6 +90,7 @@ emscripten::class_<RealFFT>("RealFFT")
     .constructor<RealFFTData*>() // the constructor takes in a data class
     .function("switchData", emscripten::select_overload<void(RealFFTData&)>(&RealFFT::switchData))
     .function("fwdTransform", &RealFFT::fwdTransform)
-    .function("invTransform", &RealFFT::invTransform);
+    .function("invTransform", &RealFFT::invTransform)
+    .function("groupDelay", &RealFFT::groupDelay);
 }
 #endif
