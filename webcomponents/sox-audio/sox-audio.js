@@ -21,10 +21,10 @@ export class SoxAudio extends LibgtkIOStream {
 
   /** Fetch the url and attempt to decode the audio from the binary data using Sox
   */
-  decodeURL(){
+  async decodeURL(){
     if (this.url == null)
       return;
-    fetch(this.url).then((response) => {
+    let res = await fetch(this.url).then((response) => {
       return response.arrayBuffer();
     }).then((data) => {
       let Nmem = this.mallocHEAP(data.byteLength, 1, 'audio'); // resize the heap
@@ -55,9 +55,13 @@ export class SoxAudio extends LibgtkIOStream {
           this.audio[c][n]=this.sox.getSample(n, c);
       }
       console.log(this.url+' loaded');
+      return true;
     }).catch((err) => {
       console.log(err)
+      return false;
     })
+
+    return res
   }
 }
 
