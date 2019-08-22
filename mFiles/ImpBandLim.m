@@ -25,7 +25,7 @@ function x=ImpBandLim(s, fs, fi, fa)
 % Output :
 %         x : The signal
 
-N=s*fs;
+N=round(s*fs);
 x=zeros(N,1); % zeros of correct duration
 x(1)=1.0; % the impulse
 X=fft(x); % zero out of band data in the DFT domain
