@@ -31,10 +31,10 @@ x(1)=1.0; % the impulse
 X=fft(x); % zero out of band data in the DFT domain
 f=linspace(0,fs-fs/N,N);
 idxOrig=find(f<fi | f>(fs-fi));
-idx=[1:fi/(fs/N) N-fi/(fs/N)+2:N];
+idx=round([1:fi/(fs/N) N-fi/(fs/N)+2:N]);
 X(idx,1)=0;
 idxOrig=find(f>fa & f<(fs-fa));
-idx=[fa/(fs/N)+2:(fs-fa)/(fs/N)];
+idx=round([fa/(fs/N)+2:(fs-fa)/(fs/N)]);
 X(idx,1)=0;
 % circular shift
 x=ifft(X);
