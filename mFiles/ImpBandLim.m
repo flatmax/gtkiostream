@@ -36,8 +36,9 @@ X(idx,1)=0;
 idxOrig=find(f>fa & f<(fs-fa));
 idx=round([fa/(fs/N)+2:(fs-fa)/(fs/N)]);
 X(idx,1)=0;
+% get the time domain signal
+x=ifft(X,'symmetric');
 % circular shift
-x=ifft(X);
 % don't worry about circularly shifting for now ...
 % xHat=circshift(x,N/2);
 % phi=(linspace(0,N-1,N))*pi/2;
@@ -47,13 +48,13 @@ x=ifft(X);
 %     plot(real(xHat))
 %     subplot(212)
 %     plot(imag(xHat))
-if ~isreal(x)
-    clf
-    subplot(211)
-    plot(real(x))
-    subplot(212)
-    plot(imag(x))
-  error('x should be a real signal');
-end
-clf; plot(x)
+% if ~isreal(x)
+%     clf
+%     subplot(211)
+%     plot(real(x))
+%     subplot(212)
+%     plot(imag(x))
+%   error('x should be a real signal');
+% end
+% clf; plot(x)
 end
