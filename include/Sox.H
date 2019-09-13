@@ -379,6 +379,14 @@ public:
   */
   int readJS(unsigned int count=0);
 
+  /** Emscripten case : Get the raw audio into the output buffer
+  \param output The user supplied audio buffer to fill
+  \param Mout The number of channels available in the output buffer
+  \param Nout The number of frames available in the output buffer
+  \return 0 on success, otherwise error.
+  */
+  int getAudio(intptr_t output, unsigned int Mout, unsigned int Nout);
+
 private:
   Eigen::Matrix<FP_TYPE_, Eigen::Dynamic, Eigen::Dynamic> audio; ///< Emscripten case : The audio data
 #endif // HAVE_EMSCRIPTEN

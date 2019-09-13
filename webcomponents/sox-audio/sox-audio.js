@@ -48,12 +48,12 @@ export class SoxAudio extends LibgtkIOStream {
       console.log(''+ch+' channels')
       console.log(''+N+' frames')
       console.log('fs='+_fs+' Hz')
-      this.audio=[];
-      for (let c=0; c<ch; c++){
-        this.audio.push(new Float32Array(N));
-        for (let n=0; n<N; n++)
-          this.audio[c][n]=this.sox.getSample(n, c);
-      }
+      let Nb = this.mallocHEAP(N*4, ch, 'audioOut'); // resize the heap ch*N 32 bit words
+      this.sox.getAudio(this.audioOut, ch, N);
+      this.audio=[]; // load the audio into the audio array
+      for (var c=0; c<ch; c++) // retrieve the audio channel data
+        this.audio.push(new Float32Array(eval(this.moduleName).HEAPF32.subarray((this.audioOut+c*Nb)>>2, (this.audioOut+c*Nb+Nb)>>2)));
+      this.freeHEAP('audioOut');
       console.log(this.url+' loaded');
       this.decodeSuccess();
     }).catch((err) => {

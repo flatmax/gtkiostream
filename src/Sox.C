@@ -88,19 +88,11 @@ int Sox<FP_TYPE_>::openRead(string fileName) {
     return 0;
 }
 
-#include <iostream>
-
 template<typename FP_TYPE_>
 int Sox<FP_TYPE_>::openRead(intptr_t buffer, size_t len){
   bool inputFile=true;
   close(inputFile);
 
-  // for (int i=0;i<len;i++)
-  //   std::cout<<(int)((char*)buffer)[i]<<'\t';
-  // std::cout<<std::endl;
-  // for (int i=0; i<150; i++)
-  //   printf("%x\n",((char*)buffer)[i]);
-  // printf("\n");
   in = sox_open_mem_read((void*)buffer, len, NULL, NULL, NULL);
   if (!in)
       return SOX_READ_FILE_OPEN_ERROR;
@@ -286,7 +278,7 @@ FP_TYPE_ Sox<FP_TYPE_>::getSample(unsigned int r, unsigned int c){
     typedef std::numeric_limits<double> Info;
     return Info::quiet_NaN();
   }
-  return audio(r,c);
+  return (FP_TYPE_)audio(r,c);
 }
 
 template<typename FP_TYPE_>
@@ -302,6 +294,22 @@ int Sox<FP_TYPE_>::readJS(unsigned int count){
   return read(audio, count);
 }
 
+template<typename FP_TYPE_>
+int Sox<FP_TYPE_>::getAudio(intptr_t output, unsigned int Mout, unsigned int Nout){
+  if (Nout!=(int)audio.rows()){
+    printf("Sox error: Sox::audio size = [%d, %d], you requested audio of size = [%d, %d]", (int)audio.rows(), (int)audio.cols(), Nout, Mout);
+    return SoxDebug().evaluateError(SOX_ROW_BOUNDS_ERROR);
+  }
+  if (Mout != (int)audio.cols()){
+    printf("Sox error: Sox::audio size = [%d, %d], you requested audio of size = [%d, %d]", (int)audio.rows(), (int)audio.cols(), Nout, Mout);
+    return SoxDebug().evaluateError(SOX_COL_BOUNDS_ERROR);
+  }
+  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned >
+                                        outAudio((float*)output, Nout, Mout);
+  outAudio=audio. template cast<float>();
+  return 0;
+}
+
 #include <emscripten/bind.h>
 EMSCRIPTEN_BINDINGS(Sox_ex) {
   emscripten::class_<Sox<double>>("Sox")
@@ -314,7 +322,7 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("read", &Sox<double>::readJS)
   .function("setMaxVal", &Sox<double>::setMaxVal)
   .function("getFSIn", &Sox<double>::getFSIn)
-
+  .function("getAudio", &Sox<double>::getAudio, emscripten::allow_raw_pointers())
   ;
 }
 #endif
