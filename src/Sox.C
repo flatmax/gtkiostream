@@ -251,12 +251,16 @@ vector<string> Sox<FP_TYPE_>::availableFormats(void) {
 }
 
 template<typename FP_TYPE_>
-void Sox<FP_TYPE_>::printFormats(){
+string Sox<FP_TYPE_>::printFormats(){
   printf("The known output file extensions (output file formats) are the following :\n");
+  string formatList;
   vector<string> formats=availableFormats();
   for (int i=0; i<formats.size(); i++)
-      printf("%s ",formats[i].c_str());
+    formatList+=" "+formats[i];
+//    printf("%s ",formats[i].c_str());
+  printf("%s ",formatList.c_str());
   printf("\n");
+  return formatList;
 }
 
 template class Sox<int>;

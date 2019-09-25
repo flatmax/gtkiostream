@@ -352,7 +352,7 @@ public:
 
     /** Print out the available formats
     */
-    void printFormats();
+    string printFormats();
 
 #ifdef HAVE_EMSCRIPTEN
   /** Emscripten case : Get an audio sample from the audio member variable

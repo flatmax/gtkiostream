@@ -41,39 +41,37 @@ function mallocHEAP(byteLength, chCnt, heapName){
   return Nb;
 }
 
-
-let sox = new libgtkIOStream.Sox;
-sox.printFormats();
-
 let data = fs.readFileSync('11.Neutral.44k.wav');
 let Nmem = mallocHEAP(data.length, 1, 'audio'); // resize the heap
 libgtkIOStream.HEAPU8.set(data, audio);
-// sox.printFormats();
-let ret=sox.openRead(audio, audioSize);
+let Sox = new libgtkIOStream.Sox;
+let formats=Sox.printFormats();
+let ret=Sox.openRead(audio, audioSize);
 if (ret!=-40026) {
     throw Error('error in opening');
 }
-sox.setMaxVal(1);
-ret=sox.read(0); // read all of the audio
+Sox.setMaxVal(1);
+ret=Sox.read(0); // read all of the audio
 if (ret!=0) {
     throw Error('error reading');
 }
 
-let ch=sox.getCols();
-let N=sox.getRows();
-let _fs=sox.getFSIn();
+let ch=Sox.getCols();
+let N=Sox.getRows();
+let _fs=Sox.getFSIn();
 console.log(''+ch+' channels')
 console.log(''+N+' frames')
 console.log('fs='+_fs+' Hz')
-let Nb = mallocHEAP(N*4, ch, 'audioOut'); // resize the heap ch*N 32 bit words
-sox.getAudio(audioOut, ch, N);
-let audioArray=[];
-for (let c=0; c<ch; c++) // retrieve the audio channel data
-  audioArray.push(new Float32Array(libgtkIOStream.HEAPF32.subarray((audioOut+c*Nb)>>2, (audioOut+c*Nb+Nb)>>2)));
+audio=[];
+for (let c=0; c<ch; c++){
+  audio.push(new Float32Array(N));
+  for (let n=0; n<N; n++)
+    audio[c][n]=Sox.getSample(n, c);
+}
 
 for (let n=0; n<N; n++){
   let str='';
   for (let c=0; c<ch; c++)
-    str+=audioArray[c][n]+' ';
+    str+=audio[c][n]+' ';
   console.log(str)
 }

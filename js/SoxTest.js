@@ -45,7 +45,7 @@ let data = fs.readFileSync('11.Neutral.44k.wav');
 let Nmem = mallocHEAP(data.length, 1, 'audio'); // resize the heap
 libgtkIOStream.HEAPU8.set(data, audio);
 let Sox = new libgtkIOStream.Sox;
-// Sox.printFormats();
+let formats=Sox.printFormats();
 let ret=Sox.openRead(audio, audioSize);
 if (ret!=-40026) {
     throw Error('error in opening');
