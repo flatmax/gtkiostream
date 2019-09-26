@@ -125,6 +125,11 @@ public:
     */
     int openRead(intptr_t buffer, size_t len);
 
+    /** Find if the input file has clipping
+    \return A negative error code on failure, otherwise the number of clipping occurances
+    */
+    int getReadClips();
+
     /** Read audio data from an already opened file.
     The audioData is returned with each column as an audio channel.
     \param audioData The Matrix to place the read audio into. It is resized as required and will match the size of the number of samples read where each column is a channel.

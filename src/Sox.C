@@ -104,6 +104,14 @@ int Sox<FP_TYPE_>::openRead(intptr_t buffer, size_t len){
 }
 
 template<typename FP_TYPE_>
+int Sox<FP_TYPE_>::getReadClips(){
+  if (in)
+    return in->clips;
+  else
+    return SOX_READ_FILE_NOT_OPENED_ERROR;
+}
+
+template<typename FP_TYPE_>
 void Sox<FP_TYPE_>::output_message(unsigned level, const char *filename, const char *fmt, va_list ap) {
     char const * const str[] = {"FAIL", "WARN", "INFO", "DBUG"};
     if (sox_globals.verbosity >= level) {
@@ -324,6 +332,7 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("getCols", &Sox<double>::getCols)
   .function("openRead", emscripten::select_overload<int(intptr_t, size_t)>(&Sox<double>::openRead), emscripten::allow_raw_pointers())
   .function("read", &Sox<double>::readJS)
+  .function("getReadClips", &Sox<double>::getReadClips)
   .function("setMaxVal", &Sox<double>::setMaxVal)
   .function("getFSIn", &Sox<double>::getFSIn)
   .function("getAudio", &Sox<double>::getAudio, emscripten::allow_raw_pointers())
