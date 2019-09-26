@@ -1,11 +1,11 @@
 {
   "name": "sox-element",
-  "version": "1.7.0i",
+  "version": "1.7.0j",
   "description": "The gtkiostream sox class as a webcompoenent",
   "main": "sox-audio.js",
   "dependencies": {
     "@polymer/polymer": "^3.0.0",
-    "gtkiostream": "^1.7.0-i"
+    "gtkiostream": "^1.7.0-j"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.1.0",
