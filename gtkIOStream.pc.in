@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: gtkIOStream
 Description: Headers and library for GUI, ORBing, Octave and Jack audio interfacing.
-URL: http://sourceforge.net/projects/gtkiostream
+URL: https://github.com/flatmax/gtkiostream
 Version: @VERSION@
 Requires:
 Libs: -L${libdir} -ldsp -lgtkIOStream @ALSA_LIBS@ @GTK_LIBS@ @EIGEN_LIBS@ @SOX_LIBS@ @MKOCTFILE_LIBPATH@ @MKOCTFILE_PCLIBPATH@ @MKOCTFILE_LIBS@ @JACK_LIBS@ @FFTW3_LIBS@ @OPENCV_LIBS@
