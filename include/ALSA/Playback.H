@@ -102,7 +102,6 @@ namespace ALSA {
 			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
 			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
 			//std::cout<<"getFormatPhysicalWidth()/8 "<<getFormatPhysicalWidth()/8<<" getChannels() "<<getChannels()<<'\n';
-			// PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
 			int ret=snd_pcm_writei(getPCM(), (void *)bufferIn, len); // first time through - allow for starting if required
 			if (prepared())
 				if ((ret=start())<0)
