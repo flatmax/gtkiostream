@@ -82,4 +82,5 @@
 \example IIRTest.C
 \example IIRCascadeTest.C
 \example FIRTest.C
+\example ALSAControlTest.C
 */
