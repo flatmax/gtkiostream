@@ -74,6 +74,7 @@ void Octave::init(void) {
 
 Octave::Octave(const vector<string> &args) {
     init();
+    printf("NOTE: Newer versoins of Octave no longer support cmd line options.\n");
     startOctave(args);
 }
 

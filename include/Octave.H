@@ -121,7 +121,8 @@ class Octave {
 public:
     octave_value_list *input; ///< The inputs to pass to the octave .m file.
 
-    /** Constructor starts an octave instance using args to pass to octave
+    /** Constructor starts an octave instance using args to pass to octave.
+    NOTE: newer versoins of octave don't support args with embedded interpreters any more. It is necessary to execute all command line args in an .m file (such as addpath calls).
     \param args Arguments to pass into octave
     */
     Octave(const vector<std::string> &args);

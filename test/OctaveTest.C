@@ -25,32 +25,35 @@ int main(int argc, char *argv[]){
     string tempPath="/tmp"; //note: if you don't have /tmp on your system, then you will ahve to change the tempmorary dir path name
 
     // start octave - adding the tempPath to the octave path
-    vector<string> args(3); args[0]=string("--silent"); args[1]=string("--path"); args[2]=tempPath;
+    // vector<string> args(3); args[0]=string("--silent"); args[1]=string("--path"); args[2]=tempPath;
+    vector<string> args; // args are no longer accepted by the Octave embedded interpreter
     Octave octave(args);
 
     cout<<"octave is init "<<octave.isReady()<<endl;
 
     int ret=0;
-    octave.runM("ls");
+    // octave.runM("addpath /tmp");
+    octave.runM("OctaveTestInit"); // add the paths in this file
 
-    // set some global variables
-/*    cout<<"global var test"<<endl;
-    Eigen::Matrix<float, Eigen::Dynamic,Eigen::Dynamic> m=Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>::Random(2,2);
-    octave.setGlobalVariable(string("m"),m);
-    cout<<"global var test1.test2.test3.test4"<<endl;
-    octave.setGlobalVariable(string("test1.test2.test3.test4"),m);
-    cout<<"global var test1.test2.test3.test4a"<<endl;
-    octave.setGlobalVariable(string("test1.test2.test3.test4a"),m);
-    cout<<"global var test1.test2.test3a"<<endl;
-    octave.setGlobalVariable(string("test1.test2.test3a"),m);
-    cout<<"global var test1.test2a"<<endl;
-    octave.setGlobalVariable(string("test1.test2a"),m);
-    cout<<"global var test1a"<<endl;
-    octave.setGlobalVariable(string("test1a"),m);
-    cout<<"global var test empty"<<endl;
-    if ((ret=octave.setGlobalVariable(string(""),m))<0)
-        cout<<OctaveDebug().evaluateError(ret)<<endl;
-*/
+    // global vars needs more work.
+    // // set some global variables
+    // cout<<"global var test"<<endl;
+    // Eigen::Matrix<float, Eigen::Dynamic,Eigen::Dynamic> m=Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>::Random(2,2);
+    // octave.setGlobalVariable(string("m"),m);
+    // cout<<"global var test1.test2.test3.test4"<<endl;
+    // octave.setGlobalVariable(string("test1.test2.test3.test4"),m);
+    // cout<<"global var test1.test2.test3.test4a"<<endl;
+    // octave.setGlobalVariable(string("test1.test2.test3.test4a"),m);
+    // cout<<"global var test1.test2.test3a"<<endl;
+    // octave.setGlobalVariable(string("test1.test2.test3a"),m);
+    // cout<<"global var test1.test2a"<<endl;
+    // octave.setGlobalVariable(string("test1.test2a"),m);
+    // cout<<"global var test1a"<<endl;
+    // octave.setGlobalVariable(string("test1a"),m);
+    // cout<<"global var test empty"<<endl;
+    // if ((ret=octave.setGlobalVariable(string(""),m))<0)
+    //     cout<<OctaveDebug().evaluateError(ret)<<endl;
+
     cout<<"create a script"<<endl;
     // create the OctaveTest.m script
     ofstream out((tempPath+"/OctaveTest.m").c_str());
@@ -76,13 +79,13 @@ int main(int argc, char *argv[]){
 
     cout<<"script test"<<endl;
     // run the script OctaveTest.m ... which is in the tempPath
-    vector<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> > input(1), output(1);
+    vector<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> > input(2), output(1);
     Eigen::Matrix<float, 1, 1> dVal;
     dVal(0,0)=10.;
     input[0].resize(2,2); input[0]<<1,2,3,4;
     input[1]=dVal;
     cout<<"C++ input"<<endl;
-    cout<<input[0]<<endl;
+    // cout<<input[0]<<endl;
     octave.runM("OctaveTest", input, output);
     cout<<"c++ output:"<<endl;
     cout<<output[0]<<endl;
