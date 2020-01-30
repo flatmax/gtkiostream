@@ -169,15 +169,24 @@ namespace ALSA {
     */
     int setPlaybackSwitch(int v){
       int err;
-      if (!hasCommonSwitch && !hasPlaybackSwitch && !hasPlaybackSwitchJoined)
+      if (!hasCommonSwitch && !hasPlaybackSwitch && !hasPlaybackSwitchJoined && !isPlaybackEnum)
         return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a playback switch and I tried to set it\n");
-      for (int i=0; i<playbackVolumes.size(); i++){
-        if ((err=snd_mixer_selem_set_playback_switch(elem, playbackVolumes[i].channel, v))<0)
-          return ALSADebug().evaluateError(err, name+" setting playback switches"+'\n');
-        if ((err=playbackVolumes[i].getSwitch(elem))<0) // refresh the playback level
-          return ALSADebug().evaluateError(err, name+" getting playback switches"+'\n');
+      if (isPlaybackEnum){
+        int i=0; // only interact with the first channel in an enum
+        if ((err=snd_mixer_selem_set_enum_item(elem, playbackEnums[i].channel, v))<0)
+          return ALSADebug().evaluateError(err, name+" setting playback enums\n");
+        if ((err=playbackEnums[i].getIndex(elem))<0) // refresh the playback index
+          return ALSADebug().evaluateError(err, name+" getting playback switches\n");
+        return playbackEnums[i].idx; // all channels have the same volume in this method
+      } else {
+        for (int i=0; i<playbackVolumes.size(); i++){
+          if ((err=snd_mixer_selem_set_playback_switch(elem, playbackVolumes[i].channel, v))<0)
+            return ALSADebug().evaluateError(err, name+" setting playback switches"+'\n');
+          if ((err=playbackVolumes[i].getSwitch(elem))<0) // refresh the playback level
+            return ALSADebug().evaluateError(err, name+" getting playback switches"+'\n');
+        }
+        return playbackVolumes[0].sw; // all channels have the same volume in this method
       }
-      return playbackVolumes[0].sw; // all channels have the same volume in this method
     }
 
     /** Set the playback volume for all channels, returning the current playback volume
@@ -262,13 +271,22 @@ namespace ALSA {
     */
     int setCaptureSwitch(int v){
       int err;
-      if (!hasCommonSwitch && !hasCaptureSwitch && !hasCaptureSwitchJoined)
+      if (!hasCommonSwitch && !hasCaptureSwitch && !hasCaptureSwitchJoined && !isCaptureEnum)
         return ALSADebug().evaluateError(ALSA_MIXER_NO_PLAYBACK_VOL_ERROR, name+" doesn't have a capture switch and I tried to set it\n");
-      for (int i=0; i<captureVolumes.size(); i++){
-        if ((err=snd_mixer_selem_set_capture_switch(elem, captureVolumes[i].channel, v))<0)
-          return ALSADebug().evaluateError(err, name+" setting capture switches"+'\n');
-        if ((err=captureVolumes[i].getSwitch(elem))<0) // refresh the capture level
-          return ALSADebug().evaluateError(err, name+" getting capture switches"+'\n');
+      if (isCaptureEnum){
+        int i=0; // only interact with the first channel in an enum
+        if ((err=snd_mixer_selem_set_enum_item(elem, captureEnums[i].channel, v))<0)
+          return ALSADebug().evaluateError(err, name+" setting capture enums\n");
+        if ((err=captureEnums[i].getIndex(elem))<0) // refresh the capture index
+          return ALSADebug().evaluateError(err, name+" getting capture switches\n");
+        return captureEnums[i].idx; // all channels have the same volume in this method
+      } else {
+        for (int i=0; i<captureVolumes.size(); i++){
+          if ((err=snd_mixer_selem_set_capture_switch(elem, captureVolumes[i].channel, v))<0)
+            return ALSADebug().evaluateError(err, name+" setting capture switches"+'\n');
+          if ((err=captureVolumes[i].getSwitch(elem))<0) // refresh the capture level
+            return ALSADebug().evaluateError(err, name+" getting capture switches"+'\n');
+        }
       }
       return captureVolumes[0].sw; // all channels have the same volume in this method
     }

@@ -166,8 +166,8 @@ namespace ALSA {
   */
   class ChannelEnumElement : public ChannelElement {
     char name[128]; ///< The name of this enum element
-    unsigned int idx; ///< The current index state of this enum element
   public:
+    unsigned int idx; ///< The current index state of this enum element
     /** Constructor taking the channel ID
     */
     ChannelEnumElement(snd_mixer_selem_channel_id_t ch) : ChannelElement(ch) {
@@ -186,8 +186,8 @@ namespace ALSA {
       return ret;
     }
 
-    /** Get the name of this enum element (knowing its channel or index number)
-    \param elem the mixer element to get the name from
+    /** Get the index setting of this enum element (knowing its channel)
+    \param elem the mixer element to get the index from
     \return <0 on error
     */
     int getIndex(snd_mixer_elem_t *elem){

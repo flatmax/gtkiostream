@@ -29,7 +29,10 @@ int main(int argc, char *argv[]) {
 		return err;
 
 	mixer.scanMixer();
-	//	cout<<mixer<<endl;
+
+	// cout<<mixer<<endl;
+	// return 0;
+
 	string state=mixer.getState();
 	cout<<state<<endl;
 
@@ -82,6 +85,11 @@ int main(int argc, char *argv[]) {
 	cout<<"Capture switch = "<<sw<<endl;
 	sw=1;
 	json=mixer.setCaptureSwitchJSON("Capture", sw);
+	cout<<json<<endl;
+
+	sw=0;
+	cout<<"Setting Input Source = "<<sw<<endl;
+	json=mixer.setCaptureSwitchJSON("Input Source", sw);
 	cout<<json<<endl;
 
 	if ((err=mixer.close())<0)
