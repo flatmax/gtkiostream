@@ -201,7 +201,7 @@ namespace ALSA {
     \param os The output stream to load.
     */
     void stringifyEnumName(std::ostream &os){
-      os<<"{\"channel\": "<<channel<<", "<<"\"name\":\""<<name<<", "<<"\"index\":\""<<idx<<"\"}";
+      os<<"{\"channel\": "<<channel<<", "<<"\"name\":\""<<name<<"\", "<<"\"index\":\""<<idx<<"\"}";
     }
   };
 
