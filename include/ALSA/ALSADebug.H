@@ -39,6 +39,7 @@ namespace ALSA {
 	#define ALSA_CONTROL_NOT_OPEN_ERROR -15+ALSA_ERROR_OFFSET ///< error when ctls pointer is null
 	#define ALSA_SCHED_PRIORITY_ERROR -16+ALSA_ERROR_OFFSET ///< error when sched. priority is out of bounds
 	#define ALSA_SCHED_POLICY_ERROR -17+ALSA_ERROR_OFFSET ///< error relating to the scheduler priority
+	#define ALSA_MIXER_NO_ENUM_ERROR -18+ALSA_ERROR_OFFSET ///< error this mixer element is not a generic enum
 	class ALSADebug : public Debug {
 	public:
 		ALSADebug(void) {
@@ -60,6 +61,7 @@ namespace ALSA {
 			errors[ALSA_CONTROL_NOT_OPEN_ERROR]=std::string("The control device isn't open, open first.");
 			errors[ALSA_SCHED_PRIORITY_ERROR]=std::string("When setting the thread priority.");
 			errors[ALSA_SCHED_POLICY_ERROR]=std::string("When setting the thread policy.");
+			errors[ALSA_MIXER_NO_ENUM_ERROR]=std::string("That mixer element is not an enum control.");
 
 			#endif
 		}
