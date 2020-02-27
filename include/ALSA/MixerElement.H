@@ -103,6 +103,7 @@ namespace ALSA {
       hasCaptureSwitch=snd_mixer_selem_has_capture_switch(elem);
       hasCaptureSwitchJoined=snd_mixer_selem_has_capture_switch_joined(elem);
       hasCaptureSwitchExclusive=snd_mixer_selem_has_capture_switch_exclusive(elem);
+      isEnum=snd_mixer_selem_is_enumerated(elem);
       isPlaybackEnum=snd_mixer_selem_is_enum_playback(elem);
       isCaptureEnum=snd_mixer_selem_is_enum_capture(elem);
 
@@ -132,14 +133,6 @@ namespace ALSA {
             captureVolumes[captureVolumes.size()-1].getSwitch(elem);
         }
 
-      if (isEnum){
-        for (int i=0; i<snd_mixer_selem_get_enum_items(elem); i++){
-          enums.push_back(ChannelEnumElement((snd_mixer_selem_channel_id_t)i));
-          enums[enums.size()-1].getName(elem);
-          enums[i].getIndex(elem); // The index of the enum element is common assumed at index zero
-        }
-      }
-
       if (isPlaybackEnum){
         for (int i=0; i<snd_mixer_selem_get_enum_items(elem); i++){
           playbackEnums.push_back(PlaybackChannelEnumElement((snd_mixer_selem_channel_id_t)i));
@@ -155,6 +148,15 @@ namespace ALSA {
           captureEnums[i].getIndex(elem); // The index of the enum element is common assumed at index zero
         }
       }
+
+      if (isEnum && !(isPlaybackEnum||isCaptureEnum)){
+        for (int i=0; i<snd_mixer_selem_get_enum_items(elem); i++){
+          enums.push_back(ChannelEnumElement((snd_mixer_selem_channel_id_t)i));
+          enums[enums.size()-1].getName(elem);
+          enums[i].getIndex(elem); // The index of the enum element is common assumed at index zero
+        }
+      } else // if it is either a playback or capture enum, let them handle it. If it is neither then isEnum = 0 which is assumed and reset here
+        isEnum=0;
 
       if (hasPlaybackVolume || hasPlaybackVolumeJoined){
         if (snd_mixer_selem_get_playback_volume_range(elem, &playbackVolMin, &playbackVolMax))
