@@ -356,6 +356,33 @@ namespace ALSA {
     \param v The state to set.
     \return <0 on error otherwise, the current state of the mixer element's switch.
     */
+    int setSwitch(std::string name, int v){
+      int i=getElementIndex(name);
+      if (i<0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, name+'\n');
+      return mixerElements[i].setSwitch(v);
+    }
+
+    /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The switch state to set - not updated on return
+    \return JSON object, with val<0 on error otherwise, the current state of the mixer element's switch
+    */
+    std::string setSwitchJSON(std::string name, int v){
+      int err=setSwitch(name, v);
+      std::ostringstream ret;
+      if (err<0)
+        ret<<"{\"name\":\""<<name<<"\",\"error\":"<< err <<"}";
+      else
+        ret<<"{\"name\":\""<<name<<"\",\"switch\":"<< err <<"}";
+      return ret.str();
+    }
+
+    /** Set the switch state of a mixer element given the name. The resulting state of the mixer element is returned
+    \param name The name of the mixer element to change
+    \param v The state to set.
+    \return <0 on error otherwise, the current state of the mixer element's switch.
+    */
     int setPlaybackSwitch(std::string name, int v){
       int i=getElementIndex(name);
       if (i<0)
