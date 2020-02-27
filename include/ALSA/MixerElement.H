@@ -50,11 +50,13 @@ namespace ALSA {
     long captureVolMin;
     double captureVolMaxDB;
     double captureVolMinDB;
+    bool isEnum; ///<0 if no control is present, 1 if it's present
     bool isPlaybackEnum; ///<0 if no control is present, 1 if it's present
     bool isCaptureEnum; ///<0 if no control is present, 1 if it's present
 
     std::vector<PlaybackChannelVolumeElement> playbackVolumes; ///< Volume setting for each playback channel in this mixer element
     std::vector<CaptureChannelVolumeElement> captureVolumes; ///< Volume setting for each capture channel in this mixer element
+    std::vector<ChannelEnumElement> enums; ///< Names (inherit indexes) for each enumerated channel in this mixer element
     std::vector<PlaybackChannelEnumElement> playbackEnums; ///< Names (inherit indexes) for each enumerated playback channel in this mixer element
     std::vector<CaptureChannelEnumElement> captureEnums; ///< Names (inherit indexes) for each enumerated capture channel in this mixer element
   public:
@@ -104,6 +106,13 @@ namespace ALSA {
       isPlaybackEnum=snd_mixer_selem_is_enum_playback(elem);
       isCaptureEnum=snd_mixer_selem_is_enum_capture(elem);
 
+      // if (snd_mixer_selem_is_enumerated(elem))
+      //   printf("snd_mixer_selem_is_enumerated %s\n", name);
+      // if (snd_mixer_selem_is_enum_playback(elem))
+      //   printf("snd_mixer_selem_is_enum_playback %s\n", name);
+      // if (snd_mixer_selem_is_enum_capture(elem))
+      //   printf("snd_mixer_selem_is_enum_capture %s\n", name);
+
       unsigned long chMask=1;
       for (int i=0; i<SND_MIXER_SCHN_LAST; i++)
         if (snd_mixer_selem_has_playback_channel(elem, (snd_mixer_selem_channel_id_t)i)>0){
@@ -122,6 +131,14 @@ namespace ALSA {
           if (hasCommonSwitch || hasCaptureSwitch || hasCaptureSwitchJoined)
             captureVolumes[captureVolumes.size()-1].getSwitch(elem);
         }
+
+      if (isEnum){
+        for (int i=0; i<snd_mixer_selem_get_enum_items(elem); i++){
+          enums.push_back(ChannelEnumElement((snd_mixer_selem_channel_id_t)i));
+          enums[enums.size()-1].getName(elem);
+          enums[i].getIndex(elem); // The index of the enum element is common assumed at index zero
+        }
+      }
 
       if (isPlaybackEnum){
         for (int i=0; i<snd_mixer_selem_get_enum_items(elem); i++){
@@ -161,6 +178,22 @@ namespace ALSA {
     }
 
     virtual ~MixerElement(){
+    }
+
+    /** Set the switch state for all channels, returning the current playback switch state
+    \param v The value to set
+    \return <0 on error or the current state of the switch
+    */
+    int setSwitch(int v){
+      int err;
+      if (!isEnum)
+        return ALSADebug().evaluateError(ALSA_MIXER_NO_ENUM_ERROR, name+" doesn't have a switch and I tried to set it\n");
+      int i=0; // only interact with the first channel in an enum
+      if ((err=snd_mixer_selem_set_enum_item(elem, enums[i].channel, v))<0)
+        return ALSADebug().evaluateError(err, name+" setting generic enums\n");
+      if ((err=enums[i].getIndex(elem))<0) // refresh the playback index
+        return ALSADebug().evaluateError(err, name+" getting generic enum switches\n");
+      return enums[i].idx; // all channels have the same volume in this method
     }
 
     /** Set the playback switch state for all channels, returning the current playback switch state
@@ -382,6 +415,7 @@ namespace ALSA {
       os<<"\"hasCaptureSwitch\":"<<me.hasCaptureSwitch<<",\n";
       os<<"\"hasCaptureSwitchJoined\":"<<me.hasCaptureSwitchJoined<<",\n";
       os<<"\"hasCaptureSwitchExclusive\":"<<me.hasCaptureSwitchExclusive<<",\n";
+      os<<"\"isEnum\":"<<me.isEnum<<",\n";
       os<<"\"isPlaybackEnum\":"<<me.isPlaybackEnum<<",\n";
       os<<"\"isCaptureEnum\":"<<me.isCaptureEnum<<"\n";
 
@@ -449,14 +483,32 @@ namespace ALSA {
                 os<<"]\n";
               }
 
-      if (me.isCaptureEnum){
-        os<<",\"captureEnums\":[\n";
-        for (int i=0; i<me.captureEnums.size(); i++){
-          me.captureEnums[i].stringifyEnumName(os);
-          os<<((i<me.captureEnums.size()-1) ? ",\n" : "\n");
+        if (me.isEnum){
+          os<<",\"enums\":[\n";
+          for (int i=0; i<me.enums.size(); i++){
+            me.enums[i].stringifyEnumName(os);
+            os<<((i<me.enums.size()-1) ? ",\n" : "\n");
+          }
+          os<<"]\n";
         }
-        os<<"]\n";
-      }
+
+        if (me.isPlaybackEnum){
+          os<<",\"playbackEnums\":[\n";
+          for (int i=0; i<me.playbackEnums.size(); i++){
+            me.playbackEnums[i].stringifyEnumName(os);
+            os<<((i<me.playbackEnums.size()-1) ? ",\n" : "\n");
+          }
+          os<<"]\n";
+        }
+
+        if (me.isCaptureEnum){
+          os<<",\"captureEnums\":[\n";
+          for (int i=0; i<me.captureEnums.size(); i++){
+            me.captureEnums[i].stringifyEnumName(os);
+            os<<((i<me.captureEnums.size()-1) ? ",\n" : "\n");
+          }
+          os<<"]\n";
+        }
 
       os<<"}";
       return os;
