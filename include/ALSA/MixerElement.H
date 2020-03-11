@@ -32,8 +32,10 @@ namespace ALSA {
     snd_mixer_elem_t *elem; ///< The pointer to the element
     unsigned int index; ///< The mixer element index
     bool hasCommonVolume; ///< element has only one volume control for both playback and capture
+    bool isPlaybackMono; ///< 0 if no control is present, 1 if it's present
     bool hasPlaybackVolume; ///< 0 if no control is present, 1 if it's present
     bool hasPlaybackVolumeJoined; ///< 0 if control is separated per channel, 1 if control acts on all channels together
+    bool isCaptureMono; ///< 0 if no control is present, 1 if it's present
     bool hasCaptureVolume; ///<0 if no control is present, 1 if it's present
     bool hasCaptureVolumeJoined; ///<0 if control is separated per channel, 1 if control acts on all channels together
     bool hasCommonSwitch; ///<0 separated control, 1 common control
@@ -93,8 +95,10 @@ namespace ALSA {
       captureVolMaxDB=captureVolMinDB=0.;
 
       hasCommonVolume=snd_mixer_selem_has_common_volume(elem);
+      isPlaybackMono=snd_mixer_selem_is_playback_mono(elem);
       hasPlaybackVolume=snd_mixer_selem_has_playback_volume(elem);
       hasPlaybackVolumeJoined=snd_mixer_selem_has_playback_volume_joined(elem);
+      isCaptureMono=snd_mixer_selem_is_capture_mono(elem);
       hasCaptureVolume=snd_mixer_selem_has_capture_volume(elem);
       hasCaptureVolumeJoined=snd_mixer_selem_has_capture_volume_joined(elem);
       hasCommonSwitch=snd_mixer_selem_has_common_switch(elem);
@@ -407,8 +411,10 @@ namespace ALSA {
       os<<"\"name\":\""<<me.name<<"\",\n";
       os<<"\"index\":"<<me.index<<",\n";
       os<<"\"hasCommonVolume\":"<<me.hasCommonVolume<<",\n";
+      os<<"\"isPlaybackMono\":"<<me.isPlaybackMono<<",\n";
       os<<"\"hasPlaybackVolume\":"<<me.hasPlaybackVolume<<",\n";
       os<<"\"hasPlaybackVolumeJoined\":"<<me.hasPlaybackVolumeJoined<<",\n";
+      os<<"\"isCaptureMono\":"<<me.isCaptureMono<<",\n";
       os<<"\"hasCaptureVolume\":"<<me.hasCaptureVolume<<",\n";
       os<<"\"hasCaptureVolumeJoined\":"<<me.hasCaptureVolumeJoined<<",\n";
       os<<"\"hasCommonSwitch\":"<<me.hasCommonSwitch<<",\n";
