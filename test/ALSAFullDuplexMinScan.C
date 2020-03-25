@@ -25,8 +25,10 @@ using namespace ALSA;
 #include "Sox.H"
 
 class FullDuplexTest : public FullDuplex<int> {
+	#define CH_CNT 8
 	int N; ///< The number of frames
 	int ch; ///< The number of channels
+	int ch7Offset=-3; ///< The channel 7 offset from zero
 
 	/** Your class must inherit this class and implement the process method.
 	The inputAudio and outputAudio variables should be resized to the number of channels
@@ -39,14 +41,26 @@ class FullDuplexTest : public FullDuplex<int> {
 			inputAudio.resize(N, ch);
 			outputAudio.resize(N, ch);
 			inputAudio.setZero();
+			return 0;
 		}
-		// outputAudio=inputAudio; // copy the input to output.
-		cout<<inputAudio.colwise().minCoeff()<<"\n";
+
+		// find the zero columns (for the Audio Injector Octo these are actually -256 not zero)
+		Eigen::Array<int, 1, CH_CNT> mins = inputAudio.colwise().minCoeff();
+		if (mins(0)==mins(CH_CNT-1)==-256)
+			ch7Offset=-1;
+		else
+			for(int i=0; i<mins.cols()-1; ++i)
+	    	if(mins(i)==-256 && mins(i+1)==-256){
+					ch7Offset=i;
+					break;
+				}
+		cout<<mins<<'\t'<<ch7Offset<<'\n';
+
 		return 0; // return 0 to continue
 	}
 public:
 	FullDuplexTest(const char*devName, int latency) : FullDuplex(devName){
-		ch=8; // use this static number of input and output channels.
+		ch=CH_CNT; // use this static number of input and output channels.
 		N=latency;
 		inputAudio.resize(0,0); // force zero size to ensure resice on the first process.
 		outputAudio.resize(0,0);
