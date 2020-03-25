@@ -29,6 +29,7 @@ class FullDuplexTest : public FullDuplex<int> {
 	int N; ///< The number of frames
 	int ch; ///< The number of channels
 	int ch7Offset=-3; ///< The channel 7 offset from zero
+	Eigen::Array<int, Eigen::Dynamic, CH_CNT> shiftedData;
 
 	/** Your class must inherit this class and implement the process method.
 	The inputAudio and outputAudio variables should be resized to the number of channels
@@ -40,22 +41,39 @@ class FullDuplexTest : public FullDuplex<int> {
 		if (inputAudio.rows()!=N || inputAudio.cols()!=ch){
 			inputAudio.resize(N, ch);
 			outputAudio.resize(N, ch);
+			shiftedData.resize(N, ch);
 			inputAudio.setZero();
 			return 0;
 		}
 
-		// find the zero columns (for the Audio Injector Octo these are actually -256 not zero)
-		Eigen::Array<int, 1, CH_CNT> mins = inputAudio.colwise().minCoeff();
-		if (mins(0)==mins(CH_CNT-1)==-256)
-			ch7Offset=-1;
-		else
-			for(int i=0; i<mins.cols()-1; ++i)
-	    	if(mins(i)==-256 && mins(i+1)==-256){
-					ch7Offset=i;
-					break;
-				}
-		cout<<mins<<'\t'<<ch7Offset<<'\n';
+		// if (ch7Offset<0) { // only do this once
+			// find the zero columns (for the Audio Injector Octo these are actually -256 not zero)
+			Eigen::Array<int, 1, CH_CNT> mins = inputAudio.colwise().minCoeff();
+			if (mins(0)==mins(CH_CNT-1)==-256)
+				ch7Offset=7;
+			else
+				for(int i=0; i<mins.cols()-1; ++i)
+		    	if(mins(i)==-256 && mins(i+1)==-256){
+						ch7Offset=i;
+						break;
+					}
+					cout<<mins<<'\t'<<ch7Offset<<'\n';
+					// printf("ch7Offset %d \n",ch7Offset);
+		// }
 
+		// if necessary circularly shift audio channels to realign input
+		if (ch7Offset!=6) // when it is 6, it is in the right location so skip that case
+			if (ch7Offset!=7){ // here we need a variable amount of circular column shifting
+				shiftedData.leftCols(CH_CNT-ch7Offset-2)=inputAudio.rightCols(CH_CNT-ch7Offset-2);
+				shiftedData.rightCols(ch7Offset+2)=inputAudio.leftCols(ch7Offset+2);
+			} else { // ch 7 is in ch 8's position so circularly shift by one
+				shiftedData.leftCols(CH_CNT-1)=inputAudio.rightCols(CH_CNT-1);
+				shiftedData.rightCols(1)=inputAudio.leftCols(1);
+			}
+		mins = shiftedData.colwise().minCoeff();
+		cout<<mins<<"\n\n\n";
+		// inputAudio=shiftedData;
+		// outputAudio=shiftedData; // copy the shifted data out
 		return 0; // return 0 to continue
 	}
 public:
@@ -68,7 +86,7 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-	int latency=2048;
+	int latency=4096;
 	int fs=48000; // The sample rate
 	cout<<"latency = "<<(float)latency/(float)fs<<" s"<<endl;
 
