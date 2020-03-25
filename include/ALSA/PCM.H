@@ -239,6 +239,13 @@ namespace ALSA {
       PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
       return getState()==SND_PCM_STATE_DISCONNECTED;
     }
+
+    /** Returns the type of the PCM
+    \return snd_pcm_type_t the type of the PCM
+    */
+    snd_pcm_type_t getPCMType(){
+      return snd_pcm_type	(getPCM());
+    }
   };
 }
 #endif //PCM_H

@@ -154,9 +154,13 @@ protected:
 			// std::cout<<"\nSW params"<<std::endl;
 			// Capture::dumpSWParams();
 
-			if ((ret=link())<0)
-				return ALSADebug().evaluateError(ret);
+			if (Playback::getPCMType()!=SND_PCM_TYPE_DMIX && Capture::getPCMType()!=SND_PCM_TYPE_DSNOOP)
+				if ((ret=link())<0)
+					return ALSADebug().evaluateError(ret);
+			else
+				printf("not linking devices as one or both are dmix or dsnoop");
 
+			printf("fullduplex go:: playback prepared 4\n");
 			while ((ret=writeReadProcess())==0)
 				;
 			if (Playback::running())
