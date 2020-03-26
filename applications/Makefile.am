@@ -1,4 +1,4 @@
-#   Copyright 2000-2018 Matt Flax <flatmax@flatmax.org>
+#   Copyright 2000-2020 Matt Flax <flatmax@flatmax.org>
 #   This file is part of GTK+ IOStream class set
 #
 #   GTK+ IOStream is free software; you can redistribute it and/or modify
@@ -23,6 +23,9 @@ EXTRA_CFLAGS =
 
 if HAVE_ALSA
 bin_PROGRAMS += LatencyTester ALSAControlMonitor
+if HAVE_SOX
+bin_PROGRAMS += ALSACaptureSplitter
+endif
 endif
 
 if HAVE_SOX
@@ -119,6 +122,10 @@ LatencyTester_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIO
 ALSAControlMonitor_SOURCES = ALSAControlMonitor.C
 ALSAControlMonitor_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
 ALSAControlMonitor_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound  -lpthread
+
+ALSACaptureSplitter_SOURCES = ALSACaptureSplitter.C
+ALSACaptureSplitter_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+ALSACaptureSplitter_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound  -lpthread
 
 #AM_CPPFLAGS             = -I$(top_srcdir)/include $(GTKDATABOX_CFLAGS)
 #LDADD                   = $(GTKDATABOX_LIBS)
