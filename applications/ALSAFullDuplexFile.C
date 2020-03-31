@@ -100,8 +100,8 @@ public:
     }
     cout<<"rates are now, file = "<<sox.getFSIn()<<" Hz and ALSA = "<<fs<<endl;
 
-    if (Playback::getChannels()!=sox.getChCntIn())
-      setChannels(sox.getChCntIn());
+    ch=sox.getChCntIn();
+    cout<<"setting ALSA channels to " <<ch<<endl;
     return 0;
   }
 };
