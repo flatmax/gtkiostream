@@ -197,15 +197,28 @@ public:
     virtual int openWrite(const string &fileName, double fs, int channels, double maxVal, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits);
 
     /** Open a memory pointer for reading
-    \param fs The same rate in Hz.
     \param buffer The pointer to the memory block
     \param len The length of the memory block in bytes
+    \param fs The same rate in Hz.
     \param channels The number of channels the file should carry.
     \param maxVal The maximum value to be contained in the output vector when passed to Sox::write
+    \param ext The file extension, e.g. "wav", "mp3", "flac"
     \return A negative error code on failure.
     */
-    int openMemWrite(void *buffer, size_t len, double fs, int channels, double maxVal){
-        return openMemWrite(buffer, len, fs, channels, maxVal, sizeof(FP_TYPE_)*CHAR_BIT, false, sox_option_default, sox_option_default, sox_option_default);
+    int openMemWrite(void *buffer, size_t *len, double fs, int channels, double maxVal, const char* ext){
+        return openMemWrite(buffer, len, fs, channels, maxVal, ext, sizeof(FP_TYPE_)*CHAR_BIT, false, sox_option_default, sox_option_default, sox_option_default);
+    }
+
+    /** Open a memory pointer for writing
+    \param buffer The pointer to the memory block
+    \param len The length of the memory block in bytes
+    \param fs The same rate in Hz.
+    \param channels The number of channels the file should carry.
+    \param maxVal The maximum value to be contained in the output vector when passed to Sox::write
+    \param ext The file extension, e.g. "wav", "mp3", "flac"
+    */
+    int openMemWrite(intptr_t buffer, size_t *len, double fs, int channels, double maxVal, const char* ext){
+        return openMemWrite((void *)buffer, len, fs, channels, maxVal, ext, sizeof(FP_TYPE_)*CHAR_BIT, false, sox_option_default, sox_option_default, sox_option_default);
     }
 
     /** Open a memory pointer for writing. Specifying the precision.
@@ -216,6 +229,7 @@ public:
     \param fs The same rate in Hz.
     \param channels The number of channels the file should carry.
     \param maxVal The maximum value to be contained in the output vector when passed to Sox::write
+    \param ext The file extension, e.g. "wav", "mp3", "flac"
     \param wordSize The number of bits in the word.
     \param switchEndian Switch the endian from big to little or little to big
     \param revBytes Reverse the bytes {sox_option_no = 0, sox_option_yes = 1, sox_option_default = 2}
@@ -223,7 +237,7 @@ public:
     \param revBits Reverse the bits {sox_option_no = 0, sox_option_yes = 1, sox_option_default = 2}
     \return A negative error code on failure.
     */
-    virtual int openMemWrite(void *buffer, size_t len, double fs, int channels, double maxVal, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits);
+    virtual int openMemWrite(void *buffer, size_t *len, double fs, int channels, double maxVal, const char* ext, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits);
 
     /** Write the audio data to an already open file.
     The audioData is written with each column as an audio channel.

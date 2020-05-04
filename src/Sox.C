@@ -57,7 +57,7 @@ int Sox<FP_TYPE_>::close(bool inputFile) {
             in=NULL;
         }
     } else {
-        if (out) {
+        if (out && out->olength) { // in mem buffer write, it can be opened and empty, and sox_close has a free seffault.
             if (sox_close(out)!=SOX_SUCCESS)
                 retVal=SOX_CLOSE_FILE_ERROR;
             out=NULL;
@@ -170,7 +170,7 @@ int Sox<FP_TYPE_>::openWrite(const string &fileName, double fs, int channels, do
 }
 
 template<typename FP_TYPE_>
-int Sox<FP_TYPE_>::openMemWrite(void *buffer, size_t len, double fs, int channels, double maxVal, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits){
+int Sox<FP_TYPE_>::openMemWrite(void *buffer, size_t *len, double fs, int channels, double maxVal, const char* ext, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits){
   int retVal=NO_ERROR; // start assuming no error
   bool inputFile=false;
   close(inputFile);
@@ -183,17 +183,9 @@ int Sox<FP_TYPE_>::openMemWrite(void *buffer, size_t len, double fs, int channel
   si.length=0;
   si.mult=NULL;
 
-  sox_encodinginfo_t encoding; // get default encodings
-  sox_init_encodinginfo(&encoding);
-  encoding.encoding=SOX_ENCODING_UNKNOWN; // setup the endcoding
-  encoding.bits_per_sample=wordSize;
-  encoding.opposite_endian=(switchEndian)?sox_true:sox_false;
-  encoding.reverse_bytes=(revBytes==0)?sox_option_no:((revBytes==1)?sox_option_yes:sox_option_default);
-  encoding.reverse_nibbles=(revNibbles==0)?sox_option_no:((revNibbles==1)?sox_option_yes:sox_option_default);
-  encoding.reverse_bits=(revBits==0)?sox_option_no:((revBits==1)?sox_option_yes:sox_option_default);
-
   // the output memory buffer
-  out=sox_open_mem_write(buffer, len, &si, &encoding, NULL, NULL);
+  // out=sox_open_mem_write(buffer, len, &si, &encoding, NULL, NULL); // this can also be used, however then the length is static and pre-allocated.
+  out=sox_open_memstream_write((char**)buffer, len, &si, NULL, ext, NULL);
   if (out==NULL)
       retVal=SOX_WRITE_FILE_OPEN_ERROR;
   outputMaxVal=maxVal;

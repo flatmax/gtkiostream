@@ -28,7 +28,7 @@
 using namespace std;
 int main(int argc, char *argv[]) {
 
-  ifstream file("/tmp/soxTest.wav", std::ios::binary | std::ios::ate);
+  ifstream file("./test/testVectors/11.Neutral.44k.wav", std::ios::binary | std::ios::ate);
   std::streamsize size = file.tellg();
   file.seekg(0, std::ios::beg);
 
@@ -37,7 +37,11 @@ int main(int argc, char *argv[]) {
       cout<<"failed to read the file"<<endl;
       return -1;
   }
+  file.close();
 
+  assert(sox_init() == SOX_SUCCESS);
+
+  // test memory read
   Sox<double> sox;
   int ret=0;
   Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic>  x; ///< The reference signal
@@ -45,9 +49,31 @@ int main(int argc, char *argv[]) {
   if (ret=sox.openRead((intptr_t)buffer.data(), size))
     if (ret!=SOX_READ_MAXSCALE_ERROR)
       return SoxDebug().evaluateError(ret);
-  sox.setMaxVal(10.);
+  float maxVal=10.;
+  sox.setMaxVal(maxVal);
   if (ret=sox.read(x))
       return SoxDebug().evaluateError(ret);
-  cout<<x<<endl;
+
+  // test memory write
+  char * bufferWM;
+  size_t buffer_size;
+  if (ret=sox.openMemWrite((intptr_t)&bufferWM, &buffer_size, sox.getFSIn(), sox.getChCntIn(), maxVal, "wav"))
+    return SoxDebug().evaluateError(ret);
+
+  if ((ret=sox.write(x))!=(x.rows()*x.cols()))
+    return SoxDebug().evaluateError(ret);
+  sox.closeWrite(); // close the output file
+  cout<<"written"<<endl;
+  cout<<"size "<<buffer_size<<endl;
+
+  ofstream oFile("/tmp/sox.memTest.wav", std::ios::binary);
+  oFile.write(bufferWM, buffer_size);
+  if (oFile.bad()){
+    oFile.close();
+    cout<<"failed to write the file"<<endl;
+    return -1;
+  }
+  oFile.close();
+  free(bufferWM);
   return 0;
 }
