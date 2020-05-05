@@ -30,20 +30,20 @@ protected:
 public:
   /// fft init ... data pointed to by 'd'
   Real2DFFT(Real2DFFTData *d){
-  //std::cout <<"RealFFT init:"<<this<<std::endl;
-  data=d;
-  // std::cout <<data->getXSize() << '\t'<<data->getYSize()<<std::endl;
-  fwdPlan = fftw_plan_dft_r2c_2d(data->getXSize(), data->getYSize(), data->in, data->out, PLANTYPE);
-  invPlan = fftw_plan_dft_c2r_2d(data->getXSize(), data->getYSize(), data->out, data->in, PLANTYPE);
-}
+    //std::cout <<"RealFFT init:"<<this<<std::endl;
+    data=d;
+    // std::cout <<data->getXSize() << '\t'<<data->getYSize()<<std::endl;
+    fwdPlan = fftw_plan_dft_r2c_2d(data->getXSize(), data->getYSize(), data->in, data->out, PLANTYPE);
+    invPlan = fftw_plan_dft_c2r_2d(data->getXSize(), data->getYSize(), data->out, data->in, PLANTYPE);
+  }
 
   /// fft deconstructor
   virtual ~Real2DFFT(){
-  //  std::cout <<"RealFFT DeInit:"<<this<<std::endl;
-  fftw_destroy_plan(fwdPlan);
-  fftw_destroy_plan(invPlan);
-  std::cout <<"RealFFT DeInit done"<<std::endl;
-}
+    //  std::cout <<"RealFFT DeInit:"<<this<<std::endl;
+    fftw_destroy_plan(fwdPlan);
+    fftw_destroy_plan(invPlan);
+    // std::cout <<"RealFFT DeInit done"<<std::endl;
+  }
 
 
   /// Forward transform the data (in to out)

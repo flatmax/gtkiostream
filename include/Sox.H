@@ -112,12 +112,14 @@ public:
     Sox(); ///< Constructor
     virtual ~Sox(); ///< Destructor
 
+#ifndef HAVE_EMSCRIPTEN
     /** Open a file for reading.
     If the input file is already open, then it is closed first.
     \param fileName the audio file to open, can be of many different types, wav, mp3, ogg, etc. etc.
     \return A negative error code on failure. SOX_READ_MAXSCALE_ERROR is returned when fileName.max is not found or opened - indicating that audio will not be rescaled correctly.
     */
     int openRead(string fileName);
+#endif
 
     /** Open a memory pointer for reading
     \param buffer The pointer to the memory block
@@ -166,6 +168,7 @@ public:
         return retVal;
     }
 
+#ifndef HAVE_EMSCRIPTEN
     /** Open a file for writing.
     If the output file is already open, then it is closed first.
 
@@ -195,6 +198,7 @@ public:
     \return A negative error code on failure.
     */
     virtual int openWrite(const string &fileName, double fs, int channels, double maxVal, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits);
+#endif
 
     /** Open a memory pointer for reading
     \param buffer The pointer to the memory block

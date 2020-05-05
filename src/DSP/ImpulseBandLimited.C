@@ -21,6 +21,7 @@
 #ifdef HAVE_SOX
 #include <Sox.H>
 
+#ifndef HAVE_EMSCRIPTEN
 template<typename FP_TYPE>
 int ImpulseBandLimited<FP_TYPE>::saveToFile(const std::string fileName, float fs){
   Sox<FP_TYPE> sox; // use sox to write to file
@@ -31,6 +32,7 @@ int ImpulseBandLimited<FP_TYPE>::saveToFile(const std::string fileName, float fs
     return sox.write(*this);
   return ret;
 }
+#endif
 #endif
 
 template<typename FP_TYPE>

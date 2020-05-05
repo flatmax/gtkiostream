@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   }
   file.close();
 
-  assert(sox_init() == SOX_SUCCESS);
+  // assert(sox_init() == SOX_SUCCESS);
 
   // test memory read
   Sox<double> sox;

@@ -18,7 +18,7 @@
 #define HEAP_TREE_TYPE_H_
 
 #include <stdlib.h>
-#include <iostream>
+// #include <iostream>
 #include <math.h>
 
 //#include "Array.H"

@@ -19,7 +19,7 @@
 #define LINKLIST_H
 
 #include <sys/types.h>
-#include <iostream>
+// #include <iostream>
 
 //#define LINKLIST_DEBUG
 
@@ -46,7 +46,8 @@ public:
         next = this;
         prev = this;
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList: Adding first "<<this<<" with previous "<< prev << " next " << next <<std::endl;
+        // std::cout <<"LinkList: Adding first "<<this<<" with previous "<< prev << " next " << next <<std::endl;
+        printf("LinkList: Adding first %p with previous %p next %p\n", this, prev, next);
 #endif
     }
     /// Links to previous element and next element
@@ -54,7 +55,8 @@ public:
         next = (*oldOne).getNext();
         prev = oldOne;
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList: Adding "<<this<<" with previous "<< prev << " next " << next <<std::endl;
+        //std::cout <<"LinkList: Adding "<<this<<" with previous "<< prev << " next " << next <<std::endl;
+        printf("LinkList: Adding %p with previous %p next %p\n", this, prev, next);
 #endif
         (*oldOne).getNext()->prev = this;
         (*oldOne).next = this;
@@ -66,7 +68,8 @@ public:
     Lug *
     getNext(void) {
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList: getNext =  "<< next <<std::endl;
+      //std::cout <<"LinkList: getNext =  "<< next <<std::endl;
+      printf("LinkList: getNext =  %p\n", next);
 #endif
         return next;
     }
@@ -75,7 +78,8 @@ public:
     Lug *
     getPrev(void) {
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList: getPrev =  "<< prev <<std::endl;
+        //std::cout <<"LinkList: getPrev =  "<< prev <<std::endl;
+        printf("LinkList: getPrev =  %p\n", prev);
 #endif
         return prev;
     }
@@ -104,7 +108,8 @@ public:
     /// Small cleanup ...
     virtual ~LinkList(void) {
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList:~LinkList  removing "<<std::endl;
+        //std::cout <<"LinkList:~LinkList  removing "<<std::endl;
+        printf("LinkList:~LinkList  removing\n");
 #endif
 
         while (lug != (Lug<TYPE>*)NULL)
@@ -118,7 +123,8 @@ public:
     */
     void add(TYPE newElement) { // Add the ptr
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList:add "<< newElement <<std::endl;
+      //std::cout <<"LinkList:add "<< newElement <<std::endl;
+      printf("LinkList:add %p\n", newElement);
 #endif
         if (lug == (Lug<TYPE>*)NULL) { // create the first ...
             lug = new Lug<TYPE>;
@@ -136,7 +142,8 @@ public:
     */
     TYPE change(TYPE changeElement) { // exchange ptr's
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList:change "<< changeElement <<std::endl;
+        //std::cout <<"LinkList:change "<< changeElement <<std::endl;
+        printf("LinkList:change %p\n", changeElement);
 #endif
         if (lug != (Lug<TYPE>*)NULL) {
             TYPE tempPtr = lug->ptr;
@@ -211,7 +218,8 @@ public:
     */
     TYPE current(void) { // Return the current ptr
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList:current " <<std::endl;
+        //std::cout <<"LinkList:current " <<std::endl;
+        printf("LinkList:current\n");
 #endif
         if (lug != (Lug<TYPE>*)NULL)
             return lug->ptr;
@@ -225,7 +233,8 @@ public:
     */
     TYPE next(void) { // return the next ptr
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList:next "<<std::endl;
+        //std::cout <<"LinkList:next "<<std::endl;
+        printf("LinkList:next\n");
 #endif
         if (lug != (Lug<TYPE>*)NULL) {
             if (dir == FWD)
@@ -258,13 +267,16 @@ public:
     */
     TYPE grab(int i) { // return the i'th lug in the chain
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList:grab "<< i <<std::endl;
+        // std::cout <<"LinkList:grab "<< i <<std::endl;
+        printf("LinkList:grab %d\n",i);
 #endif
         if (i<=0) {
-            std::cerr<<"LinkList: grab: index is less then or equal to zero"<<std::endl;
+            fprintf(stderr, "LinkList:grab  grab: index is less then or equal to zero\n");
+            // std::cerr<<"LinkList: grab: index is less then or equal to zero"<<std::endl;
             return (TYPE)0;// NULL;
         } else if (i>count) {
-            std::cerr<<"LinkList: grab: index exceeds count"<<std::endl;
+            fprintf(stderr, "LinkList:grab  grab: index exceeds count\n");
+            //std::cerr<<"LinkList: grab: index exceeds count"<<std::endl;
             return (TYPE)0;// NULL;
         } else {
             lug = startLug;
@@ -277,39 +289,40 @@ public:
 
     int getCount(void) {
 #ifdef LINKLIST_DEBUG
-        std::cout <<"LinkList:getCount "<< count <<std::endl;
+      //std::cout <<"LinkList:getCount "<< count <<std::endl;
+      printf("LinkList:getCount %d\n", count);
 #endif
         return count;    ///< Returns the number of Lug s in the chain
     }
 
-    /** \brief Runs the ostream operator on each element of the list
-    \param o the ostream
-    \param l A pointer to the linked list
-    \return The ostream
-    */
-    friend std::ostream& operator <<(std::ostream& o, LinkList* l) {
-        if (l->getCount()==0) return o;
-        l->grab(1);
-        l->prev();
-        for (int j=0; j<l->getCount(); j++)
-            o<<l->next()<<' ';
-        o<<std::endl;
-        return o;
-    }
-    /** \brief Runs the ostream operator on each element of the list
-      \param o the ostream
-      \param l The linked list
-      \return The ostream
-      */
-    friend std::ostream& operator <<(std::ostream& o, LinkList& l) {
-        if (l.getCount()==0) return o;
-        l.grab(1);
-        l.prev();
-        for (int j=0; j<l.getCount(); j++)
-            o<<l.next()<<' ';
-        o<<std::endl;
-        return o;
-    }
+    // /** \brief Runs the ostream operator on each element of the list
+    // \param o the ostream
+    // \param l A pointer to the linked list
+    // \return The ostream
+    // */
+    // friend std::ostream& operator <<(std::ostream& o, LinkList* l) {
+    //     if (l->getCount()==0) return o;
+    //     l->grab(1);
+    //     l->prev();
+    //     for (int j=0; j<l->getCount(); j++)
+    //         o<<l->next()<<' ';
+    //     o<<std::endl;
+    //     return o;
+    // }
+    // /** \brief Runs the ostream operator on each element of the list
+    //   \param o the ostream
+    //   \param l The linked list
+    //   \return The ostream
+    //   */
+    // friend std::ostream& operator <<(std::ostream& o, LinkList& l) {
+    //     if (l.getCount()==0) return o;
+    //     l.grab(1);
+    //     l.prev();
+    //     for (int j=0; j<l.getCount(); j++)
+    //         o<<l.next()<<' ';
+    //     o<<std::endl;
+    //     return o;
+    // }
 
     /** Method to get the last element in the list.
     \return The lug at index i OR NULL if it doesn't exist

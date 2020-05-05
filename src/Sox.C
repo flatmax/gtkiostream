@@ -23,12 +23,12 @@
 // on microsoft, you have to manually rename Sox.H to SoxWindows.H
 #include "SoxWindows.H"
 #endif
-
-#include <fstream>
 #include <sox.h>
 #include <stdio.h>
-//#include <valarray>
 
+#ifndef HAVE_EMSCRIPTEN
+#include <fstream>
+#endif
 using namespace Eigen;
 
 template<typename FP_TYPE_>
@@ -66,6 +66,7 @@ int Sox<FP_TYPE_>::close(bool inputFile) {
     return retVal;
 }
 
+#ifndef HAVE_EMSCRIPTEN
 template<typename FP_TYPE_>
 int Sox<FP_TYPE_>::openRead(string fileName) {
     bool inputFile=true;
@@ -87,6 +88,7 @@ int Sox<FP_TYPE_>::openRead(string fileName) {
     maxFile.close();
     return 0;
 }
+#endif
 
 template<typename FP_TYPE_>
 int Sox<FP_TYPE_>::openRead(intptr_t buffer, size_t len){
@@ -125,6 +127,7 @@ void Sox<FP_TYPE_>::output_message(unsigned level, const char *filename, const c
     }
 }
 
+#ifndef HAVE_EMSCRIPTEN
 template<typename FP_TYPE_>
 int Sox<FP_TYPE_>::openWrite(const string &fileName, double fs, int channels, double maxVal, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits){
     int retVal=NO_ERROR; // start assuming no error
@@ -168,6 +171,7 @@ int Sox<FP_TYPE_>::openWrite(const string &fileName, double fs, int channels, do
     outf.close();
     return retVal;
 }
+#endif
 
 template<typename FP_TYPE_>
 int Sox<FP_TYPE_>::openMemWrite(void *buffer, size_t *len, double fs, int channels, double maxVal, const char* ext, unsigned int wordSize, bool switchEndian, int revBytes, int revNibbles, int revBits){
@@ -191,7 +195,6 @@ int Sox<FP_TYPE_>::openMemWrite(void *buffer, size_t *len, double fs, int channe
   outputMaxVal=maxVal;
   return retVal;
 }
-
 
 template<typename FP_TYPE_>
 int Sox<FP_TYPE_>::write(const vector<vector<FP_TYPE_> > &audioData) {

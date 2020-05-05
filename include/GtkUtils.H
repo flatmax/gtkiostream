@@ -17,7 +17,7 @@
 #ifndef GTKUTILS_H_
 #define GTKUTILS_H_
 #include <gtk/gtk.h>
-#include <iostream>
+// #include <iostream>
 
 /** \brief returns the first visible widget in a container
 \param container the container who's children are checked

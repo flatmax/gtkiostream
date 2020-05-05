@@ -102,7 +102,7 @@ endif
 
 if HAVE_SOX
 if HAVE_EMSCRIPTEN
-noinst_PROGRAMS += SoxTest
+noinst_PROGRAMS += SoxTest2
 EXTRA_LIBS += $(SOX_LIBS)
 else
 if NOT_MINGW_SYSTEM
