@@ -17,7 +17,11 @@
 # Author Matt Flax <flatmax@flatmax.org>
 
 AUTOMAKE_OPTIONS = foreign subdir-objects
-SUBDIRS = src applications api include test 
+SUBDIRS = src api include test
+
+if !HAVE_EMSCRIPTEN
+SUBDIRS += applications
+endif
 
 ACLOCAL_AMFLAGS = -I m4
 
@@ -25,4 +29,3 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gtkIOStream.pc gtkIOStreamORB.pc
 
 EXTRA_DIST = README changeLog.txt gpl.txt VS2012 debian
-
