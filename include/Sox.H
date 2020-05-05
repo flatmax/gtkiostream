@@ -222,7 +222,7 @@ public:
     \param ext The file extension, e.g. "wav", "mp3", "flac"
     */
     int openMemWrite(intptr_t buffer, size_t *len, double fs, int channels, double maxVal, const char* ext){
-        return openMemWrite((void *)buffer, len, fs, channels, maxVal, ext, sizeof(FP_TYPE_)*CHAR_BIT, false, sox_option_default, sox_option_default, sox_option_default);
+      return openMemWrite((void*)buffer, len, fs, channels, maxVal, ext, sizeof(FP_TYPE_)*CHAR_BIT, false, sox_option_default, sox_option_default, sox_option_default);
     }
 
     /** Open a memory pointer for writing. Specifying the precision.
@@ -402,6 +402,13 @@ public:
   */
   int readJS(unsigned int count=0);
 
+  /** Emscripten case : Write audio data into the memory buffer.
+  \param audio, Interleaved audio frames, double format
+  \param count the number of samples per channel to write
+  \return The number of samples written otherwise the appropriate error otherwise.
+  */
+  int  writeJS(intptr_t audio, unsigned int count);
+
   /** Emscripten case : Get the raw audio into the output buffer
   \param output The user supplied audio buffer to fill
   \param Mout The number of channels available in the output buffer
@@ -410,8 +417,35 @@ public:
   */
   int getAudio(intptr_t output, unsigned int Mout, unsigned int Nout);
 
+  /** Open memory for writing
+  \param fs The same rate in Hz.
+  \param channels The number of channels the file should carry.
+  \param maxVal The maximum value to be contained in the output vector when passed to Sox::write
+  \param ext The file extension, e.g. "wav", "mp3", "flac"
+  */
+  int openMemWrite(double fs, int channels, double maxVal, string ext){
+    return openMemWrite((void*)&buffer, &bufferSize, fs, channels, maxVal, ext.c_str(), sizeof(FP_TYPE_)*CHAR_BIT, false, sox_option_default, sox_option_default, sox_option_default);
+  }
+
+  /** When a memory output stream is used, get the size of the buffer
+  */
+  size_t getBufferSize(){return bufferSize;}
+
+  /** Copy the buffer to the jsBuffer
+  \param jsBuffer The javascript WASM buffer to copy to.
+  \return The size of the data copied
+  */
+  int getMemFile(intptr_t jsBuffer){
+    memcpy((void*)jsBuffer, (void*)buffer, bufferSize);
+    return bufferSize;
+  }
+
 private:
   Eigen::Matrix<FP_TYPE_, Eigen::Dynamic, Eigen::Dynamic> audio; ///< Emscripten case : The audio data
+
+  char * buffer; ///< buffer for writing audio to memory
+  size_t bufferSize; ///< The size of the memory buffer
+
 #endif // HAVE_EMSCRIPTEN
 };
 #endif // SOX_H_

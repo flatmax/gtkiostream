@@ -38,6 +38,9 @@ Sox<FP_TYPE_>::Sox() {
     // we aren't using effects here so don't init.
     // assert(sox_init() == SOX_SUCCESS); // init the sox library effects
     in=out=NULL;
+#ifdef HAVE_EMSCRIPTEN
+    buffer=NULL;
+#endif
 }
 
 template<typename FP_TYPE_>
@@ -57,11 +60,16 @@ int Sox<FP_TYPE_>::close(bool inputFile) {
             in=NULL;
         }
     } else {
-        if (out && out->olength) { // in mem buffer write, it can be opened and empty, and sox_close has a free seffault.
-            if (sox_close(out)!=SOX_SUCCESS)
-                retVal=SOX_CLOSE_FILE_ERROR;
-            out=NULL;
-        }
+#ifdef HAVE_EMSCRIPTEN
+      if (buffer)
+        free(buffer);
+      buffer=NULL;
+#endif
+      if (out && out->olength) { // in mem buffer write, it can be opened and empty, and sox_close has a free seffault.
+          if (sox_close(out)!=SOX_SUCCESS)
+              retVal=SOX_CLOSE_FILE_ERROR;
+          out=NULL;
+      }
     }
     return retVal;
 }
@@ -302,6 +310,16 @@ int Sox<FP_TYPE_>::readJS(unsigned int count){
 }
 
 template<typename FP_TYPE_>
+int  Sox<FP_TYPE_>::writeJS(intptr_t audio, unsigned int count){
+  int ch = getChCntOut();
+  if (ch<0)
+    return ch;
+  Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned >
+                                        outAudio((double*)audio, count, ch);
+  return write(outAudio);
+}
+
+template<typename FP_TYPE_>
 int Sox<FP_TYPE_>::getAudio(intptr_t output, unsigned int Mout, unsigned int Nout){
   if (Nout!=(int)audio.rows()){
     printf("Sox error: Sox::audio size = [%d, %d], you requested audio of size = [%d, %d]", (int)audio.rows(), (int)audio.cols(), Nout, Mout);
@@ -327,10 +345,14 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("getCols", &Sox<double>::getCols)
   .function("openRead", emscripten::select_overload<int(intptr_t, size_t)>(&Sox<double>::openRead), emscripten::allow_raw_pointers())
   .function("read", &Sox<double>::readJS)
+  .function("openWrite", emscripten::select_overload<int(double, int, double, string)>(&Sox<double>::openMemWrite), emscripten::allow_raw_pointers())
+  .function("write", &Sox<double>::writeJS, emscripten::allow_raw_pointers())
   .function("getReadClips", &Sox<double>::getReadClips)
   .function("setMaxVal", &Sox<double>::setMaxVal)
   .function("getFSIn", &Sox<double>::getFSIn)
   .function("getAudio", &Sox<double>::getAudio, emscripten::allow_raw_pointers())
+  .function("getBufferSize", &Sox<double>::getBufferSize)
+  .function("getMemFile", &Sox<double>::getMemFile)
   ;
 }
 #endif

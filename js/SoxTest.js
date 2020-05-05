@@ -41,24 +41,26 @@ function mallocHEAP(byteLength, chCnt, heapName){
   return Nb;
 }
 
+//////////////////////////
+// Audio file read test
 let data = fs.readFileSync('11.Neutral.44k.wav');
 let Nmem = mallocHEAP(data.length, 1, 'audio'); // resize the heap
 libgtkIOStream.HEAPU8.set(data, audio);
-let Sox = new libgtkIOStream.Sox;
-let formats=Sox.printFormats();
-let ret=Sox.openRead(audio, audioSize);
+let sox = new libgtkIOStream.Sox;
+let formats=sox.printFormats();
+let ret=sox.openRead(audio, audioSize);
 if (ret!=-40026) {
     throw Error('error in opening');
 }
-Sox.setMaxVal(1);
-ret=Sox.read(0); // read all of the audio
+sox.setMaxVal(1);
+ret=sox.read(0); // read all of the audio
 if (ret!=0) {
     throw Error('error reading');
 }
 
-let ch=Sox.getCols();
-let N=Sox.getRows();
-let _fs=Sox.getFSIn();
+let ch=sox.getCols();
+let N=sox.getRows();
+let _fs=sox.getFSIn();
 console.log(''+ch+' channels')
 console.log(''+N+' frames')
 console.log('fs='+_fs+' Hz')
@@ -66,12 +68,46 @@ audio=[];
 for (let c=0; c<ch; c++){
   audio.push(new Float32Array(N));
   for (let n=0; n<N; n++)
-    audio[c][n]=Sox.getSample(n, c);
+    audio[c][n]=sox.getSample(n, c);
 }
 
-for (let n=0; n<N; n++){
-  let str='';
-  for (let c=0; c<ch; c++)
-    str+=audio[c][n]+' ';
-  console.log(str)
+// print out the audio
+// for (let n=0; n<N; n++){
+//   let str='';
+//   for (let c=0; c<ch; c++)
+//     str+=audio[c][n]+' ';
+//   console.log(str)
+// }
+
+//////////////////////////
+// Audio file write test
+
+// prepare the audio data for writing out
+audio=new Float64Array(N*ch);
+  for (let n=0; n<N; n++){
+    for (let c=0; c<ch; c++){
+    audio[c*N+n]=sox.getSample(n, c);
+  }
+  if (n<10)
+    console.log(audio[n]+' '+audio[N+n])
 }
+
+// open the audio memory file for writing
+ret=sox.openWrite(_fs, ch, 1.0, "wav");
+if (ret)
+    throw Error('error in opening write');
+
+// write the audio data to disk
+Nmem = mallocHEAP(ch*N*8, 1, 'audioOut'); // resize the heap
+libgtkIOStream.HEAPF64.set(audio, audioOut>>3);
+ret=sox.write(audioOut, N);
+if (ret!=(ch*N)){
+  console.log('didn\'t write the correct amount of data when calling sox.write')
+  return;
+}
+
+// write the audio file to disk
+Nmem = mallocHEAP(sox.getBufferSize(), 1, 'audioFile'); // resize the heap
+sox.getMemFile(audioFile);
+let audioF = new Uint8Array(libgtkIOStream.HEAPU8.subarray(audioFile, audioFile+Nmem));
+fs.writeFileSync('/tmp/sox.js.wav', audioF, 'binary');
