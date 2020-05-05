@@ -57,7 +57,7 @@ class FullDuplexTest : public FullDuplex<int> {
 						ch7Offset=i;
 						break;
 					}
-					cout<<mins<<'\t'<<ch7Offset<<'\n';
+					// cout<<mins<<'\t'<<ch7Offset<<'\n';
 					// printf("ch7Offset %d \n",ch7Offset);
 		// }
 
@@ -70,10 +70,10 @@ class FullDuplexTest : public FullDuplex<int> {
 				shiftedData.leftCols(CH_CNT-1)=inputAudio.rightCols(CH_CNT-1);
 				shiftedData.rightCols(1)=inputAudio.leftCols(1);
 			}
-		mins = shiftedData.colwise().minCoeff();
-		cout<<mins<<"\n\n\n";
+		// mins = shiftedData.colwise().minCoeff();
+		// cout<<mins<<"\n\n\n";
 		// inputAudio=shiftedData;
-		// outputAudio=shiftedData; // copy the shifted data out
+		outputAudio=shiftedData; // copy the shifted data out
 		return 0; // return 0 to continue
 	}
 public:
