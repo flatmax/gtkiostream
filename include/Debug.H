@@ -135,11 +135,12 @@ public:
     */
     virtual int evaluateError(int errorNum) {
 #ifndef NDEBUG
-      if (errorNum!=NO_ERROR)
+      if (errorNum!=NO_ERROR){
         if (errors.find(errorNum)==errors.end()) // if we don't have this error then perhaps it is a system error ?
           fprintf(stderr, "Error : %d strerror reports : %s ", errorNum, strerror(errno));
         else
           fprintf(stderr, "Error : %d %s ", errorNum, errors[errorNum].c_str());
+      }
 #endif
         return errorNum;
     }
@@ -171,53 +172,53 @@ public:
     }
 };
 
-#if !defined(DEBUG_OUTPUT) || !defined(DEBUG_LOCAL_OUTPUT)
-class Debugger {
-public:
-    enum {NOTHING} endl;
-
-    Debugger &operator<<(const char*str){
-        return *this;
-    }
-
-    Debugger &operator<<(const int nothing){
-        return *this;
-    }
-
-};
-#include <streambuf>
-#include <ostream>
-template <class cT, class traits = std::char_traits<cT> >
-class basic_nullbuf: public std::basic_streambuf<cT, traits> {
-    typename traits::int_type overflow(typename traits::int_type c) {
-        return traits::not_eof(c); // indicate success
-    }
-};
-
-template <class cT, class traits = std::char_traits<cT> >
-class basic_onullstream: public std::basic_ostream<cT, traits> {
-public:
-    basic_onullstream(): std::basic_ios<cT, traits>(&m_sbuf), std::basic_ostream<cT, traits>(&m_sbuf) {
-        //init(&m_sbuf);
-    }
-
-private:
-    basic_nullbuf<cT, traits> m_sbuf;
-};
-
-typedef basic_onullstream<char> NullStream;
-static NullStream nullstream;
-#endif
-
-#ifdef DEBUG_OUTPUT
-#define Debugger std::cout
-// #else
-// #define Debugger nullstream
-#endif
-
-#ifdef DEBUG_LOCAL_OUTPUT
-#define DebuggerLocal std::cout
-// #else
-// #define DebuggerLocal nullstream
-#endif
+// #if !defined(DEBUG_OUTPUT) || !defined(DEBUG_LOCAL_OUTPUT)
+// class Debugger {
+// public:
+//     enum {NOTHING} endl;
+//
+//     Debugger &operator<<(const char*str){
+//         return *this;
+//     }
+//
+//     Debugger &operator<<(const int nothing){
+//         return *this;
+//     }
+//
+// };
+// #include <streambuf>
+// #include <ostream>
+// template <class cT, class traits = std::char_traits<cT> >
+// class basic_nullbuf: public std::basic_streambuf<cT, traits> {
+//     typename traits::int_type overflow(typename traits::int_type c) {
+//         return traits::not_eof(c); // indicate success
+//     }
+// };
+//
+// template <class cT, class traits = std::char_traits<cT> >
+// class basic_onullstream: public std::basic_ostream<cT, traits> {
+// public:
+//     basic_onullstream(): std::basic_ios<cT, traits>(&m_sbuf), std::basic_ostream<cT, traits>(&m_sbuf) {
+//         //init(&m_sbuf);
+//     }
+//
+// private:
+//     basic_nullbuf<cT, traits> m_sbuf;
+// };
+//
+// typedef basic_onullstream<char> NullStream;
+// static NullStream nullstream;
+// #endif
+//
+// #ifdef DEBUG_OUTPUT
+// #define Debugger std::cout
+// // #else
+// // #define Debugger nullstream
+// #endif
+//
+// #ifdef DEBUG_LOCAL_OUTPUT
+// #define DebuggerLocal std::cout
+// // #else
+// // #define DebuggerLocal nullstream
+// #endif
 #endif // DEBUG_H_
