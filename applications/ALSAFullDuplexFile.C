@@ -61,11 +61,11 @@ class FullDuplexTest : public FullDuplex<int> {
 			outputAudio.resize(N, ch);
 			inputAudio.setZero();
 		}
-    if ((res=sox.read(outputAudio, N))<0)
-      if (outputAudio.rows()==0) // end of the file.
-        return 1; // indicate end of file exit
+		if ((res=sox.read(outputAudio, N))<0)
+		  if (outputAudio.rows()==0) // end of the file.
+		    return 1; // indicate end of file exit
 
-    cout<<"\rinput PCM maxima "<<inputAudio.square().colwise().minCoeff(); // print the input audio max coeff
+		cout<<"\rinput PCM maxima "<<inputAudio.square().colwise().mean().sqrt()<<'\n'; // print the input audio max coeff
 
 		return 0; // return 0 to continue
 	}
@@ -108,7 +108,7 @@ public:
 
 int main(int argc, char *argv[]) {
   string deviceName="hw:0";
-  int latency=2048;
+  int latency=8192;
 
   OptionParser op;
   int i=0, ret;
@@ -122,8 +122,8 @@ int main(int argc, char *argv[]) {
       ;
 
   FullDuplexTest fullDuplex(deviceName.c_str(), latency);
-	cout<<"opened the device "<<fullDuplex.Playback::getDeviceName()<<endl;
-	cout<<"channels max "<<fullDuplex.Playback::getMaxChannels()<<endl;
+  cout<<"opened the device "<<fullDuplex.Playback::getDeviceName()<<endl;
+  cout<<"channels max "<<fullDuplex.Playback::getMaxChannels()<<endl;
 
   int res;
   // we don't want defaults so reset and refil the params ...
