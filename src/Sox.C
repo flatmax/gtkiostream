@@ -40,6 +40,7 @@ Sox<FP_TYPE_>::Sox() {
     in=out=NULL;
 #ifdef HAVE_EMSCRIPTEN
     buffer=NULL;
+    bufferSize=0;
 #endif
 }
 
@@ -352,7 +353,7 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("getFSIn", &Sox<double>::getFSIn)
   .function("getAudio", &Sox<double>::getAudio, emscripten::allow_raw_pointers())
   .function("getBufferSize", &Sox<double>::getBufferSize)
-  .function("getMemFile", &Sox<double>::getMemFile)
+  .function("getMemFilePtr", &Sox<double>::getMemFilePtr, emscripten::allow_raw_pointers())
   ;
 }
 #endif

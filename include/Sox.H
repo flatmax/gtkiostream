@@ -427,17 +427,16 @@ public:
     return openMemWrite((void*)&buffer, &bufferSize, fs, channels, maxVal, ext.c_str(), sizeof(FP_TYPE_)*CHAR_BIT, false, sox_option_default, sox_option_default, sox_option_default);
   }
 
-  /** When a memory output stream is used, get the size of the buffer
+  /** When a memory output stream is used, get the size of the buffer (after writing)
+  \return The size of the memory buffer
   */
   size_t getBufferSize(){return bufferSize;}
 
-  /** Copy the buffer to the jsBuffer
-  \param jsBuffer The javascript WASM buffer to copy to.
-  \return The size of the data copied
+  /** The memory pointer for use in JS
+  \return The memory pointer
   */
-  int getMemFile(intptr_t jsBuffer){
-    memcpy((void*)jsBuffer, (void*)buffer, bufferSize);
-    return bufferSize;
+  intptr_t getMemFilePtr(){
+    return (intptr_t)buffer;
   }
 
 private:

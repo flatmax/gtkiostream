@@ -97,7 +97,7 @@ ret=sox.openWrite(_fs, ch, 1.0, "wav");
 if (ret)
     throw Error('error in opening write');
 
-// write the audio data to disk
+// write the audio data to a memory file
 Nmem = mallocHEAP(ch*N*8, 1, 'audioOut'); // resize the heap
 libgtkIOStream.HEAPF64.set(audio, audioOut>>3);
 ret=sox.write(audioOut, N);
@@ -107,7 +107,6 @@ if (ret!=(ch*N)){
 }
 
 // write the audio file to disk
-Nmem = mallocHEAP(sox.getBufferSize(), 1, 'audioFile'); // resize the heap
-sox.getMemFile(audioFile);
-let audioF = new Uint8Array(libgtkIOStream.HEAPU8.subarray(audioFile, audioFile+Nmem));
+let memPtr=sox.getMemFilePtr();
+let audioF = libgtkIOStream.HEAPU8.subarray(memPtr, memPtr+sox.getBufferSize());
 fs.writeFileSync('/tmp/sox.js.wav', audioF, 'binary');
