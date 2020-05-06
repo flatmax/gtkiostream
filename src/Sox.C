@@ -347,6 +347,7 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("openRead", emscripten::select_overload<int(intptr_t, size_t)>(&Sox<double>::openRead), emscripten::allow_raw_pointers())
   .function("read", &Sox<double>::readJS)
   .function("openWrite", emscripten::select_overload<int(double, int, double, string)>(&Sox<double>::openMemWrite), emscripten::allow_raw_pointers())
+  .function("closeWrite", &Sox<double>::closeWrite)
   .function("write", &Sox<double>::writeJS, emscripten::allow_raw_pointers())
   .function("getReadClips", &Sox<double>::getReadClips)
   .function("setMaxVal", &Sox<double>::setMaxVal)
@@ -355,6 +356,8 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("getBufferSize", &Sox<double>::getBufferSize)
   .function("getMemFilePtr", &Sox<double>::getMemFilePtr, emscripten::allow_raw_pointers())
   .function("printFormats", &Sox<double>::printFormats)
+  .function("getChCntIn", &Sox<double>::getChCntIn)
+  .function("getChCntOut", &Sox<double>::getChCntOut)
   ;
 }
 #endif
