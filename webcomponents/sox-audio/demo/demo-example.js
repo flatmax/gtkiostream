@@ -21,6 +21,7 @@ class DemoExample extends LitElement {
       <input type="button" value="load audio" @click="${this.setURL}"/>
       <input type="button" value="dump audio" @click="${this.dumpAudio}" />
       <input type="button" value="show formats" @click="${this.getFormats}" />
+      <input type="button" value="save audio" @click="${this.memWrite}" />
       <sox-audio @sox-audio-ready=${this.getFormats}>
         SoxAudio loading ...
       </sox-audio>
@@ -36,23 +37,67 @@ class DemoExample extends LitElement {
   static get properties() {
     return {
       formats: {type: String}, // url for fetching the audio
+      ext: {type: String}, // audio write file extension
     };
   }
 
+  /** This opens and reads an audio file
+  */
   setURL(){
     var soxAudio = this.shadowRoot.querySelector('sox-audio');
     soxAudio.url="11.Neutral.44k.wav";
   }
 
+  /** dump the audio data to console.
+  */
   dumpAudio(){
     var soxAudio = this.shadowRoot.querySelector('sox-audio');
     console.log(soxAudio.audio)
   }
 
+  /** Get the available audio formats
+  */
   getFormats(){
     console.log('demo-example getFormats');
     var soxAudio = this.shadowRoot.querySelector('sox-audio');
     this.formats=soxAudio.formats;
+  }
+
+  /** This method demonstrates a full write and extraction of audio for the user.
+  Once the openWrite has been called, many write calls may follow - growing the audio file.
+  */
+  memWrite(){
+    this.ext='wav';
+    var soxAudio = this.shadowRoot.querySelector('sox-audio');
+    if (!soxAudio.audio){
+      console.log('load audio first')
+      return;
+    }
+    let ch=soxAudio.audio.length;
+    // find the max value of the audio data
+    let maxVal = -1;
+    for (let c=0; c<ch; c++){
+      let maxV=Math.max.apply(null, soxAudio.audio[c].map(Math.abs));
+      if (maxV>maxVal)
+        maxVal=maxV;
+    }
+    soxAudio.openWrite(soxAudio.fsIn, ch, maxVal, this.ext);
+    soxAudio.write(soxAudio.audio); // write the previously loaded audio to memory disk
+    this.giveAudioToUser(soxAudio);
+  }
+
+  /** Give the audio file which was written to the user
+  */
+  giveAudioToUser(soxAudio){
+    let a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    let blob = soxAudio.getBlob();
+    let url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = 'audio.'+this.ext;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }
 customElements.define('demo-example', DemoExample);
