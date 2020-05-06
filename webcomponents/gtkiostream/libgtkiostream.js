@@ -13,6 +13,12 @@ export class LibgtkIOStream extends LitElement {
   */
   connectedCallback(){
     super.connectedCallback();
+
+    // add a method to setup the WASM initalised callback
+    window.addEventListener('libgtkIOStream::initialised', (e)=>{
+      this.WASMReady();
+    })
+
     this.moduleName = 'libgtkIOStream';
     let script = document.createElement('script');
     script.src = 'libgtkIOStream.js';
@@ -49,6 +55,10 @@ export class LibgtkIOStream extends LitElement {
       eval(this.moduleName)._free(this[heapName]);
     if (this[heapName+'Size'])
       this[heapName+'Size']=null;
+  }
+
+  /// overload this to execute something when the WASM has finished compiling
+  WASMReady(){
   }
 }
 
