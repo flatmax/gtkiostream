@@ -4,16 +4,11 @@
   "description": "The gtkiostream sox class as a webcompoenent",
   "main": "sox-audio.js",
   "dependencies": {
-    "@polymer/polymer": "^3.0.0",
-    "gtkiostream": "^1.7.0-j"
+    "gtkiostream": "^1.7.0-j",
+    "lit-element": "^2.3.1"
   },
   "devDependencies": {
-    "@polymer/iron-demo-helpers": "^3.1.0",
-    "@polymer/test-fixture": "^4.0.2",
-    "@webcomponents/webcomponentsjs": "^2.2.10",
-    "chai": "^4.2.0",
-    "mocha": "^5.2.0",
-    "wct-mocha": "^1.0.0"
+    "@webcomponents/webcomponentsjs": "^2.4.3"
   },
   "repository": {
     "type": "git",

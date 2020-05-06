@@ -1,4 +1,4 @@
-import {LibgtkIOStream} from 'gtkiostream/libgtkiostream-.js';
+import {LibgtkIOStream} from 'gtkiostream/libgtkiostream.js';
 
 /**
  * `sox-audio`
@@ -11,12 +11,16 @@ import {LibgtkIOStream} from 'gtkiostream/libgtkiostream-.js';
 export class SoxAudio extends LibgtkIOStream {
   static get properties() {
     return {
-      url: { // url for fetching the audio
-        type: String,
-        value: null,
-        observer: 'decodeURL'
-      },
+      url: {type: String}, // url for fetching the audio
     };
+  }
+
+  /** Observed properties are handled here.
+  This is a litelement builtin
+  */
+  updated(changedProperties) {
+    if (changedProperties.has('url')) // when the url property changes, handle it
+      this.decodeURL();
   }
 
   /** Fetch the url and attempt to decode the audio from the binary data using Sox

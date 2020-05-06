@@ -1,4 +1,4 @@
-import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import { LitElement } from 'lit-element';
 
 /**
  * `gtkiostream-`
@@ -7,7 +7,7 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
  * @customElement
  * @polymer
  */
-export class LibgtkIOStream extends PolymerElement {
+export class LibgtkIOStream extends LitElement {
 
   /** When ready define the moduleName based on the module file name
   */

@@ -1,51 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+<head>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js" defer></script>
 
-    <title>sox-audio demo</title>
+  <!-- Load components via WebComponents.waitFor -->
+  <script type="module">
+    window.WebComponents = window.WebComponents || {
+      waitFor(cb){ addEventListener('WebComponentsReady', cb) }
+    }
+    WebComponents.waitFor(async () => {
+      import('./demo-example.js');
+    });
+  </script>
 
-    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-
-    <script type="module">
-      import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
-      import '@polymer/iron-demo-helpers/demo-snippet';
-    </script>
-
-    <script type="module" src="../sox-audio.js"></script>
-
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
-    </custom-style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic sox-audio demo</h3>
-      <demo-snippet>
-        <template>
-          <sox-audio></sox-audio>
-        </template>
-        <input type="button" value="load audio" onclick="setURL();" />
-        <input type="button" value="dump audio" onclick="dumpAudio();" />
-      </demo-snippet>
-    </div>
-    <script type="text/javascript">
-      // once the WASM is compiled and ready, fire off this function
-      window.addEventListener('libgtkIOStream::initialised', (e)=>{
-        console.log('sox-audio demo starting');
-        setURL();
-      })
-
-      function setURL(){
-        var soxAudio = document.querySelector('sox-audio');
-        soxAudio.url="11.Neutral.44k.wav";
-      }
-      function dumpAudio(){
-        var soxAudio = document.querySelector('sox-audio');
-        console.log(soxAudio.audio)
-      }
-    </script>
-  </body>
-</html>
+  <title>deqx-xover</title>
+</head>
+<body>
+  <demo-example>
+    demo loading ...
+  </demo-example>
+</body>
