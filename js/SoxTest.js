@@ -83,7 +83,7 @@ for (let c=0; c<ch; c++){
 // Audio file write test
 
 // prepare the audio data for writing out
-audio=new Float64Array(N*ch);
+audio=new Float32Array(N*ch);
   for (let n=0; n<N; n++){
     for (let c=0; c<ch; c++){
     audio[c*N+n]=sox.getSample(n, c);
@@ -98,8 +98,8 @@ if (ret)
     throw Error('error in opening write');
 
 // write the audio data to a memory file
-Nmem = mallocHEAP(ch*N*8, 1, 'audioOut'); // resize the heap
-libgtkIOStream.HEAPF64.set(audio, audioOut>>3);
+Nmem = mallocHEAP(ch*N*4, 1, 'audioOut'); // resize the heap
+libgtkIOStream.HEAPF32.set(audio, audioOut>>2);
 ret=sox.write(audioOut, N);
 if (ret!=(ch*N)){
   console.log('didn\'t write the correct amount of data when calling sox.write')

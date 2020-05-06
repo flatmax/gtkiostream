@@ -315,8 +315,8 @@ int  Sox<FP_TYPE_>::writeJS(intptr_t audio, unsigned int count){
   int ch = getChCntOut();
   if (ch<0)
     return ch;
-  Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned >
-                                        outAudio((double*)audio, count, ch);
+  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned >
+                                        outAudio((float*)audio, count, ch);
   return write(outAudio);
 }
 

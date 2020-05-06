@@ -407,7 +407,7 @@ public:
   \param count the number of samples per channel to write
   \return The number of samples written otherwise the appropriate error otherwise.
   */
-  int  writeJS(intptr_t audio, unsigned int count);
+  int writeJS(intptr_t audio, unsigned int count);
 
   /** Emscripten case : Get the raw audio into the output buffer
   \param output The user supplied audio buffer to fill
