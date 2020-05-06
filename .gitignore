@@ -50,3 +50,4 @@ webcomponents/gtkiostream/libgtkIOStreamNode.js
 webcomponents/gtkiostream/test
 RealFFTExampleGD
 test/IIRSiglution
+package-lock.json
