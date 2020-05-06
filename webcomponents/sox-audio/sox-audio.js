@@ -12,6 +12,7 @@ export class SoxAudio extends LibgtkIOStream {
   static get properties() {
     return {
       url: {type: String}, // url for fetching the audio
+      formats: {type: String}, // the supported audio file formats
     };
   }
 
@@ -23,17 +24,27 @@ export class SoxAudio extends LibgtkIOStream {
       this.decodeURL();
   }
 
+  /// When the WASM code is ready initialise the Sox object
+  WASMReady(){
+    if (!this.sox)
+      this.sox = new (eval(this.moduleName).Sox);
+    this.getFormats();
+    this.dispatchEvent(new CustomEvent('sox-audio-ready', { detail: {} }));
+  }
+
   /** Fetch the url and attempt to decode the audio from the binary data using Sox
   */
   decodeURL(){
     if (this.url == null)
+      return;
+    if (!this.sox)
       return;
     fetch(this.url).then((response) => {
       return response.arrayBuffer();
     }).then((data) => {
       let Nmem = this.mallocHEAP(data.byteLength, 1, 'audio'); // resize the heap
       eval(this.moduleName).HEAPU8.set(new Uint8Array(data), this.audio);
-      this.sox = new (eval(this.moduleName).Sox);
+      this.sox.closeRead();
       let ret=this.sox.openRead(this.audio, this.audioSize);
       if (ret!=-40026) {
           throw Error('error in opening');
@@ -73,6 +84,14 @@ export class SoxAudio extends LibgtkIOStream {
   /** Overload this method on the client once get decode error
   */
   decodeError(e) {}
+  /** Get the available audio file types which can be handled
+  */
+  getFormats(){
+    if (!this.sox)
+      return;
+    this.formats=this.sox.printFormats();
+    return this.formats;
+  }
 }
 
 window.customElements.define('sox-audio', SoxAudio);

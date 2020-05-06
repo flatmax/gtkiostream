@@ -354,6 +354,7 @@ EMSCRIPTEN_BINDINGS(Sox_ex) {
   .function("getAudio", &Sox<double>::getAudio, emscripten::allow_raw_pointers())
   .function("getBufferSize", &Sox<double>::getBufferSize)
   .function("getMemFilePtr", &Sox<double>::getMemFilePtr, emscripten::allow_raw_pointers())
+  .function("printFormats", &Sox<double>::printFormats)
   ;
 }
 #endif

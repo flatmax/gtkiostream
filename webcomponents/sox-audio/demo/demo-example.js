@@ -20,10 +20,23 @@ class DemoExample extends LitElement {
 
       <input type="button" value="load audio" @click="${this.setURL}"/>
       <input type="button" value="dump audio" @click="${this.dumpAudio}" />
-      <sox-audio>
+      <input type="button" value="show formats" @click="${this.getFormats}" />
+      <sox-audio @sox-audio-ready=${this.getFormats}>
         SoxAudio loading ...
       </sox-audio>
+      <div>
+        available formats :
+        <div>
+          ${this.formats}
+        </div>
+      </div>
     `;
+  }
+
+  static get properties() {
+    return {
+      formats: {type: String}, // url for fetching the audio
+    };
   }
 
   setURL(){
@@ -34,6 +47,12 @@ class DemoExample extends LitElement {
   dumpAudio(){
     var soxAudio = this.shadowRoot.querySelector('sox-audio');
     console.log(soxAudio.audio)
+  }
+
+  getFormats(){
+    console.log('demo-example getFormats');
+    var soxAudio = this.shadowRoot.querySelector('sox-audio');
+    this.formats=soxAudio.formats;
   }
 }
 customElements.define('demo-example', DemoExample);
