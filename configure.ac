@@ -268,7 +268,7 @@ else
     MKOCTFILE_CFLAGS="$(echo $($MKOCTFILE -p INCFLAGS | $CAT) | sed -re 's|\\|/|g')"
     MKOCTFILE_LIBS="$(echo \
       $(unset RLD_FLAG; $MKOCTFILE -p RLD_FLAG | $CAT) \
-      $(unset LFLAGS; $MKOCTFILE -p LFLAGS | $CAT) \
+      $(unset LDFLAGS; $MKOCTFILE -p LDFLAGS | $CAT) \
       $(unset LIBOCTINTERP; $MKOCTFILE -p LIBOCTINTERP | $CAT) \
       $(unset LIBOCTAVE; $MKOCTFILE -p LIBOCTAVE | $CAT) \
       $(unset LIBCRUFT; $MKOCTFILE -p LIBCRUFT | $CAT) \
