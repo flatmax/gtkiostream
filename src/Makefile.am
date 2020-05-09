@@ -53,6 +53,8 @@ if HAVE_SOX
 libgtkIOStream_la_SOURCES += Sox.C
 libgtkIOStream_la_CPPFLAGS += $(SOX_CFLAGS)
 libgtkIOStream_la_LDFLAGS += $(SOX_LIBS)
+libdsp_la_CPPFLAGS += $(SOX_CFLAGS)
+libdsp_la_LDFLAGS += $(SOX_LIBS)
 endif
 
 if HAVE_OCTAVE
