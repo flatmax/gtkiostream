@@ -42,7 +42,7 @@ g++ `pkg-config --cflags gtk+-2.0` LabelsTest.C -o LabelsTest `pkg-config --libs
 For Unix/Linux etc. Users :
 
 Run the auto conf script :
-./scripts/myAutoreconf.sh
+./tools/autotools.sh
 
 Run configure  : ./configure --prefix=/usr/local
 Run make : make
