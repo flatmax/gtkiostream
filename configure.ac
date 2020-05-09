@@ -269,6 +269,7 @@ else
     MKOCTFILE_LIBS="$(echo \
       $(unset RLD_FLAG; $MKOCTFILE -p RLD_FLAG | $CAT) \
       $(unset LDFLAGS; $MKOCTFILE -p LDFLAGS | $CAT) \
+      -L$(unset OCTLIBDIR; $MKOCTFILE -p OCTLIBDIR | $CAT) \
       $(unset LIBOCTINTERP; $MKOCTFILE -p LIBOCTINTERP | $CAT) \
       $(unset LIBOCTAVE; $MKOCTFILE -p LIBOCTAVE | $CAT) \
       $(unset LIBCRUFT; $MKOCTFILE -p LIBCRUFT | $CAT) \
