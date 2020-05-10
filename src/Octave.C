@@ -43,7 +43,6 @@ extern OCTINTERP_API void clean_up_and_exit (int, bool);
 //extern void clean_up_and_exit (int retval);
 
 extern void set_global_value (const string& nm, const octave_value& val);
-extern octave_value get_global_value (const string& nm, bool silent = false);
 
 // extern OCTINTERP_API bool octave_initialized;
 extern OCTINTERP_API bool octave_interpreter_ready;

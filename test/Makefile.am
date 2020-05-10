@@ -103,10 +103,12 @@ endif
 if HAVE_SOX
 if HAVE_EMSCRIPTEN
 noinst_PROGRAMS += SoxTest2
+EXTRA_CFLAGS += $(SOX_CFLAGS)
 EXTRA_LIBS += $(SOX_LIBS)
 else
 if NOT_MINGW_SYSTEM
 noinst_PROGRAMS += IIOMMapTest IIOTest IIOQueueTest SoxTest SoxTest2
+EXTRA_CFLAGS += $(SOX_CFLAGS)
 EXTRA_LIBS += $(SOX_LIBS)
 endif
 endif

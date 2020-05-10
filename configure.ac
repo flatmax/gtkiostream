@@ -233,23 +233,23 @@ if test "$MKOCTFILE" != "mkoctfile"; then
       # no mkoctfile program_invocation_name
 
     AC_ARG_WITH([octave-include-path],
-    [--with-octave-include-path location of the octave headers, defaults to /usr/include/octave-3.2.4],
+    [--with-octave-include-path location of the octave headers, defaults to -I/usr/include/octave-3.8.1],
     [MKOCTFILE_CFLAGS="-I$withval"],
     [MKOCTFILE_CFLAGS='-I/usr/include/octave-3.8.1'])
     AC_ARG_WITH([octave-lib-path],
-      [--with-octave-lib-path location of the octave libraries, defaults to -L/usr/lib/octave-3.2.4],
+      [--with-octave-lib-path location of the octave libraries, defaults to -L/usr/lib/octave-3.8.1],
       [MKOCTFILE_LIBPATH="$withval"],
       [MKOCTFILE_LIBPATH='-L/usr/lib/octave-3.8.1'])
     AC_SUBST([MKOCTFILE_LIBPATH])
 
     AC_ARG_WITH([octave-lib-pc-path],
-      [--with-octave-lib-pc-path location of the octave libraries for the .pc, defaults to -L/usr/lib/octave-3.2.4],
+      [--with-octave-lib-pc-path location of the octave libraries for the .pc, defaults to -L/usr/lib/octave-3.8.1],
       [MKOCTFILE_PCLIBPATH="$withval"],
       [MKOCTFILE_PCLIBPATH='-L/usr/lib/octave-3.8.1'])
     AC_SUBST([MKOCTFILE_PCLIBPATH])
 
     AC_ARG_WITH([octave-libs],
-      [--with-octave-libs location of the octave libraries, defaults to '-lcruft -loctave -loctinterp'],
+      [--with-octave-libs location of the octave libraries, defaults to '-loctave -loctinterp'],
       [MKOCTFILE_LIBS="$withval"],
       [MKOCTFILE_LIBS='-loctave -loctinterp'])
 
@@ -268,7 +268,8 @@ else
     MKOCTFILE_CFLAGS="$(echo $($MKOCTFILE -p INCFLAGS | $CAT) | sed -re 's|\\|/|g')"
     MKOCTFILE_LIBS="$(echo \
       $(unset RLD_FLAG; $MKOCTFILE -p RLD_FLAG | $CAT) \
-      $(unset LFLAGS; $MKOCTFILE -p LFLAGS | $CAT) \
+      $(unset LDFLAGS; $MKOCTFILE -p LDFLAGS | $CAT) \
+      -L$(unset OCTLIBDIR; $MKOCTFILE -p OCTLIBDIR | $CAT) \
       $(unset LIBOCTINTERP; $MKOCTFILE -p LIBOCTINTERP | $CAT) \
       $(unset LIBOCTAVE; $MKOCTFILE -p LIBOCTAVE | $CAT) \
       $(unset LIBCRUFT; $MKOCTFILE -p LIBCRUFT | $CAT) \
