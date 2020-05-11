@@ -31,6 +31,17 @@ If you just want to use GTK GUI stuff, then no need to build the project, simply
 If you want to make and install, then like so :
 
 install some prerequisites : g++ automake libtool pkg-config
+
+For Fedora Linux, you might want to do, in addition:
+
+    sudo dnf install eigen3-devel sox-devel jack-audio-connection-kit-devel gl2ps-devel suitesparse-devel arpack-devel qrupdate-devel
+
+For Raspian/Debian,
+
+    sudo apt install libeigen3-dev libsox-dev libjack-jackd2-dev libgtk2.0-dev liboctave-dev
+
+Then:
+
 ./configure
 make
 make install

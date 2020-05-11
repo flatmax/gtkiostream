@@ -18,6 +18,7 @@
 #include <octave/parse.h>
 #include <octave/octave-config.h>
 #include <octave/octave.h>
+#include <octave/variables.h>
 // #include <octave/oct-obj.h>
 #include <octave/oct-map.h>
 #include <octave/symtab.h>
