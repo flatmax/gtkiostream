@@ -321,6 +321,7 @@ public:
     Scales &drawValue() {
         if (getCount())
             gtk_scale_set_draw_value((GtkScale*)current(), FALSE);
+        return *this;
     }
 
     /** Create a horizontal scale widget
