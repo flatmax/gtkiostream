@@ -43,8 +43,6 @@ extern OCTINTERP_API void clean_up_and_exit (int, bool);
 //extern void do_octave_atexit (void);
 //extern void clean_up_and_exit (int retval);
 
-extern void set_global_value (const string& nm, const octave_value& val);
-
 // extern OCTINTERP_API bool octave_initialized;
 extern OCTINTERP_API bool octave_interpreter_ready;
 
@@ -283,9 +281,9 @@ int Octave::setGlobalVariable(const string &name, Matrix &m) {
 
         if (varNames.size()) {
             octave_value ov=get_global_value(string(baseName), true);
-            set_global_value (string(baseName), setGlobalSubVariable(varNames, m, 0, ov));
+            octave::symbol_table().global_assign (string(baseName), setGlobalSubVariable(varNames, m, 0, ov));
         } else
-            set_global_value (string(baseName), m);
+            octave::symbol_table().global_assign (string(baseName), m);
         return 0;
     } else
         return OCTAVE_NOBASE_ERROR;
