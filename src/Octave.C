@@ -280,7 +280,7 @@ int Octave::setGlobalVariable(const string &name, Matrix &m) {
             varNames.push_back(string(subName));
 
         if (varNames.size()) {
-            octave_value ov=get_global_value(string(baseName), true);
+            octave_value ov=octave::symbol_table().global_varval(string(baseName));
             octave::symbol_table().global_assign (string(baseName), setGlobalSubVariable(varNames, m, 0, ov));
         } else
             octave::symbol_table().global_assign (string(baseName), m);
