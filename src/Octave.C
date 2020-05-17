@@ -38,7 +38,7 @@ extern OCTINTERP_API octave_exit_func octave_exit;
 extern OCTINTERP_API void clean_up_and_exit (int, bool);
 
 // extern OCTINTERP_API octave_value_list
-// feval (const string& name, const octave_value_list& args = octave_value_list (), int nargout = 0);
+// octave::feval (const string& name, const octave_value_list& args = octave_value_list (), int nargout = 0);
 
 //extern void do_octave_atexit (void);
 //extern void clean_up_and_exit (int retval);
@@ -142,7 +142,7 @@ vector<vector<vector<TYPE> > > &Octave::runM(const char* commandName, const vect
 
     // execute
     octave_value_list output; ///< Output variables returned from Octave
-    output = feval(string(commandName), (*input));
+    output = octave::feval(string(commandName), (*input));
 
     // unload outputs
     if (out.size() != output.length())
@@ -190,7 +190,7 @@ vector<Eigen::Matrix<TYPE, Eigen::Dynamic, Eigen::Dynamic> > &Octave::runM(const
     }
 
     octave_value_list output; ///< Output variables returned from Octave
-    output = feval(string(commandName), (*input));
+    output = octave::feval(string(commandName), (*input));
 
     if (out.size() != output.length())
         out.resize(output.length());
@@ -211,13 +211,13 @@ template vector<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> >  &Octave
 
 octave_value_list Octave::runMWithInput(const char* commandName){
     octave_value_list output; ///< Output variables returned from Octave
-    output = feval(string(commandName), (*input));
+    output = octave::feval(string(commandName), (*input));
     return output;
 }
 
 void Octave::runM(const char* commandName){
-    //output = feval(string(commandName), input, retCount);
-    feval(string(commandName), octave_value_list (), 0);
+    //output = octave::feval(string(commandName), input, retCount);
+    octave::feval(string(commandName), octave_value_list (), 0);
 }
 
 #ifdef HAVE_OPENCV
@@ -246,8 +246,8 @@ vector<cv::Mat> &Octave::runM(const char* commandName, const vector<cv::Mat> &in
     }
 
     octave_value_list output; ///< Output variables returned from Octave
-    //output = feval(string(commandName), input, retCount);
-    output = feval(string(commandName), (*input));
+    //output = octave::feval(string(commandName), input, retCount);
+    output = octave::feval(string(commandName), (*input));
 
     if (out.size() != output.length())
         out.resize(output.length());
