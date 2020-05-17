@@ -311,7 +311,7 @@ Octave_map Octave::setGlobalSubVariable(const vector<string> &varNames, const Ma
             om=base.map_value();
 //            om=base.cell_value();
             octave_value nv=m;
-            if (nv.is_cell())
+            if (nv.iscell())
                 cout<<"created a cell"<<endl;
             om.assign(varNames[index], nv);
 //            om=base(0);
