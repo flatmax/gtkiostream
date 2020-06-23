@@ -54,7 +54,7 @@ int ImpulseBandLimited<FP_TYPE>::generateImpulse(float s, float fs, float fi, fl
   fft.fwd(X.data(), x.data(), x.rows()); // find the DFT of x
 
   // zero out of band data
-  int cnt=(int)(fi/(fs/(float)N))-1;
+  int cnt=(int)(fi/(fs/(float)N));
   X.block(0,0,cnt,1).setZero(); // low freq
   int start=(N-(int)(fi/(fs/(float)N))+1);
   cnt=(N-1)-start+1;
