@@ -277,6 +277,7 @@ public:
     */
     DragNDrop &operator<<(Widget &w){
         setUserData(&w);
+        return *this;
     }
 };
 #endif // DRAGNDROP_H_

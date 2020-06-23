@@ -46,6 +46,7 @@ gboolean pulseProgress(gpointer data) {
 
     ProgressBar *bar=static_cast<ProgressBar*>(data);
     *bar=-accumulator;
+    return 1;
 }
 
 static void quit(void *widget, gpointer data) {

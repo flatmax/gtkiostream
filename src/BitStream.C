@@ -169,6 +169,7 @@ BitStream &BitStream::rotateR(const unsigned int N) {
             data[0]=(data[0]&genMask(VTYPEBits()-M))|bitReg; // add the last M bits to the beginning of the first word
         }
     }
+    return *this;
 }
 
 std::ostream& BitStream::hexDump(std::ostream& stream) {

@@ -240,6 +240,7 @@ public:
         ll.grab(1); ll.prev();
         for (int i=0;i<ll.getCount();i++)
             placeWidget(ll.next());
+        return *this;
     }
 
     /*! Operator to pack a Container in this table
@@ -309,6 +310,7 @@ public:
         ll.grab(1); ll.prev();
         for (int i=0;i<ll.getCount();i++)
             operator>>(ll.next());
+        return *this;
     }
 };
 
