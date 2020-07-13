@@ -149,7 +149,8 @@ namespace ALSA {
         for (int i=0; i<snd_mixer_selem_get_enum_items(elem); i++){
           captureEnums.push_back(CaptureChannelEnumElement((snd_mixer_selem_channel_id_t)i));
           captureEnums[captureEnums.size()-1].getName(elem);
-          captureEnums[i].getIndex(elem); // The index of the enum element is common assumed at index zero
+          if (i==0)
+            captureEnums[i].getIndex(elem); // The index of the enum element is common assumed at index zero
         }
       }
 
@@ -157,7 +158,8 @@ namespace ALSA {
         for (int i=0; i<snd_mixer_selem_get_enum_items(elem); i++){
           enums.push_back(ChannelEnumElement((snd_mixer_selem_channel_id_t)i));
           enums[enums.size()-1].getName(elem);
-          enums[i].getIndex(elem); // The index of the enum element is common assumed at index zero
+          if (i==0)
+            enums[i].getIndex(elem); // The index of the enum element is common assumed at index zero
         }
       } else // if it is either a playback or capture enum, let them handle it. If it is neither then isEnum = 0 which is assumed and reset here
         isEnum=0;

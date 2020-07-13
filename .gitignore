@@ -51,3 +51,11 @@ webcomponents/gtkiostream/test
 RealFFTExampleGD
 test/IIRSiglution
 package-lock.json
+a.out
+*.wasm
+a.zip
+af.zip
+ALSACaptureSplitter
+ALSAFullDuplexFile
+ALSACapture
+ALSAFullDuplexMinScan
