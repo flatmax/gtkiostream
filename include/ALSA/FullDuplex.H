@@ -92,7 +92,7 @@ protected:
 		/** link the capture and playback devices.
 		\return <0 on error.
 		*/
-		int link(){
+		virtual int link(){
 			if (Playback::getPCMType()!=SND_PCM_TYPE_DMIX && Capture::getPCMType()!=SND_PCM_TYPE_DSNOOP){
 				printf("linking playback and capture\n");
 				return snd_pcm_link(Playback::getPCM(), Capture::getPCM());
@@ -104,7 +104,7 @@ protected:
 		/** unlink the capture and playback devices.
 		\return <0 on error.
 		*/
-		int unLink(){
+		virtual int unLink(){
 			return snd_pcm_unlink(Capture::getPCM());
 		}
 
