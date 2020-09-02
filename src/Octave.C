@@ -38,12 +38,10 @@ extern OCTINTERP_API octave_exit_func octave_exit;
 extern OCTINTERP_API void clean_up_and_exit (int, bool);
 
 // extern OCTINTERP_API octave_value_list
-// feval (const string& name, const octave_value_list& args = octave_value_list (), int nargout = 0);
+// octave::feval (const string& name, const octave_value_list& args = octave_value_list (), int nargout = 0);
 
 //extern void do_octave_atexit (void);
 //extern void clean_up_and_exit (int retval);
-
-extern void set_global_value (const string& nm, const octave_value& val);
 
 // extern OCTINTERP_API bool octave_initialized;
 extern OCTINTERP_API bool octave_interpreter_ready;
@@ -142,7 +140,7 @@ vector<vector<vector<TYPE> > > &Octave::runM(const char* commandName, const vect
 
     // execute
     octave_value_list output; ///< Output variables returned from Octave
-    output = feval(string(commandName), (*input));
+    output = octave::feval(string(commandName), (*input));
 
     // unload outputs
     if (out.size() != output.length())
@@ -190,7 +188,7 @@ vector<Eigen::Matrix<TYPE, Eigen::Dynamic, Eigen::Dynamic> > &Octave::runM(const
     }
 
     octave_value_list output; ///< Output variables returned from Octave
-    output = feval(string(commandName), (*input));
+    output = octave::feval(string(commandName), (*input));
 
     if (out.size() != output.length())
         out.resize(output.length());
@@ -211,13 +209,13 @@ template vector<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> >  &Octave
 
 octave_value_list Octave::runMWithInput(const char* commandName){
     octave_value_list output; ///< Output variables returned from Octave
-    output = feval(string(commandName), (*input));
+    output = octave::feval(string(commandName), (*input));
     return output;
 }
 
 void Octave::runM(const char* commandName){
-    //output = feval(string(commandName), input, retCount);
-    feval(string(commandName), octave_value_list (), 0);
+    //output = octave::feval(string(commandName), input, retCount);
+    octave::feval(string(commandName), octave_value_list (), 0);
 }
 
 #ifdef HAVE_OPENCV
@@ -246,8 +244,8 @@ vector<cv::Mat> &Octave::runM(const char* commandName, const vector<cv::Mat> &in
     }
 
     octave_value_list output; ///< Output variables returned from Octave
-    //output = feval(string(commandName), input, retCount);
-    output = feval(string(commandName), (*input));
+    //output = octave::feval(string(commandName), input, retCount);
+    output = octave::feval(string(commandName), (*input));
 
     if (out.size() != output.length())
         out.resize(output.length());
@@ -282,10 +280,10 @@ int Octave::setGlobalVariable(const string &name, Matrix &m) {
             varNames.push_back(string(subName));
 
         if (varNames.size()) {
-            octave_value ov=get_global_value(string(baseName), true);
-            set_global_value (string(baseName), setGlobalSubVariable(varNames, m, 0, ov));
+            octave_value ov=octave::symbol_table().global_varval(string(baseName));
+            octave::symbol_table().global_assign (string(baseName), setGlobalSubVariable(varNames, m, 0, ov));
         } else
-            set_global_value (string(baseName), m);
+            octave::symbol_table().global_assign (string(baseName), m);
         return 0;
     } else
         return OCTAVE_NOBASE_ERROR;
@@ -311,7 +309,7 @@ Octave_map Octave::setGlobalSubVariable(const vector<string> &varNames, const Ma
             om=base.map_value();
 //            om=base.cell_value();
             octave_value nv=m;
-            if (nv.is_cell())
+            if (nv.iscell())
                 cout<<"created a cell"<<endl;
             om.assign(varNames[index], nv);
 //            om=base(0);
