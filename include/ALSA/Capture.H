@@ -50,9 +50,13 @@ namespace ALSA {
 		*/
 		int readBuf(char *buffer, size_t len){
 			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
+			int ret=0;
+			if (prepared())
+				if ((ret=start())<0)
+					return ALSADebug().evaluateError(ret);
+
 			// PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
 			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
-			int ret=0;
 			while ((len-=ret)>0){
 				ret = snd_pcm_readi(getPCM(), buffer, len);
 				if (ret<0)
