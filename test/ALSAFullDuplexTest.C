@@ -22,8 +22,6 @@ using namespace std;
 
 using namespace ALSA;
 
-#include "Sox.H"
-
 class FullDuplexTest : public FullDuplex<int> {
 	int N; ///< The number of frames
 	int ch; ///< The number of channels
