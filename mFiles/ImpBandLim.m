@@ -25,6 +25,11 @@ function x=ImpBandLim(s, fs, fi, fa)
 % Output :
 %         x : The signal
 
+if nargin==0
+    ImpBandLimTest;
+    return;
+end
+
 N=round(s*fs);
 x=zeros(N,1); % zeros of correct duration
 x(1)=1.0; % the impulse
@@ -57,4 +62,15 @@ x=ifft(X,'symmetric');
 %   error('x should be a real signal');
 % end
 % clf; plot(x)
+end
+
+function ImpBandLimTest
+
+s=1; fs=1024; fi=0; fa=fs/2;
+x=ImpBandLim(s, fs, fi, fa);
+
+ax(1)=subplot(211);
+semilogx(x);
+ax(2)=subplot(212);
+semilogx(abs(fft(x)));
 end
