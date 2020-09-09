@@ -128,19 +128,23 @@ protected:
 				// set the playback and capture channels and period sizes accordingly and set the parameters
 				if ((ret=Playback::setChannels(outputAudio.cols()))<0)
 					return ALSADebug().evaluateError(ret);
-				if ((ret=Capture::setChannels(inputAudio.cols()))<0)
-					return ALSADebug().evaluateError(ret);
 				if ((ret=Playback::setBufSize(outputAudio.rows()))<0)
-					return ALSADebug().evaluateError(ret);
-				if ((ret=Capture::setBufSize(inputAudio.rows()))<0)
 					return ALSADebug().evaluateError(ret);
 
 				if (sizeof(FRAME_TYPE)!=Playback::getFormatPhysicalWidth()/8){
 					printf("sizeof(FRAME_TYPE) = %ld, Playback::getFormatPhysicalWidth()/8 = %d\n", sizeof(FRAME_TYPE), Playback::getFormatPhysicalWidth()/8);
 					return ALSADebug().evaluateError(ALSA_FORMAT_MISMATCH_ERROR, " When comparing the FullDuplex sample type template word against the ALSA format word. ");
 				}
-
 				Playback::setParams();
+			}
+
+			if (!Capture::prepared()){
+				if ((ret=Capture::setChannels(inputAudio.cols()))<0)
+					return ALSADebug().evaluateError(ret);
+				if ((ret=Capture::setBufSize(inputAudio.rows()))<0)
+					return ALSADebug().evaluateError(ret);
+				if (Capture::hasXrun()) // capture state is xrun, prepare
+					printf("FullDuplex::go WARNING Capture has xrun\n");
 				Capture::setParams();
 			}
 			// Capture::enableLog();
