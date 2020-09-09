@@ -77,6 +77,20 @@ namespace ALSA {
       return ret;
     }
 
+    /** Reopen the stream
+    \param block Whether to open non blocking
+    \return >= 0 on success
+    */
+    int reopen(const char *device, const int block){
+      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      snd_pcm_stream_t streamType=snd_pcm_stream(getPCM());
+      std::cout<<"opening the device "<<device<<std::endl;
+      int ret=close();
+      if (ret<0)
+        std::cerr<<"Couldn't close the device "<<snd_strerror(ret)<<std::endl;
+      return open(device, streamType, block);
+    }
+
     /** Stops the PCM dropping frames.
     \return <0 on error
     */
@@ -95,7 +109,12 @@ namespace ALSA {
     */
     int drain(){
       PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
-      return snd_pcm_drain(getPCM());
+      int ret=0;
+      if (running())
+        ret=snd_pcm_drain(getPCM());
+      else
+        std::cout<<"PCM::drain can't drain, not running"<<std::endl;
+      return ret;
     }
 
     /** Resets the PCM.
