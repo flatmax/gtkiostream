@@ -23,25 +23,29 @@ namespace ALSA {
 	/** The input channels of this sound card
 	*/
 	class Capture : public Stream {
-		void init(const char *devName){
-			int err=Stream::init(devName, SND_PCM_STREAM_CAPTURE, block ? 0 : SND_PCM_NONBLOCK);
-			if (err < 0) {
-				std::cout<<err<<std::endl;
-				std::cerr<<"Capture :: Capture : open error: "<< snd_strerror(err)<<std::endl;
-				assert("open error");
-			}
+
+	protected:
+		int open(const char *devName="default"){
+			int ret=Stream::init(devName, SND_PCM_STREAM_CAPTURE, block ? 0 : SND_PCM_NONBLOCK);
+			if (ret < 0)
+				std::cerr<<"Capture :: Capture : open error: "<< snd_strerror(ret)<<std::endl;
+			return ret;
 		}
 	public:
 		/** Constructor specifying the device name
 		\param devName The device name to open.
 		*/
 		Capture(const char *devName) : Stream() {
-			init(devName);
+			int ret=open(devName);
+			if (ret<0)
+				assert("open error");
 		};
 
 		/// Constructor
 		Capture() {
-			init("default");
+			int ret=open("default");
+			if (ret<0)
+				assert("open error");
 		};
 
 		/** Read data from the PCM device - inverleaved version

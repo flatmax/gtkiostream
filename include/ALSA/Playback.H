@@ -27,22 +27,25 @@ namespace ALSA {
 		std::vector<void *> buffer; ///< Non interleaved buffer pointers
 	public:
 		Playback(const char *devName) : Stream() {
-			open(devName);
+			int ret=open(devName);
+			if (ret<0)
+				assert("open error");
 		}
 
 		Playback() {
-			open();
+			int ret=open();
+			if (ret<0)
+				assert("open error");
 		}
 
 		virtual ~Playback(void){
 		}
 
-		void open(const char *devName="default"){
+		int open(const char *devName="default"){
 			int ret=Stream::init(devName, SND_PCM_STREAM_PLAYBACK, block ? 0 : SND_PCM_NONBLOCK);
-			if (ret < 0) {
+			if (ret < 0)
 				std::cerr<<"Playback :: Playback : open error: "<< snd_strerror(ret)<<std::endl;
-				assert("open error");
-			}
+			return ret;
 		}
 
 		/** Write audio data to a buffer, returning error or the number written
