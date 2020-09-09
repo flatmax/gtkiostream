@@ -162,11 +162,12 @@ protected:
 			if ((ret=link())<0)
 				return ALSADebug().evaluateError(ret);
 
-			printf("fullduplex go:: playback prepared 4\n");
 			while ((ret=writeReadProcess())==0)
 				;
 			if (Playback::running())
-				Playback::drop(); // stop the pcm
+				Playback::drain(); // stop the pcm
+			if (Capture::running())
+				Capture::drain(); // stop the pcm
 			if ((ret2=unLink())<0)
 				if (ret>=0)
 					return ALSADebug().evaluateError(ret2);
