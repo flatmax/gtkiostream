@@ -106,6 +106,14 @@ namespace ALSA {
       return snd_pcm_reset(getPCM());
     }
 
+    /** Prepares the PCM (e.g. after xrun).
+    \return <0 on error
+    */
+    int prepare(){
+      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      return snd_pcm_prepare(getPCM());
+    }
+
     void enableLog(){
       snd_output_stdio_attach(&log, stdout, 0);
     }
