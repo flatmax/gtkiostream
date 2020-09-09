@@ -105,7 +105,8 @@ namespace ALSA {
 			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
 			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
 			//std::cout<<"getFormatPhysicalWidth()/8 "<<getFormatPhysicalWidth()/8<<" getChannels() "<<getChannels()<<'\n';
-			int ret=snd_pcm_writei(getPCM(), (void *)bufferIn, len); // first time through - allow for starting if required
+			int ret;
+			ret=snd_pcm_writei(getPCM(), (void *)bufferIn, len); // first time through - allow for starting if required
 			if (prepared())
 				if ((ret=start())<0)
 					return ALSADebug().evaluateError(ret);
@@ -116,9 +117,13 @@ namespace ALSA {
 				if ((ret>=0 && ret<len) && block!=0)
 					wait(1);
 				if (ret<0)
-					if (ret==-EPIPE)
+					if (ret==-EPIPE){
 						ALSADebug().evaluateError(ret," writeBuf underrun\n");
-					else
+						if (ret=prepare()<0){
+							return ALSADebug().evaluateError(ret," post EPIPE, couldn't prepare\n");
+						}
+						ret=0;
+					} else
 						return ALSADebug().evaluateError(ret," in writeBuf main loop, unidentified error.\n");
 				bufferIn += ret*bytes_per_frame;
 
