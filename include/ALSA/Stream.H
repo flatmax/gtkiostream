@@ -103,25 +103,25 @@ namespace ALSA {
     int setParams() {
       int err=setHWParams();
       if (err < 0) {
-        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to set hw params ");
+        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to set hw params\n");
         return err;
       }
 
       if ((err = getSWParams()) < 0)
-        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to determine current sParams ");
+        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to determine current sParams\n");
 
       if ((err = setSWThreshold(0x7fffffff)) < 0)
-        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to set start threshold mode ");
+        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to set start threshold mode\n");
 
       snd_pcm_uframes_t val = 4;
       if (block)
         getPeriodSize(&val);
 
       if ((err=setAvailMin(val))< 0)
-        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to set avail min ");
+        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to set avail min\n");
 
       if ((err=setSWParams()) < 0)
-        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to set sw params ");
+        return ALSADebug().evaluateError(err, "Stream:: setParams : Unable to set sw params\n");
       return err;
     }
 
