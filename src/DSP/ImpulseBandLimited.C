@@ -45,7 +45,7 @@ int ImpulseBandLimited<FP_TYPE>::generateImpulse(float s, float fs, float fi, fl
     return Debug().evaluateError(EINVAL, "Minimum frequency is incorrect, ensure fs/2>=fi>=0");
   if (fa>fs/2. || fa<0)
     return Debug().evaluateError(EINVAL, "Maximum frequency is incorrect, ensure fs/2>=fa>=0");
-  int N=round(s*fs); // the number of samples
+  int N=round(s*fs); // the number of samples'
   Eigen::Array<double, Eigen::Dynamic, 1> x(N,1);
   x.setZero(); // initialise the impulse
   x(0,0)=1.;
@@ -55,10 +55,12 @@ int ImpulseBandLimited<FP_TYPE>::generateImpulse(float s, float fs, float fi, fl
 
   // zero out of band data
   int cnt=(int)(fi/(fs/(float)N));
-  X.block(0,0,cnt,1).setZero(); // low freq
+  if (cnt>0)
+    X.block(0,0,cnt,1).setZero(); // low freq
   int start=(N-(int)(fi/(fs/(float)N))+1);
   cnt=(N-1)-start+1;
-  X.block(start,0,cnt,1).setZero(); // high freq
+  if (cnt>0)
+    X.block(start,0,cnt,1).setZero(); // high freq
   start=(int)(fa/(fs/(float)N))+1;
   cnt=(int)((fs-fa)/(fs/(float)N))-1-start+1;
   X.block(start,0,cnt,1).setZero(); // mid freq
