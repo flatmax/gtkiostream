@@ -17,10 +17,10 @@
 # Author Matt Flax <flatmax@flatmax.org>
 
 AUTOMAKE_OPTIONS = foreign subdir-objects
-SUBDIRS = src api include test
+SUBDIRS = src api include
 
 if !HAVE_EMSCRIPTEN
-SUBDIRS += applications
+SUBDIRS += applications test
 endif
 
 ACLOCAL_AMFLAGS = -I m4
