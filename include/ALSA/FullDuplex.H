@@ -171,7 +171,7 @@ protected:
 			if (Playback::running())
 				Playback::drain(); // stop the pcm
 			if (Capture::running())
-				Capture::drain(); // stop the pcm
+				Capture::drop(); // stop the pcm
 			if ((ret2=unLink())<0)
 				if (ret>=0)
 					return ALSADebug().evaluateError(ret2);
