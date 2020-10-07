@@ -66,22 +66,25 @@ namespace ALSA {
 				if (ret<0)
 					switch (ret){
 						case -EAGAIN: // try again
-							ret=0;
+							wait(1);
 							break;
 						case -EBADFD:
 							printf("Capture::readbuf : PCM state %s\n", getStateName());
 							return ALSADebug().evaluateError(ret, "reading failed because pcm is not in the correct state\n");
 						case -EPIPE:
-								ALSADebug().evaluateError(ret," writeBuf overrun\n");
-							return ALSADebug().evaluateError(ret);
+							if (ret=recover(ret))
+								return ALSADebug().evaluateError(ret, "preparing failed\n");
+							break;
 						case -ESTRPIPE:
 							return ALSADebug().evaluateError(ret);
 						default:
 							std::cout<<"read error "<<ret<<'\n';
 							return ALSADebug().evaluateError(ALSA_UNKNOWN_READ_ERROR);
 					}
-				if (ret==0 && block!=0)
-					wait();
+					if ((ret>=0 && ret<len)&& block!=0)
+						wait(1);
+					if (ret<0) // clear error
+						ret=0;
 				buffer+= ret*bytes_per_frame;
 			}
 			return 0;
