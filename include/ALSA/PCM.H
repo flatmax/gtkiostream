@@ -133,6 +133,15 @@ namespace ALSA {
       return snd_pcm_prepare(getPCM());
     }
 
+    /** Recovers the PCM (e.g. after -EINTR, -EPIPE, -ESTRPIPE).
+    \return <0 on error
+    */
+    int recover(int err){
+      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      int silent=0;
+      return snd_pcm_recover(getPCM(), err, silent);
+    }
+
     void enableLog(){
       snd_output_stdio_attach(&log, stdout, 0);
     }
