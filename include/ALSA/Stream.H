@@ -158,7 +158,7 @@ namespace ALSA {
     \retval 1 PCM stream is ready for I/O
     */
     int wait(int timeOut=1000) {
-      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
       return snd_pcm_wait(getPCM(), timeOut);
     }
 
