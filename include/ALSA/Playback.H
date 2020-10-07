@@ -111,20 +111,23 @@ namespace ALSA {
 				if ((ret=start())<0)
 					return ALSADebug().evaluateError(ret);
 
-			if (ret==-EAGAIN)
-					ret=0;
 			while ((len-=ret) > 0) {
 				if ((ret>=0 && ret<len) && block!=0)
 					wait(1);
-				if (ret<0)
-					if (ret==-EPIPE){
-						ALSADebug().evaluateError(ret," writeBuf underrun\n");
-						if (ret=prepare()<0){
-							return ALSADebug().evaluateError(ret," post EPIPE, couldn't prepare\n");
-						}
+				if (ret<0){ // handle errors
+					len+=ret; // undo the error subtraction
+					if (ret==-EAGAIN){ // try again
+						wait(1);
 						ret=0;
 					} else
-						return ALSADebug().evaluateError(ret," in writeBuf main loop, unidentified error.\n");
+						if (ret==-EPIPE){
+							ALSADebug().evaluateError(ret," writeBuf underrun\n");
+							if (ret=recover(ret)<0)
+								return ALSADebug().evaluateError(ret," post EPIPE, couldn't prepare\n");
+							ret=0;
+						} else
+							return ALSADebug().evaluateError(ret," in writeBuf main loop, unidentified error.\n");
+				}
 				bufferIn += ret*bytes_per_frame;
 
 				ret = snd_pcm_writei(getPCM(), (void *)bufferIn, len);
