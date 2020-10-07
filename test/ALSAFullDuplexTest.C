@@ -48,6 +48,24 @@ public:
 		inputAudio.resize(0,0); // force zero size to ensure resice on the first process.
 		outputAudio.resize(0,0);
 	}
+
+	/** Overload the link method
+	*/
+	int link(){
+		int ret = FullDuplex<int>::link();
+		if (ret<0)
+			printf("Linking failed. Continuing ...\n");
+		return 0;
+	}
+
+	/** Overload the link method
+	*/
+	int unLink(){
+		int ret = FullDuplex<int>::unLink();
+		if (ret<0)
+			printf("Unlinking failed. Continuing ...\n");
+		return 0;
+	}
 };
 
 int main(int argc, char *argv[]) {
@@ -55,7 +73,8 @@ int main(int argc, char *argv[]) {
 	int fs=48000; // The sample rate
 	cout<<"latency = "<<(float)latency/(float)fs<<" s"<<endl;
 
-	const char deviceName[]="hw:0";
+//	const char deviceName[]="hw:0";
+	const char deviceName[]="default";
 	FullDuplexTest fullDuplex(deviceName, latency);
 	cout<<"opened the device "<<fullDuplex.Playback::getDeviceName()<<endl;
 	cout<<"channels max "<<fullDuplex.Playback::getMaxChannels()<<endl;
