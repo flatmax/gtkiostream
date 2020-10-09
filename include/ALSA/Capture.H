@@ -54,14 +54,14 @@ namespace ALSA {
 		*/
 		int readBuf(char *buffer, size_t len){
 			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
-			int ret=0;
-			if (prepared())
-				if ((ret=start())<0)
-					return ALSADebug().evaluateError(ret);
-
-			// PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
 			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
+			int ret=0, ret2;
 			while ((len-=ret)>0){
+				if (prepared()){
+					printf("Capture::preapred : starting\n");
+					if ((ret2=start())<0)
+						return ALSADebug().evaluateError(ret2);
+				}
 				ret = snd_pcm_readi(getPCM(), buffer, len);
 				if (ret<0)
 					switch (ret){
@@ -72,19 +72,18 @@ namespace ALSA {
 							printf("Capture::readbuf : PCM state %s\n", getStateName());
 							return ALSADebug().evaluateError(ret, "reading failed because pcm is not in the correct state\n");
 						case -EPIPE:
-							if (ret=recover(ret))
-								return ALSADebug().evaluateError(ret, "preparing failed\n");
+							if (ret2=prepare())
+								return ALSADebug().evaluateError(ret2, "preparing failed\n");
 							break;
 						case -ESTRPIPE:
 							return ALSADebug().evaluateError(ret);
 						default:
-							std::cout<<"read error "<<ret<<'\n';
 							return ALSADebug().evaluateError(ALSA_UNKNOWN_READ_ERROR);
 					}
-					if ((ret>=0 && ret<len)&& block!=0)
-						wait(1);
-					if (ret<0) // clear error
-						ret=0;
+				if ((ret>=0 && ret<len)&& block!=0)
+					wait(1);
+				if (ret<0) // clear error
+					ret=0;
 				buffer+= ret*bytes_per_frame;
 			}
 			return 0;
