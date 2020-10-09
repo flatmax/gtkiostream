@@ -52,9 +52,9 @@ namespace ALSA {
 		\returns <0 on error, 0 to continue, >0 to stop
 		*/
 		int writeReadProcess(){
-			int ret=Playback::writeBuf(outputAudio);
+			int 				ret=Capture::readBuf(inputAudio);
 			if (ret==0)
-				ret=Capture::readBuf(inputAudio);
+				ret=Playback::writeBuf(outputAudio);
 			if (ret==0)
 				ret=process();
 			return ret;
