@@ -51,10 +51,14 @@ namespace ALSA {
         std::cerr<<"Couldn't setAccess"<<std::endl;
         return ret;
       }
-      if ((ret=setFormat(ALSA_DEFAULT_FORMAT))<0){
-        std::cerr<<"Couldn't setFormat"<<std::endl;
-        return ret;
-      }
+
+      snd_pcm_type_t pcmType = getPCMType(); // check the pcm type
+
+      if (pcmType!=SND_PCM_TYPE_EXTPLUG)
+        if ((ret=setFormat(ALSA_DEFAULT_FORMAT))<0){
+          std::cerr<<"Couldn't setFormat"<<std::endl;
+          return ret;
+        }
       if ((ret=setChannels(ALSA_DEFAULT_CHANNELS))<0){
         std::cerr<<"Couldn't setChannels"<<std::endl;
         return ret;
