@@ -50,6 +50,15 @@ namespace ALSA {
       return &handle;
     }
 
+
+    /** Returns the type of the PCM
+    \return snd_pcm_type_t the type of the PCM
+    */
+    snd_pcm_type_t getPCMType(){
+      PCM_NOT_OPEN_CHECK_TYPED(getPCM(), snd_pcm_type_t) // check pcm is open
+      return snd_pcm_type(getPCM());
+    }
+
     /** Open the stream
     \param device The name of the device
     \param streamType SND_PCM_STREAM_PLAYBACK or SND_PCM_STREAM_CAPTURE
@@ -276,12 +285,6 @@ namespace ALSA {
       return getState()==SND_PCM_STATE_DISCONNECTED;
     }
 
-    /** Returns the type of the PCM
-    \return snd_pcm_type_t the type of the PCM
-    */
-    snd_pcm_type_t getPCMType(){
-      return snd_pcm_type	(getPCM());
-    }
   };
 }
 #endif //PCM_H
