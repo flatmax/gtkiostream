@@ -37,7 +37,7 @@ class ALSAExternalPlugin : public Software {
 
 	snd_pcm_extplug_callback_t callbacks; /// The callback functions
 
-    // Define the varextplugus snd_pcm_extplug_callback_t static functextplugns
+  // Define the varextplugus snd_pcm_extplug_callback_t static functextplugns
 	STATICFN(int, close)
 	STATICFN2(int, hwParams, snd_pcm_hw_params_t *, params)
 	STATICFN(int, hwFree)
@@ -89,58 +89,58 @@ public:
     	std::cout<<__func__<<std::endl;
 	}
 
-    /** Close
-    \return 0 on success, < 0 on failure
-    */
-    virtual int close(){
-    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
-        return 0;
-    }
+  /** Close
+  \return 0 on success, < 0 on failure
+  */
+  virtual int close(){
+  	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+      return 0;
+  }
 
-    /** Set various hw params
-    \params The params of the system
-    \return 0 on success, < 0 on failure
-    */
-    virtual int hwParams(snd_pcm_hw_params_t *params){
-			std::cout<<__func__<<std::endl;
-			copyFrom(params);
-			std::cout<<"channels : "<<getChannels()<<std::endl;
-			std::cout<<"fs       : "<<getSampleRate(0)<<" Hz"<<std::endl;
-			std::cout<<"period sz: "<<getPeriodSize()<<" frames"<<std::endl;
-			return 0;
-    }
+  /** Set various hw params
+  \params The params of the system
+  \return 0 on success, < 0 on failure
+  */
+  virtual int hwParams(snd_pcm_hw_params_t *params){
+		std::cout<<__func__<<std::endl;
+		copyFrom(params);
+		std::cout<<"channels : "<<getChannels()<<std::endl;
+		std::cout<<"fs       : "<<getSampleRate(0)<<" Hz"<<std::endl;
+		std::cout<<"period sz: "<<getPeriodSize()<<" frames"<<std::endl;
+		return 0;
+  }
 
-    /** We have to specify hwparams
-    \return 0 on success, < 0 on failure
-    */
-    virtual int specifyHWParams()=0;
+  /** We have to specify hwparams
+  \return 0 on success, < 0 on failure
+  */
+  virtual int specifyHWParams()=0;
 
-    /** free
-    \return 0 on success, < 0 on failure
-    */
-    virtual int hwFree(){
-    	////std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
-        return 0;
-    }
+  /** free
+  \return 0 on success, < 0 on failure
+  */
+  virtual int hwFree(){
+  	////std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+      return 0;
+  }
 
-    /** dump
-    \return 0 on success, < 0 on failure
-    */
-    virtual void dump(snd_output_t *out){
-    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
-    }
+  /** dump
+  \return 0 on success, < 0 on failure
+  */
+  virtual void dump(snd_output_t *out){
+  	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+  }
 
-    /** init
-    \return 0 on success, < 0 on failure
-    */
-    virtual int init(){
-    	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
-        return 0;
-    }
+  /** init
+  \return 0 on success, < 0 on failure
+  */
+  virtual int init(){
+  	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
+      return 0;
+  }
 
-    snd_pcm_sframes_t doTransfer(const snd_pcm_channel_area_t *dst_areas, snd_pcm_uframes_t dst_offset, const snd_pcm_channel_area_t *src_areas, snd_pcm_uframes_t src_offset, snd_pcm_uframes_t size){
-    	return transfer(dst_areas, dst_offset, src_areas, src_offset, size);
-    }
+  snd_pcm_sframes_t doTransfer(const snd_pcm_channel_area_t *dst_areas, snd_pcm_uframes_t dst_offset, const snd_pcm_channel_area_t *src_areas, snd_pcm_uframes_t src_offset, snd_pcm_uframes_t size){
+  	return transfer(dst_areas, dst_offset, src_areas, src_offset, size);
+  }
 
 	/** The transfer method
 	*/
