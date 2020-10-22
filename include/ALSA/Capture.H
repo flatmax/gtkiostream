@@ -31,6 +31,10 @@ namespace ALSA {
 				std::cerr<<"Capture :: Capture : open error: "<< snd_strerror(ret)<<std::endl;
 			return ret;
 		}
+
+		/** A capture device alone can't be linked
+		*/
+		virtual bool getLinked(){return 0;}
 	public:
 		/** Constructor specifying the device name
 		\param devName The device name to open.
@@ -57,10 +61,12 @@ namespace ALSA {
 			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
 			int ret=0, ret2;
 			while ((len-=ret)>0){
-				if (prepared()){
-					printf("Capture::preapred : starting\n");
-					if ((ret2=start())<0)
-						return ALSADebug().evaluateError(ret2);
+				if (ret2=prepared()){
+					if (!getLinked()){
+						if ((ret2=start())<0)
+							// printf("Capture::preapred %d : starting\n", ret2);
+							return ALSADebug().evaluateError(ret2);
+						}
 				}
 				ret = snd_pcm_readi(getPCM(), buffer, len);
 				if (ret<0)
@@ -72,7 +78,7 @@ namespace ALSA {
 							printf("Capture::readbuf : PCM state %s\n", getStateName());
 							return ALSADebug().evaluateError(ret, "reading failed because pcm is not in the correct state\n");
 						case -EPIPE:
-							if (ret2=prepare())
+							if (ret2=recover(ret))
 								return ALSADebug().evaluateError(ret2, "preparing failed\n");
 							break;
 						case -ESTRPIPE:
