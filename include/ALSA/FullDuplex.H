@@ -67,6 +67,8 @@ namespace ALSA {
 		\return <0 on error, 0 to continue and >0 to stop.
 		*/
 		virtual int process()=0;
+
+		bool linked; ///< Indicate whether PCMs are linked
 protected:
 	/// The input audio variable, columns are channels, rows are frames (samples).
 	Eigen::Array<FRAME_TYPE, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> inputAudio;
@@ -77,13 +79,17 @@ protected:
 		/** Constructor using the same device for both capture and playback.
 		\param devName The device name to use
 		*/
-		FullDuplex(const char *devName) : Capture(devName), Playback(devName) {}
+		FullDuplex(const char *devName) : Capture(devName), Playback(devName) {
+			linked=0;
+		}
 
 		/** Constructor using the different devices for capture and playback.
 		\param playDevName The device name to use
 		\param captureDevName The device name to use
 		*/
-		FullDuplex(const char *playDevName, const char *captureDevName) : Capture(captureDevName), Playback(playDevName) {}
+		FullDuplex(const char *playDevName, const char *captureDevName) : Capture(captureDevName), Playback(playDevName) {
+			linked=0;
+		}
 
 		/** Destructor
 		*/
@@ -93,18 +99,27 @@ protected:
 		\return <0 on error.
 		*/
 		virtual int link(){
+			int ret=0;
+			linked=0;
 			if (Playback::getPCMType()!=SND_PCM_TYPE_DMIX && Capture::getPCMType()!=SND_PCM_TYPE_DSNOOP){
 				printf("linking playback and capture\n");
-				return snd_pcm_link(Playback::getPCM(), Capture::getPCM());
+				ret = snd_pcm_link(Playback::getPCM(), Capture::getPCM());
+				linked=1;
 			} else
 				printf("not linking devices as one or both are dmix or dsnoop\n");
-			return 0;
+			return ret;
 		}
+
+		/** Find out if playback and capture are linked or not
+		\return 1 for linked, 0 for not linked.
+		*/
+		bool getLinked(){return linked;}
 
 		/** unlink the capture and playback devices.
 		\return <0 on error.
 		*/
 		virtual int unLink(){
+			linked=0;
 			return snd_pcm_unlink(Capture::getPCM());
 		}
 
@@ -147,6 +162,10 @@ protected:
 					printf("FullDuplex::go WARNING Capture has xrun\n");
 				Capture::setParams();
 			}
+
+			std::cout<<"Playback::getPCMType "<<Playback::getPCMType()<<std::endl;
+			std::cout<<"Capture::getPCMType "<<Capture::getPCMType()<<std::endl;
+
 			// Capture::enableLog();
 			// std::cout<<"status"<<std::endl;
 			// Capture::dumpStatus();
