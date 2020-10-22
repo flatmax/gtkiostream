@@ -25,6 +25,10 @@ namespace ALSA {
 	*/
 	class Playback : public Stream {
 		std::vector<void *> buffer; ///< Non interleaved buffer pointers
+	protected:
+		/** A playback device alone can't be linked
+		*/
+		virtual bool getLinked(){return 0;}
 	public:
 		Playback(const char *devName) : Stream() {
 			int ret=open(devName);
