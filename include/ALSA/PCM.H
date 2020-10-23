@@ -163,7 +163,7 @@ namespace ALSA {
     \return <0 pon error. Return number of frames ready to be read (capture) / written (playback)
     */
     int availUpdate(){
-      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
       return snd_pcm_avail_update(getPCM());
     }
 
