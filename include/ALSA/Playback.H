@@ -46,7 +46,8 @@ namespace ALSA {
 		}
 
 		int open(const char *devName="default"){
-			int ret=Stream::init(devName, SND_PCM_STREAM_PLAYBACK, block ? 0 : SND_PCM_NONBLOCK);
+			int blockRequest=0; // defailt playback blocking state
+			int ret=Stream::init(devName, SND_PCM_STREAM_PLAYBACK, blockRequest);
 			if (ret < 0)
 				std::cerr<<"Playback :: Playback : open error: "<< snd_strerror(ret)<<std::endl;
 			return ret;
