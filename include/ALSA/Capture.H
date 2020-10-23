@@ -26,7 +26,8 @@ namespace ALSA {
 
 	protected:
 		int open(const char *devName="default"){
-			int ret=Stream::init(devName, SND_PCM_STREAM_CAPTURE, block ? 0 : SND_PCM_NONBLOCK);
+			int blockRequest=1; // default capture to blocking
+			int ret=Stream::init(devName, SND_PCM_STREAM_CAPTURE, blockRequest);
 			if (ret < 0)
 				std::cerr<<"Capture :: Capture : open error: "<< snd_strerror(ret)<<std::endl;
 			return ret;
@@ -60,38 +61,67 @@ namespace ALSA {
 			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
 			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
 			int ret=0, ret2;
+			// float waitT=1./(float)getSampleRate();
+			// int _1ms = (int)(1e-3/waitT);
+			// std::cout<<"Capture:: len "<<len<<" ret "<<ret<<std::endl;
+			// printf(" ret %d len %d period %d fs %d\n",ret,len, getPeriodSize(), getSampleRate());
+			// printf("_1ms %d\n",_1ms);
+			// printf("block = %d\n", block);
 			while ((len-=ret)>0){
-				if (ret2=prepared()){
-					if (!getLinked()){
-						if ((ret2=start())<0)
-							// printf("Capture::preapred %d : starting\n", ret2);
-							return ALSADebug().evaluateError(ret2);
-						}
+				if (prepared()){
+					// if (!getLinked())
+						ret=start();
 				}
-				ret = snd_pcm_readi(getPCM(), buffer, len);
+				if (ret>=0){
+						// ret=avail();
+						// std::cout<<"avail "<<ret<<", len "<<len<<std::endl;
+				// 		if (ret>=0){
+				// 				if ((len-ret)>2*_1ms && ret<len){
+				// 					printf("waiting\n");
+				// 					float waitTime = waitT*(float)(len-ret); // in seconds
+				// 					int waitMs = floor((int)(waitTime*1.e3))-1; // in ms
+				// 					printf(" len %d waitMs %d\n",len, waitMs);
+				// 					if (waitMs==0) waitMs=-1;
+				// 					wait(waitMs);
+				// 					// wait(-1);
+				// 					ret=0;
+				// 					continue;
+				// 				}
+						// std::cout<<"Capture::getState"<<getStateName()<<std::endl;
+						// wait(-1);
+						// while ((ret = snd_pcm_readi(getPCM(), buffer, len))==-EAGAIN); // non blocking operation
+						// printf(" ret %d len %d\n",ret,len);
+						ret = snd_pcm_readi(getPCM(), buffer, len); // non blocking operation
+						// printf(" ret %d len %d\n",ret,len);
+					// }
+				}
 				if (ret<0)
 					switch (ret){
 						case -EAGAIN: // try again
-							wait(1);
 							break;
 						case -EBADFD:
-							printf("Capture::readbuf : PCM state %s\n", getStateName());
 							return ALSADebug().evaluateError(ret, "reading failed because pcm is not in the correct state\n");
 						case -EPIPE:
-							if (ret2=recover(ret))
-								return ALSADebug().evaluateError(ret2, "preparing failed\n");
-							break;
+							if (ret2=prepare())
+								return ALSADebug().evaluateError(ret2, "-EPIPE preparing failed\n");
 						case -ESTRPIPE:
-							return ALSADebug().evaluateError(ret);
+							while ((ret2=recover(ret))==-EAGAIN)
+								sleep(1); /* wait until the suspend flag is released */
+							if (ret2<0)
+								if (ret2=prepare())
+									return ALSADebug().evaluateError(ret2, "-ESTRPIPE recovering failed\n");
+							break;
 						default:
 							return ALSADebug().evaluateError(ALSA_UNKNOWN_READ_ERROR);
 					}
-				if ((ret>=0 && ret<len)&& block!=0)
-					wait(1);
+				// if ((ret>=0 && ret<len)&& block!=0)
+				// 	wait(1);
 				if (ret<0) // clear error
 					ret=0;
 				buffer+= ret*bytes_per_frame;
 			}
+			// ret=avail();
+			// printf("avail %d\n",ret);
 			return 0;
 		}
 
