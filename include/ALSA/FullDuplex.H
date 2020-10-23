@@ -52,9 +52,9 @@ namespace ALSA {
 		\returns <0 on error, 0 to continue, >0 to stop
 		*/
 		int writeReadProcess(){
-			int ret=Capture::readBuf(inputAudio);
+			int ret=Playback::writeBuf(outputAudio);
 			if (ret==0)
-				ret=Playback::writeBuf(outputAudio);
+				ret=Capture::readBuf(inputAudio);
 			if (ret==0)
 				ret=process();
 			return ret;
@@ -184,9 +184,10 @@ protected:
 
 			if ((ret=link())<0)
 				return ALSADebug().evaluateError(ret);
-
-			while ((ret=writeReadProcess())==0)
-				;
+			ret=Playback::writeBuf(outputAudio);
+			if (ret==0)
+				while ((ret=writeReadProcess())==0)
+					;
 			if (Playback::running())
 				Playback::drain(); // stop the pcm
 			if (Capture::running())
