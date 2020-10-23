@@ -43,6 +43,10 @@ class FullDuplexTest : public FullDuplex<int> {
 	}
 public:
 	FullDuplexTest(const char*devName, int latency) : FullDuplex(devName){
+		init(latency);
+	}
+
+	void init(int latency){
 		ch=2; // use this static number of input and output channels.
 		N=latency;
 		inputAudio.resize(0,0); // force zero size to ensure resice on the first process.
