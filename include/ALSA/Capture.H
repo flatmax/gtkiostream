@@ -72,19 +72,19 @@ namespace ALSA {
 					if (!block){ // use wait for non-blocking mode
 						ret=availUpdate(); // see how many frames are available
 						if (ret>=0){
-								if ((len-ret)>_1ms && ret<len){ // wait if we need more then 1 ms of data
-									float waitTime = waitT*(float)(len-ret); // in seconds
-									int waitMs = ((int)(waitTime*1.e3))-1; // in ms
-									if (waitMs==0) // if we are fractional before casting, then wait for anything
-										waitMs=-1;
-									wait(waitMs);
-									ret=0;
-									continue;
-								}
+							if ((len-ret)>_1ms && ret<len){ // wait if we need more then 1 ms of data
+								float waitTime = waitT*(float)(len-ret); // in seconds
+								int waitMs = ((int)(waitTime*1.e3))-1; // in ms => give 1ms headroom
+								if (waitMs==0) // if we are fractional before casting, then wait for anything
+									waitMs=-1;
+								wait(waitMs);
+								ret=0;
+								continue;
+							}
 							while ((ret = snd_pcm_readi(getPCM(), buffer, len))==-EAGAIN); // non blocking operation
 						}
 					} else
-						ret = snd_pcm_readi(getPCM(), buffer, len); // non blocking operation
+						ret = snd_pcm_readi(getPCM(), buffer, len); // blocking operation
 					// printf(" ret %d len %d\n",ret,len);
 				}
 				if (ret<0)
@@ -106,14 +106,10 @@ namespace ALSA {
 						default:
 							return ALSADebug().evaluateError(ALSA_UNKNOWN_READ_ERROR);
 					}
-				// if ((ret>=0 && ret<len)&& block!=0)
-				// 	wait(1);
 				if (ret<0) // clear error
 					ret=0;
 				buffer+= ret*bytes_per_frame;
 			}
-			// ret=avail();
-			// printf("avail %d\n",ret);
 			return 0;
 		}
 
