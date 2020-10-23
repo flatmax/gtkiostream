@@ -108,30 +108,36 @@ namespace ALSA {
 		int writeBuf(char *bufferIn, size_t len){
 			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
 			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
-			//std::cout<<"getFormatPhysicalWidth()/8 "<<getFormatPhysicalWidth()/8<<" getChannels() "<<getChannels()<<'\n';
 
 			int ret=0, ret2;
 			while ((len-=ret) > 0) {
+				if (hasXrun())
+					if (ret2=recover(-EPIPE))
+						return ALSADebug().evaluateError(ret2, "-EPIPE recovering failed\n");
+				if (suspended())
+					if (ret2=recover(-ESTRPIPE))
+						return ALSADebug().evaluateError(ret2, "-ESTRPIPE recovering failed\n");
+
 				ret=snd_pcm_writei(getPCM(), (void *)bufferIn, len); // first time through - allow for starting if required
-				if (prepared()){
-					printf("Playback::preapred : starting\n");
+				if (prepared())
 					if ((ret2=start())<0)
 						return ALSADebug().evaluateError(ret2);
-				}
+
 				if ((ret>=0 && ret<len) && block!=0)
 					wait(1);
 				if (ret<0){ // handle errors
 					if (ret==-EAGAIN){ // try again
-						wait(1);
 						ret=0;
-					} else
-						if (ret==-EPIPE){
-							ALSADebug().evaluateError(ret," writeBuf underrun\n");
-							if (ret2=prepare()<0)
-								return ALSADebug().evaluateError(ret2," post EPIPE, couldn't prepare\n");
-							ret=0;
-						} else
-							return ALSADebug().evaluateError(ret," in writeBuf main loop, unidentified error.\n");
+						continue;
+					}
+					if (ret==-EPIPE){
+						ALSADebug().evaluateError(ret," writeBuf -EPIPE\n");
+						ret=0;
+						if (ret2=prepare()<0)
+							return ALSADebug().evaluateError(ret2," post EPIPE, couldn't prepare\n");
+						continue;
+					}
+					return ALSADebug().evaluateError(ret," in writeBuf main loop, unidentified error.\n");
 				}
 				bufferIn += ret*bytes_per_frame;
 			}
