@@ -151,6 +151,22 @@ namespace ALSA {
       return snd_pcm_recover(getPCM(), err, silent);
     }
 
+    /** How many samples available ?
+    \return <0 pon error. Return number of frames ready to be read (capture) / written (playback)
+    */
+    int avail(){
+      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      return snd_pcm_avail(getPCM());
+    }
+
+    /** How many samples available ?
+    \return <0 pon error. Return number of frames ready to be read (capture) / written (playback)
+    */
+    int availUpdate(){
+      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      return snd_pcm_avail_update(getPCM());
+    }
+
     void enableLog(){
       snd_output_stdio_attach(&log, stdout, 0);
     }
