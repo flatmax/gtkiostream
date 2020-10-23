@@ -61,39 +61,31 @@ namespace ALSA {
 			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
 			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
 			int ret=0, ret2;
-			// float waitT=1./(float)getSampleRate();
-			// int _1ms = (int)(1e-3/waitT);
-			// std::cout<<"Capture:: len "<<len<<" ret "<<ret<<std::endl;
-			// printf(" ret %d len %d period %d fs %d\n",ret,len, getPeriodSize(), getSampleRate());
-			// printf("_1ms %d\n",_1ms);
-			// printf("block = %d\n", block);
+			float waitT=1./(float)getSampleRate(); // time-constants for non-blocking mode
+			int _1ms = (int)(1e-3/waitT);
 			while ((len-=ret)>0){
 				if (prepared()){
 					// if (!getLinked())
 						ret=start();
 				}
 				if (ret>=0){
-						// ret=avail();
-						// std::cout<<"avail "<<ret<<", len "<<len<<std::endl;
-				// 		if (ret>=0){
-				// 				if ((len-ret)>2*_1ms && ret<len){
-				// 					printf("waiting\n");
-				// 					float waitTime = waitT*(float)(len-ret); // in seconds
-				// 					int waitMs = floor((int)(waitTime*1.e3))-1; // in ms
-				// 					printf(" len %d waitMs %d\n",len, waitMs);
-				// 					if (waitMs==0) waitMs=-1;
-				// 					wait(waitMs);
-				// 					// wait(-1);
-				// 					ret=0;
-				// 					continue;
-				// 				}
-						// std::cout<<"Capture::getState"<<getStateName()<<std::endl;
-						// wait(-1);
-						// while ((ret = snd_pcm_readi(getPCM(), buffer, len))==-EAGAIN); // non blocking operation
-						// printf(" ret %d len %d\n",ret,len);
+					if (!block){ // use wait for non-blocking mode
+						ret=availUpdate(); // see how many frames are available
+						if (ret>=0){
+								if ((len-ret)>_1ms && ret<len){ // wait if we need more then 1 ms of data
+									float waitTime = waitT*(float)(len-ret); // in seconds
+									int waitMs = ((int)(waitTime*1.e3))-1; // in ms
+									if (waitMs==0) // if we are fractional before casting, then wait for anything
+										waitMs=-1;
+									wait(waitMs);
+									ret=0;
+									continue;
+								}
+							while ((ret = snd_pcm_readi(getPCM(), buffer, len))==-EAGAIN); // non blocking operation
+						}
+					} else
 						ret = snd_pcm_readi(getPCM(), buffer, len); // non blocking operation
-						// printf(" ret %d len %d\n",ret,len);
-					// }
+					// printf(" ret %d len %d\n",ret,len);
 				}
 				if (ret<0)
 					switch (ret){
