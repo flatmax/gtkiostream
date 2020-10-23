@@ -189,7 +189,7 @@ protected:
 				while ((ret=writeReadProcess())==0)
 					;
 			if (Playback::running())
-				Playback::drain(); // stop the pcm
+				Playback::drop(); // stop the pcm
 			if (Capture::running())
 				Capture::drop(); // stop the pcm
 			if ((ret2=unLink())<0)
