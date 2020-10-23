@@ -138,7 +138,7 @@ namespace ALSA {
     \return <0 on error
     */
     int prepare(){
-      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), bool) // check pcm is open
       return snd_pcm_prepare(getPCM());
     }
 
@@ -146,7 +146,7 @@ namespace ALSA {
     \return <0 on error
     */
     int recover(int err){
-      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
       int silent=0;
       return snd_pcm_recover(getPCM(), err, silent);
     }
@@ -219,8 +219,8 @@ namespace ALSA {
     }
 
     const char *getStateName(){
-        PCM_NOT_OPEN_CHECK_STRING(getPCM()) // check pcm is open
-       return snd_pcm_state_name(getState());
+        PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), char *) // check pcm is open
+        return snd_pcm_state_name(getState());
     }
     /** Returns true if in the prepared state
     */
@@ -253,7 +253,7 @@ namespace ALSA {
     /** Returns true if in the xrun state
     */
     bool hasXrun(){
-      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), bool) // check pcm is open
       return getState()==SND_PCM_STATE_XRUN;
     }
 
@@ -274,7 +274,7 @@ namespace ALSA {
     /** Returns true if in the SUSPENDED state
     */
     bool suspended(){
-      PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
+      PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), bool) // check pcm is open
       return getState()==SND_PCM_STATE_SUSPENDED;
     }
 
@@ -284,7 +284,6 @@ namespace ALSA {
       PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
       return getState()==SND_PCM_STATE_DISCONNECTED;
     }
-
   };
 }
 #endif //PCM_H
