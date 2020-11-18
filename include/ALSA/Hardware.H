@@ -312,16 +312,16 @@ namespace ALSA {
 		\param the desired buffer size
 		\return <0 on error.
 		*/
-		int setBufSize(snd_pcm_uframes_t bufSize) {
+		int setBufSize(snd_pcm_uframes_t bufSize, int bufCnt=2) {
 			PCM_NOT_OPEN_CHECK(getPCM()) // check pcm is open
-			snd_pcm_uframes_t periodSize = bufSize * 2;
+			snd_pcm_uframes_t periodSize = bufSize * bufCnt;
 
 			int err = snd_pcm_hw_params_set_buffer_size_near(getPCM(), hParams, &periodSize);
 			if (err < 0) {
 				printf("Unable to set buffer size %d %s \n",(int)(bufSize*2), snd_strerror(err));
 				return err;
 			}
-			periodSize /= 2;
+			periodSize /= bufCnt;
 			if ((err = setPeriodSize(&periodSize)) < 0)
 				printf("Unable to set period size %d %s \n",(int)periodSize, snd_strerror(err));
 			return err;
