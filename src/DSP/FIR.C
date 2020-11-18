@@ -20,8 +20,22 @@
 #ifdef HAVE_SOX
 #include <Sox.H>
 
+// #include <iostream>
+// using namespace std;
+//
 template<typename FP_TYPE>
-int FIR<FP_TYPE><FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName){
+int FIR<FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName, int whichCh){
+  int ret=loadTimeDomainCoefficients(fileName); // load all channels and then select only the one requested
+  if (ret<0)
+    return ret;
+  if (whichCh>h.cols())
+    return SoxDebug().evaluateError(SOX_COL_BOUNDS_ERROR, " FIR: whichCh is > then the number of channels available in the loaded filter\n");
+  loadTimeDomainCoefficients(h.col(whichCh));
+  return 0;
+}
+
+template<typename FP_TYPE>
+int FIR<FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName){
   int ret=NO_ERROR;
   Sox<FP_TYPE> sox; // use sox to try to read the filter from file
   if ((ret=sox.openRead(string(fileName)))<0 && ret!=SOX_READ_MAXSCALE_ERROR) // try to open the file
@@ -30,8 +44,20 @@ int FIR<FP_TYPE><FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName
       Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> hNew; // the time domain representation of the filter
       if (ret=sox.read(hNew)<0) // Try to read the entire file into the coefficient Matrix B.
           SoxDebug().evaluateError(ret, fileName);
+      // else {
+      //   if (chCnt>0 && hNew.cols() != chCnt)
+      //     if (hNew.cols() > chCnt) // we need to shed rows from the matrix
+      //       hNew=hNew.leftCols(chCnt);
+      //     else { // the matrix needs expansion
+      //       int colsO=hNew.cols();
+      //       hNew.conservativeResize(hNew.rows(), chCnt);
+      //       hNew.rightCols(chCnt-colsO).setZero();
+      //       hNew.rightCols(chCnt-colsO).topRows(1).setOnes();
+      //     }
+      // cout<<hNew.topRows(4)<<endl;
       else
-          loadTimeDomainCoefficients(hNew);
+        loadTimeDomainCoefficients(hNew);
+      // }
   }
   return ret;
 }

@@ -18,6 +18,7 @@
 #ifndef FIR_H
 #define FIR_H
 
+#include "gtkiostream_config.h"
 #include "Debug.H"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wignored-attributes"
@@ -80,6 +81,14 @@ public:
     /** Method to read time domain coefficients from file, convert to the Fourier domain and Construct the necessary data types.
     You may pass any audio file which can be read by the class Sox - it can read a very large number of audio file formats.
     \param fileName The name of the file to load the time domain coefficients from
+    \param whichCh The channel to use, if we load 10 channels and whichCh=0, then only store the first channel, if whichCh=2 then only store the third channel.
+    \return Negative value on error.
+    */
+    int loadTimeDomainCoefficients(const std::string fileName, int whichCh);
+
+    /** Method to read time domain coefficients from file, convert to the Fourier domain and Construct the necessary data types.
+    You may pass any audio file which can be read by the class Sox - it can read a very large number of audio file formats.
+    \param fileName The name of the file to load the time domain coefficients from
     \return Negative value on error.
     */
     int loadTimeDomainCoefficients(const std::string fileName);
@@ -103,6 +112,7 @@ public:
         return;
       }
       if (input.cols()!=h.cols() || output.cols() != h.cols()){
+        printf("input.cols() %d output.cols() %d h.cols() %d\n",input.cols(), output.cols(), h.cols());
         FIRDebug().evaluateError(FIR_CHANNEL_MISMATCH_ERROR);
         return;
       }
