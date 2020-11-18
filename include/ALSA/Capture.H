@@ -26,7 +26,7 @@ namespace ALSA {
 
 	protected:
 		int open(const char *devName="default"){
-			int blockRequest=1; // default capture to blocking
+			int blockRequest=0; // default capture to blocking
 			int ret=Stream::init(devName, SND_PCM_STREAM_CAPTURE, blockRequest);
 			if (ret < 0)
 				std::cerr<<"Capture :: Capture : open error: "<< snd_strerror(ret)<<std::endl;
