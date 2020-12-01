@@ -143,5 +143,10 @@ public:
     \return The number of channels (columns) in h.
     */
     int getChannelCnt(){return h.cols();}
+
+    /** Get the sample count of the filters
+    \return the number of samples in a channel's filter.
+    */
+    int getN(){return h.rows();}
 };
 #endif // FIR_H
