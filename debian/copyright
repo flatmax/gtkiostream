@@ -3,7 +3,7 @@ Upstream-Name: gtkiostream
 Source: http://sourceforge.net/projects/gtkiostream/
 
 Files: *
-Copyright: Copyright 2000-2018 Matt Flax <flatmax@flatmax.org>
+Copyright: Copyright 2000-2021 Matt Flax <flatmax@flatmax.org>
 License: GPL-2.0+
 
 Files: debian/*
