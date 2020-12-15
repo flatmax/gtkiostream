@@ -21,6 +21,7 @@
 #include "Debug.H"
 
 #include <string>
+#include <iostream>
 
 #define LIBWEBSOCKETS_CREATECONTEXT_ERROR LIBWEBSOCKETS_ERROR_OFFSET-1
 
@@ -79,39 +80,59 @@ class LibWebSockets {
     signal(SIGINT, SIG_DFL);
   }
 
-  virtual void protocolInit(){
-    lwsl_notice("LibWebSockets::protcolInit()\n");
-  }
+  // virtual void protocolInit(){
+  //   lwsl_notice("LibWebSockets::protcolInit()\n");
+  // }
+  //
+  // virtual void protocolDestroy(){
+  //   lwsl_notice("LibWebSockets::protcolDestroy()\n");
+  // }
+  //
+  // virtual void rawRxFile(void *in, size_t len){
+  //   lwsl_notice("LibWebSockets::rawRxFile()\n");
+  // }
+  //
+  // virtual void clientWriteable(void *in, size_t len){
+  //   lwsl_notice("LibWebSockets::clientWriteable\n");
+  // }
+  //
+  // virtual void clientReceive(void *in, size_t len){
+  //   lwsl_notice("LibWebSockets::clientReceive\n");
+  // }
+  //
+  // virtual void serverWriteable(void *in, size_t len){
+  //   lwsl_notice("LibWebSockets::serverWriteable\n");
+  // }
+  //
+  // virtual void receive(void *in, size_t len){
+  //   lwsl_notice("LibWebSockets::receive\n");
+  // }
 
-  virtual void protocolDestroy(){
-    lwsl_notice("LibWebSockets::protcolDestroy()\n");
-  }
+  // definitions for declaring default virtualisable callback functions
+  #define VIRTUALFNNAME(name) name
+  // #define VIRTUALFNNAME(name) name##_static
+  // callback functions which take no arguments
+	#define VIRTUALFNDEF(retType, name) virtual retType VIRTUALFNNAME(name) ()
+	#define VIRTUALFNBODY(name) {std::cout<<__func__<<std::endl;}
+	#define VIRTUALFN(retType, name) VIRTUALFNDEF(retType, name) VIRTUALFNBODY(name)
+  // callback functions which take two variables as inputs typically void * and int
+  #define VIRTUALFNDEF2(retType, name, arg1_type, arg1, arg2_type, arg2) static retType VIRTUALFNNAME(name) (arg1_type arg1, arg2_type arg2)
+	#define VIRTUALFNBODY2(name, arg1, arg2) {std::cout<<__func__<<std::endl; std::cout<<arg1<<std::endl; std::cout<<arg2<<std::endl;}
+	#define VIRTUALFN2(retType, name, arg1_type, arg1, arg2_type, arg2) VIRTUALFNDEF2(retType, name, arg1_type, arg1, arg2_type, arg2) VIRTUALFNBODY2(name, arg1, arg2)
 
-  virtual void rawRxFile(void *in, size_t len){
-    lwsl_notice("LibWebSockets::rawRxFile()\n");
-  }
+  // Define the default virtualisable callback functions
 
-  virtual void clientWriteable(void *in, size_t len){
-    lwsl_notice("LibWebSockets::clientWriteable\n");
-  }
-
-  virtual void clientReceive(void *in, size_t len){
-    lwsl_notice("LibWebSockets::clientReceive\n");
-  }
-
-  virtual void serverWriteable(void *in, size_t len){
-    lwsl_notice("LibWebSockets::serverWriteable\n");
-  }
-
-  virtual void receive(void *in, size_t len){
-    lwsl_notice("LibWebSockets::receive\n");
-  }
+  VIRTUALFN(void, protocolInit)
+  VIRTUALFN(void, protocolDestroy)
+  VIRTUALFN2(void, rawRxFile, void *, in, size_t, len)
+  VIRTUALFN(void, clientWriteable)
+  VIRTUALFN2(void, clientReceive, void *, in, size_t, len)
+  VIRTUALFN(void, serverWriteable)
+  VIRTUALFN2(void, receive, void *, in, size_t, len)
 
   static int callback(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len){
     LibWebSockets *lws = static_cast<LibWebSockets *>(lws_context_user(lws_get_context(wsi)));
   	int n;
-    printf("LibWebSockets::callback\n");
-    lws->protocolInit();
 
   	switch (reason) {
   	case LWS_CALLBACK_PROTOCOL_INIT:
@@ -124,13 +145,13 @@ class LibWebSockets {
       lws->rawRxFile(in, len);
   		break;
     case LWS_CALLBACK_CLIENT_WRITEABLE:
-      lws->clientWriteable(in, len);
+      lws->clientWriteable();
       break;
     case LWS_CALLBACK_CLIENT_RECEIVE:
       lws->clientReceive(in, len);
       break;
     case LWS_CALLBACK_SERVER_WRITEABLE:
-      lws->serverWriteable(in, len);
+      lws->serverWriteable();
       break;
     case LWS_CALLBACK_RECEIVE:
       lws->receive(in, len);
