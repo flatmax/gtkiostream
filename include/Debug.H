@@ -94,12 +94,16 @@ typedef unsigned int uint;
 #define HANKEL_ERROR_OFFSET -40700
 #endif
 
+#ifndef LIBWEBSOCKETS_ERROR_OFFSET
+#define LIBWEBSOCKETS_ERROR_OFFSET -40800
+#endif
+
 // #ifndef DSF_ERROR_OFFSET
 // #define DSF_ERROR_OFFSET
 // #endif
 
 #define MAX_ERROR_OFFSET DEBUG_ERROR_OFFSET ///< The lowest debug error magnitude from gtkiostream
-#define MIN_ERROR_OFFSET (HANKEL_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
+#define MIN_ERROR_OFFSET (LIBWEBSOCKETS_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
 //#define MIN_ERROR_OFFSET (DSF_ERROR_OFFSET-1000) ///< The highest debug error magnitude from gtkiostream
 
 #include <map>

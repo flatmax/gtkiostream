@@ -120,6 +120,15 @@ noinst_PROGRAMS += OverlapAddTest #DecompositionTest
 endif
 endif
 
+if HAVE_LIBWEBSOCKETS
+noinst_PROGRAMS += LibWebSocketsServerTest
+EXTRA_CFLAGS += $(LIBWEBSOCKETS_CFLAGS)
+EXTRA_LIBS += $(LIBWEBSOCKETS_LIBS)
+LibWebSocketsServerTest_SOURCES = LibWebSocketsServerTest.C
+LibWebSocketsServerTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EXTRA_CFLAGS)
+LibWebSocketsServerTest_LDADD =  $(EXTRA_LIBS)
+endif
+
 TimeTest_SOURCES = TimeTest.C
 OptionParserTest_SOURCES = OptionParserTest.C
 ThreadTest_SOURCES = ThreadTest.C

@@ -206,6 +206,15 @@ if test "x$HAVE_ALSA" == xyes ; then
     AC_DEFINE(HAVE_ALSA, [], [whether to build in Alsa support])
 fi
 
+# libwebsockets
+PKG_CHECK_MODULES(LIBWEBSOCKETS, libwebsockets,HAVE_LIBWEBSOCKETS="yes", HAVE_LIBWEBSOCKETS="no")
+AC_SUBST(LIBWEBSOCKETS_CFLAGS)
+AC_SUBST(LIBWEBSOCKETS_LIBS)
+AM_CONDITIONAL(HAVE_LIBWEBSOCKETS, test x$HAVE_LIBWEBSOCKETS = xyes)
+if test "x$HAVE_LIBWEBSOCKETS" == xyes ; then
+    AC_DEFINE(HAVE_LIBWEBSOCKETS, [], [whether to build in libwebsockets support])
+fi
+
 # check for cross compilation
 AM_CONDITIONAL(WE_ARE_CROSS_COMPILING, [test "${cross_compiling}" = yes], [test "${cross_compiling}" = no])
 if test "${cross_compiling}" = yes; then
@@ -366,3 +375,6 @@ Octave tests and applications will not be built.])])
 
 AM_COND_IF(HAVE_ALSA, [AC_MSG_NOTICE([Alsa   ....................................... Present])], [AC_MSG_NOTICE([Alsa   ......................................... Not present
 Alsa tests and applications will not be built.])])
+
+AM_COND_IF(HAVE_LIBWEBSOCKETS, [AC_MSG_NOTICE([LIBWEBSOCKETS ............................................ Present])], [AC_MSG_NOTICE([LIBWEBSOCKETS ............................................ Not present
+LIBWEBSOCKETS tests / library support will not be built.])])
