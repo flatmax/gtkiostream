@@ -110,6 +110,35 @@ public:
     return 0;
   }
 
+  /** Remove a file descriptor from the inotify watch system.
+  \param fd The file descriptor to remove
+  \return 0 on success
+  */
+  virtual int rm(int fdw){
+    int ret=inotify_rm_watch(fd, fdw);
+    if (ret!=0)
+      Debug().evaluateError(fd, "couldn't remove the fd from the inotify subsystem\n");
+    for (std::map<std::string, int>::iterator it=pathFds.begin(); it!=pathFds.end(); ++it)
+      if (it->second == fdw){
+        pathFds.erase(it->first);
+        break;
+      }
+    return ret;
+  }
+
+  /** Get the file descriptor for a particular path if it is in the list of watched file descriptors.
+  \return The fd on success. Returns ENOENT is not in existance.
+  */
+  int getFD(std::string path){
+    int fdw;
+    try {
+      fdw=pathFds.at(path);
+    } catch (const std::out_of_range& oor){
+      return Debug().evaluateError(-ENOENT, " FileWatchThreaded : no fd for that path is currently being watched.");
+    }
+    return fdw;
+  }
+
   /** Add a file or directory to watch here, if it doesn't exist, then create
   \param path The directory or file to watch
   \return 0 on success
@@ -126,6 +155,11 @@ public:
       }
     }
     return ret;
+  }
+
+  void dumpContents(){
+    for (std::map<std::string, int>::iterator it=pathFds.begin(); it!=pathFds.end(); ++it)
+      printf("%s => %d\n",it->first.c_str(), it->second);
   }
 };
 

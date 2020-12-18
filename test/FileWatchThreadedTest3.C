@@ -38,18 +38,6 @@ int main(int argc, char *argv[]){
     std::cout<<"Please modify "<<argv[1]<<std::endl;
     fwt.run();
 
-    std::cout<<"currently watching : "<<std::endl;
-    fwt.dumpContents();
-    int fd=fwt.getFD(argv[1]);
-    std::cout<<"watching fd "<<fd<<std::endl;
-    std::cout<<"removing "<<argv[1]<<std::endl;
-    fwt.rm(fd);
-    std::cout<<"currently watching : "<<std::endl;
-    fwt.dumpContents();
-    std::cout<<"removing again "<<argv[1]<<std::endl;
-    int ret=fwt.rm(fd);
-    fwt.addFile(argv[1]); // add the file to watch and create it if it doesn't exist.
-
     fwt.meetThread(); // wait for the thread to exit
 
     return 0;

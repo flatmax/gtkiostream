@@ -23,7 +23,7 @@ EXTRA_CFLAGS =
 
 noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest
 noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6 FileWatchThreadedTest
-noinst_PROGRAMS += FileWatchThreadedTest2
+noinst_PROGRAMS += FileWatchThreadedTest2 FileWatchThreadedTest3
 noinst_PROGRAMS += IIRTest2 HankelTest ImpulseBandLimitedTest ResamplerTest RealFFTExampleGD IIRSiglution
 #noinst_PROGRAMS += DSFStreamTest
 if !HAVE_EMSCRIPTEN
@@ -382,6 +382,7 @@ endif
 
 FileWatchThreadedTest_SOURCES = FileWatchThreadedTest.C
 FileWatchThreadedTest2_SOURCES = FileWatchThreadedTest2.C
+FileWatchThreadedTest3_SOURCES = FileWatchThreadedTest3.C
 
 FutexTest_SOURCES = FutexTest.C
 FutexVsPThreadTest_SOURCES = FutexVsPThreadTest.C
