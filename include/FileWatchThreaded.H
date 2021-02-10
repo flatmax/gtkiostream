@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <assert.h>
+#include <stdexcept>
 
 /** Class to watch a file and execute on state change - based on inotify
 Usage is like so :
