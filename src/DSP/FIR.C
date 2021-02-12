@@ -18,6 +18,8 @@
 #include "DSP/FIR.H"
 
 #ifdef HAVE_SOX
+#ifndef HAVE_EMSCRIPTEN
+
 #include <Sox.H>
 
 // #include <iostream>
@@ -61,6 +63,7 @@ int FIR<FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName){
   }
   return ret;
 }
+#endif
 #endif
 
 template<typename FP_TYPE>
