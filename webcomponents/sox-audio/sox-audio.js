@@ -121,12 +121,29 @@ export class SoxAudio extends LibgtkIOStream {
 
   /** Method to encode audio to an audio file.
   @param audio The audio data to write to memory file
+  @return 0 on success
   */
   write(audio){
+    if (Float32Array.prototype.isPrototypeOf(audio)){ // we have been given a Float32Array
+      // check that the number of samples are divisible by our channel count
+      if (audio.length % this.sox.getChCntOut()){
+        console.error('SoxAudio::write : error : the number of samples is not divisible by the number of channels');
+        return -1;
+      }
+      let N=audio.length;
+      let Nb = this.mallocHEAP(N*4, 1, 'audioOut'); // resize the heap ch*N 32 bit words
+      eval(this.moduleName).HEAPF32.subarray((this.audioOut)>>2, (this.audioOut+Nb)>>2).set(audio);
+      let ret=this.sox.write(this.audioOut, N/this.sox.getChCntOut());
+      if (ret!=N){
+        console.error('SoxAudio::write : error : didn\'t write the correct amount of data when calling sox.write, wrote '+ret+' instead of the desired '+(N*ch)+' smaples.')
+        return -3;
+      }
+      return 0;
+    }
     if (Array.prototype.isPrototypeOf(audio)){ // we need to convert the audio from arrays of audio to arrays of Float32Array
       let ch=audio.length;
       if (ch!=this.sox.getChCntOut()){
-        console.log("channel count mismatch you are trying to write "+ch+" channels, but you initialised openWrite with "+this.sox.getChCntOut()+" channels");
+        console.error("SoxAudio::write : error : channel count mismatch you are trying to write "+ch+" channels, but you initialised openWrite with "+this.sox.getChCntOut()+" channels");
         return -1;
       }
       let N=audio[0].length;
@@ -136,10 +153,13 @@ export class SoxAudio extends LibgtkIOStream {
         eval(this.moduleName).HEAPF32.subarray((this.audioOut+c*Nb)>>2, (this.audioOut+c*Nb+Nb)>>2).set(audio[c]);
       let ret=this.sox.write(this.audioOut, N);
       if (ret!=(ch*N)){
-        console.log('didn\'t write the correct amount of data when calling sox.write, wrote '+ret+' instead of the desired '+(N*ch)+' smaples.')
+        console.error('SoxAudio::write : error : didn\'t write the correct amount of data when calling sox.write, wrote '+ret+' instead of the desired '+(N*ch)+' smaples.')
         return -2;
       }
+      return 0;
     }
+    console.error('SoxAudio::write : error : Unknwon audio type.');
+    return -4;
   }
 
   /** Give the file back to the user as a blob with the correct mime type
