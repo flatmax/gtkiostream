@@ -42,12 +42,12 @@ endif
 libgtkIOStream_la_SOURCES = WSOLA.C BitStream.C #IIO/IIO.C IIO/IIODevice.C
 
 libgtkIOStream_la_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(GTKDATABOX_CFLAGS) $(FFTW3_CFLAGS)
-libgtkIOStream_la_LDFLAGS =  -rdynamic -version-info $(LT_CURRENT) $(GTKDATABOX_LIBS) -release $(LT_RELEASE)
+libgtkIOStream_la_LDFLAGS =  -fstack-protector -rdynamic -version-info $(LT_CURRENT) $(GTKDATABOX_LIBS) -release $(LT_RELEASE)
 
 lib_LTLIBRARIES += libdsp.la
 libdsp_la_SOURCES = DSP/IIR.C DSP/IIRCascade.C DSP/FIR.C DSP/ImpulseBandLimited.C
 libdsp_la_CPPFLAGS = -I$(top_srcdir)/include $(FFTW3_CFLAGS) $(EIGEN_CFLAGS) -DMFILE_PATH1=\"mFiles\" -DMFILE_PATH2=\"$(DESTDIR)$(docdir)/mFiles\"
-libdsp_la_LDFLAGS =  -rdynamic -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(LT_RELEASE)
+libdsp_la_LDFLAGS =  -fstack-protector -rdynamic -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(LT_RELEASE)
 
 if HAVE_SOX
 libgtkIOStream_la_SOURCES += Sox.C
@@ -85,11 +85,11 @@ endif
 
 libfft_la_SOURCES = ComplexFFTData.C Real2DFFTData.C RealFFTData.C RealFFT.C
 libfft_la_CPPFLAGS = -I$(top_srcdir)/include $(FFTW3_CFLAGS)
-libfft_la_LDFLAGS =  -version-info $(LT_CURRENT)  $(FFTW3_LIBS) -release $(LT_RELEASE)
+libfft_la_LDFLAGS =  -fstack-protector -version-info $(LT_CURRENT)  $(FFTW3_LIBS) -release $(LT_RELEASE)
 
 libAudioMask_la_SOURCES = AudioMask/AudioMask.C AudioMask/AudioMasker.C AudioMask/MooreSpread.C
 libAudioMask_la_CPPFLAGS = -I$(top_srcdir)/include $(FFTW3_CFLAGS) $(EIGEN_CFLAGS)
-libAudioMask_la_LDFLAGS =  -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(LT_RELEASE)
+libAudioMask_la_LDFLAGS =  -fstack-protector -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(LT_RELEASE)
 
 if HAVE_EMSCRIPTEN
 all-local: libgtkIOStream.la libfft.la libdsp.la
