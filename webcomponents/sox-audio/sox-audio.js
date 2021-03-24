@@ -1,4 +1,4 @@
-import {LibgtkIOStream} from 'gtkiostream/libgtkiostream.js';
+import { libgtkIOStream, LibgtkIOStream } from 'gtkiostream/libgtkiostream.js';
 
 /**
  * `sox-audio`

@@ -17,10 +17,9 @@
  */
 
 var fs = require('fs');
-var libgtkIOStream = require('./libgtkIOStreamNode');
-libgtkIOStream().then((Module)=>{
-  libgtkIOStream = Module;
-
+libgtkIOStream = require('./libgtkIOStreamNode');
+libgtkIOStream().then((mod)=>{
+  libgtkIOStream = mod;
   /** Taken from : https://github.com/flatmax/WASMAudio
   malloc a WASM heap based on an audio matrix size. If the audio buffer
   channel count or frame count is changed, then free and malloc again.

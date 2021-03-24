@@ -1,4 +1,10 @@
 import { LitElement } from 'lit-element';
+import Module from './libgtkIOStream.js';
+export var libgtkIOStream;
+Module().then((mod)=>{
+  libgtkIOStream = mod;
+  window.dispatchEvent(new CustomEvent('libgtkIOStream::initialised'));
+})
 
 /**
  * `gtkiostream-`
@@ -20,9 +26,6 @@ export class LibgtkIOStream extends LitElement {
     })
 
     this.moduleName = 'libgtkIOStream';
-    let script = document.createElement('script');
-    script.src = 'libgtkIOStream.js';
-    document.head.appendChild(script);
   }
 
 
