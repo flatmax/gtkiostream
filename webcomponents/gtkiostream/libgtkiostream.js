@@ -1,7 +1,7 @@
 import { LitElement } from 'lit-element';
-import Module from './libgtkIOStream.js';
+import modProm from './libgtkIOStream.js';
 export var libgtkIOStream;
-Module().then((mod)=>{
+modProm().then((mod)=>{
   libgtkIOStream = mod;
   window.dispatchEvent(new CustomEvent('libgtkIOStream::initialised'));
 })
