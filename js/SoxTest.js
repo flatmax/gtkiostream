@@ -44,7 +44,8 @@ libgtkIOStream().then((mod)=>{
 
   //////////////////////////
   // Audio file read test
-  let data = fs.readFileSync('11.Neutral.44k.wav');
+  //let data = fs.readFileSync('11.Neutral.44k.wav');
+  let data = fs.readFileSync('11.Neutral.44k.flac');
   let Nmem = mallocHEAP(data.length, 1, 'audio'); // resize the heap
   libgtkIOStream.HEAPU8.set(data, audio);
   let sox = new libgtkIOStream.Sox;
