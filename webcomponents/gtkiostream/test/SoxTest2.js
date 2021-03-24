@@ -18,46 +18,49 @@
 
 var fs = require('fs');
 var libgtkIOStream = require('./libgtkIOStreamNode');
+libgtkIOStream().then((Module)=>{
+  libgtkIOStream = Module;
 
-/** Taken from : https://github.com/flatmax/WASMAudio
-malloc a WASM heap based on an audio matrix size. If the audio buffer
-channel count or frame count is changed, then free and malloc again.
-We remember size here to check if the heap frame count is different.
-\param byteLength The number of bytes in each channel
-\param chCnt The number of channels
-\param heapName For example 'inBufs'
-*/
-function mallocHEAP(byteLength, chCnt, heapName){
-  let Nb=byteLength; // number of bytes
-  let M=chCnt; // number of channels
-  let N=M*Nb; // total byte count
-  // resize memory if required
-  if (this[heapName]==null || this[heapName+'Size']!=N){
-    if (this[heapName]!=null)
-      libgtkIOStream._free(this[heapName]);
-    this[heapName] = libgtkIOStream._malloc(N);
-    this[heapName+'Size']=N;
+  /** Taken from : https://github.com/flatmax/WASMAudio
+  malloc a WASM heap based on an audio matrix size. If the audio buffer
+  channel count or frame count is changed, then free and malloc again.
+  We remember size here to check if the heap frame count is different.
+  \param byteLength The number of bytes in each channel
+  \param chCnt The number of channels
+  \param heapName For example 'inBufs'
+  */
+  function mallocHEAP(byteLength, chCnt, heapName){
+    let Nb=byteLength; // number of bytes
+    let M=chCnt; // number of channels
+    let N=M*Nb; // total byte count
+    // resize memory if required
+    if (this[heapName]==null || this[heapName+'Size']!=N){
+      if (this[heapName]!=null)
+        libgtkIOStream._free(this[heapName]);
+      this[heapName] = libgtkIOStream._malloc(N);
+      this[heapName+'Size']=N;
+    }
+    return Nb;
   }
-  return Nb;
-}
 
-let data = fs.readFileSync('clippedAudio.wav');
-let Nmem = mallocHEAP(data.length, 1, 'audio'); // resize the heap
-libgtkIOStream.HEAPU8.set(data, audio);
-let Sox = new libgtkIOStream.Sox;
-let formats=Sox.printFormats();
-let ret=Sox.openRead(audio, audioSize);
-if (ret!=-40026) {
-    throw Error('error in opening');
-}
-Sox.setMaxVal(1);
-ret=Sox.read(0); // read all of the audio
-if (ret!=0) {
-    throw Error('error reading');
-}
+  let data = fs.readFileSync('clippedAudio.wav');
+  let Nmem = mallocHEAP(data.length, 1, 'audio'); // resize the heap
+  libgtkIOStream.HEAPU8.set(data, audio);
+  let Sox = new libgtkIOStream.Sox;
+  let formats=Sox.printFormats();
+  let ret=Sox.openRead(audio, audioSize);
+  if (ret!=-40026) {
+      throw Error('error in opening');
+  }
+  Sox.setMaxVal(1);
+  ret=Sox.read(0); // read all of the audio
+  if (ret!=0) {
+      throw Error('error reading');
+  }
 
-console.log('');
-if (Sox.getReadClips())
-  console.log('The audio file loaded with clipping. It clipped '+Sox.getReadClips()+' times.'+'\nPlease reduce the magnitude of the recorded audio file and load again.')
-else
-  console.log('The audio file loaded cleanly (with no clipping).');
+  console.log('');
+  if (Sox.getReadClips())
+    console.log('The audio file loaded with clipping. It clipped '+Sox.getReadClips()+' times.'+'\nPlease reduce the magnitude of the recorded audio file and load again.')
+  else
+    console.log('The audio file loaded cleanly (with no clipping).');
+});

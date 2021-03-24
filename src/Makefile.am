@@ -94,7 +94,7 @@ libAudioMask_la_LDFLAGS =  -version-info $(LT_CURRENT) $(FFTW3_LIBS) -release $(
 if HAVE_EMSCRIPTEN
 all-local: libgtkIOStream.la libfft.la libdsp.la
 
-	@emcc --bind -s ALLOW_MEMORY_GROWTH=1 --llvm-opts 1 -s WASM=0 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
+	@emcc --bind -s ALLOW_MEMORY_GROWTH=1 --llvm-opts 1 -s MODULARIZE=1 -s EXPORT_NAME="'libgtkIOStream'" --pre-js ../webcomponents/preNode.js -s WASM=0 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
 	mv .libs/libgtkIOStream.js .libs/libgtkIOStreamNode.js
 	@emcc --bind --llvm-opts 1 --memory-init-file 0 --pre-js ../webcomponents/pre.js -s EXPORT_ES6=1 -s MODULARIZE=1 -s EXPORT_NAME="'libgtkIOStream'" -s SINGLE_FILE=1 -s "BINARYEN_METHOD='native-wasm'" -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
 

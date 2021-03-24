@@ -17,41 +17,44 @@
  */
 
 libgtkIOStream = require('../src/.libs/libgtkIOStreamNode');
+libgtkIOStream().then((Module)=>{
+  libgtkIOStream = Module;
 
-chCnt=2;
-outSizePow2_=true; // force power of two output buffer sizing
-WSOLA = new libgtkIOStream.WSOLA(chCnt, outSizePow2_);
+  chCnt=2;
+  outSizePow2_=true; // force power of two output buffer sizing
+  WSOLA = new libgtkIOStream.WSOLA(chCnt, outSizePow2_);
 
-// The system sample rate - get it from the audio system
-fs=48000;
-WSOLA.setFS(fs);
+  // The system sample rate - get it from the audio system
+  fs=48000;
+  WSOLA.setFS(fs);
 
-timeScale=1.2; // This value specifies whether to speed up or slow down the audio
+  timeScale=1.2; // This value specifies whether to speed up or slow down the audio
 
-// The number of audio sames to load initially
-N=WSOLA.getSamplesRequired();
+  // The number of audio sames to load initially
+  N=WSOLA.getSamplesRequired();
 
-// Create the output data matrix
-outputAudio= [];
-for(m=0; m<chCnt; m++)
-    outputAudio[m] = new Array(WSOLA.getOutputSize());
+  // Create the output data matrix
+  outputAudio= [];
+  for(m=0; m<chCnt; m++)
+      outputAudio[m] = new Array(WSOLA.getOutputSize());
 
-for (i=0; i<10; i++){
-	console.log('We need '+chCnt+' channels of '+N+' audio samples each to be loaded');
-	// We aren't using a real audio device, so for now we will use random data
-	for (m=0; m<chCnt; m++)
-		for (n=0; n<N; n++)
-			WSOLA.loadInput(m, n, Math.random());
+  for (i=0; i<10; i++){
+  	console.log('We need '+chCnt+' channels of '+N+' audio samples each to be loaded');
+  	// We aren't using a real audio device, so for now we will use random data
+  	for (m=0; m<chCnt; m++)
+  		for (n=0; n<N; n++)
+  			WSOLA.loadInput(m, n, Math.random());
 
-	console.log('processing');
-	// We use process to execute WSOLA and produce the output audio data
-	// timeScale can change with each iteration, allowing dynamic audio speed change
-	// N tells us how much audio data to load in during the next iteration
-	N=WSOLA.process(timeScale);
+  	console.log('processing');
+  	// We use process to execute WSOLA and produce the output audio data
+  	// timeScale can change with each iteration, allowing dynamic audio speed change
+  	// N tells us how much audio data to load in during the next iteration
+  	N=WSOLA.process(timeScale);
 
-	// unload the audio data here
-	console.log('We need '+chCnt+' channels of '+WSOLA.getOutputSize()+' audio samples each to be unloaded');
-	for (m=0; m<chCnt; m++)
-	 	for (n=0; n<WSOLA.getOutputSize(); n++)
-	 		outputAudio[m][n]=WSOLA.unloadOutput(m, n);
-}
+  	// unload the audio data here
+  	console.log('We need '+chCnt+' channels of '+WSOLA.getOutputSize()+' audio samples each to be unloaded');
+  	for (m=0; m<chCnt; m++)
+  	 	for (n=0; n<WSOLA.getOutputSize(); n++)
+  	 		outputAudio[m][n]=WSOLA.unloadOutput(m, n);
+  }
+});
