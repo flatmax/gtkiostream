@@ -39,7 +39,10 @@ if HAVE_ZEROC_ICE
 #EXTRA_DIST = ORBICE.ice
 endif
 
-libgtkIOStream_la_SOURCES = WSOLA.C BitStream.C #IIO/IIO.C IIO/IIODevice.C
+libgtkIOStream_la_SOURCES = WSOLA.C #IIO/IIO.C IIO/IIODevice.C
+if !HAVE_EMSCRIPTEN
+libgtkIOStream_la_SOURCES += BitStream.C
+endif
 
 libgtkIOStream_la_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(GTKDATABOX_CFLAGS) $(FFTW3_CFLAGS)
 libgtkIOStream_la_LDFLAGS =  -fstack-protector -rdynamic -version-info $(LT_CURRENT) $(GTKDATABOX_LIBS) -release $(LT_RELEASE)
