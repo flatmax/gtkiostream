@@ -29,7 +29,7 @@ endif
 endif
 
 if HAVE_SOX
-bin_PROGRAMS += WSOLA audioMasker HexToSox
+bin_PROGRAMS += WSOLA audioMasker HexToSox FilterGen
 if HAVE_EMSCRIPTEN
 else
 if NOT_MINGW_SYSTEM
@@ -114,6 +114,10 @@ MixerTester_LDADD = $(top_builddir)/src/libdsp.la  $(top_builddir)/src/libAudioM
 HexToSox_SOURCES = HexToSox.C
 HexToSox_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
 HexToSox_LDADD = $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS)
+
+FilterGen_SOURCES = FilterGen.C
+FilterGen_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+FilterGen_LDADD = $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS)
 
 LatencyTester_SOURCES = LatencyTester.C
 LatencyTester_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
