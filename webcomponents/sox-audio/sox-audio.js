@@ -28,7 +28,7 @@ export class SoxAudio extends LibgtkIOStream {
   constructor(){
     super();
     // Sox has troubles reading from memory files with accurate length and channel numbers
-    this.frames=50000000; // the default number to read in
+    this.frames=5000000; // the default number to read in
   }
 
   /** Observed properties are handled here.
@@ -68,7 +68,7 @@ export class SoxAudio extends LibgtkIOStream {
   }
 
   readBlob(blob){
-    blob.arrayBuffer().then((data)=> this.read(data);)
+    blob.arrayBuffer().then(data => this.read(data))
   }
 
   read(data){
