@@ -49,39 +49,55 @@ export class SoxAudio extends LibgtkIOStream {
     }
     fetch(this.url).then((response) => {
       return response.arrayBuffer();
-    }).then((data) => {
-      let Nmem = this.mallocHEAP(data.byteLength, 1, 'audio'); // resize the heap
-      eval(this.moduleName).HEAPU8.set(new Uint8Array(data), this.audio);
-      let ret=this.sox.openRead(this.audio, this.audioSize);
-      if (ret!=-40026) {
-          throw Error('error in opening');
-      }
-      this.sox.setMaxVal(1);
-      ret=this.sox.read(0); // read all of the audio
-      if (ret!=0) {
-          throw Error('error reading');
-      }
-
-      this.freeHEAP('audio');
-
-      let ch=this.sox.getCols();
-      let N=this.sox.getRows();
-      this.fsIn=this.sox.getFSIn();
-      console.log(''+ch+' channels')
-      console.log(''+N+' frames')
-      console.log('fs='+this.fsIn+' Hz')
-      let Nb = this.mallocHEAP(N*4, ch, 'audioOut'); // resize the heap ch*N 32 bit words
-      this.sox.getAudio(this.audioOut, ch, N);
-      this.audio=[]; // load the audio into the audio array
-      for (var c=0; c<ch; c++) // retrieve the audio channel data
-        this.audio.push(new Float32Array(eval(this.moduleName).HEAPF32.subarray((this.audioOut+c*Nb)>>2, (this.audioOut+c*Nb+Nb)>>2)));
-      this.freeHEAP('audioOut');
+    }).then(data => {
+      this.decodeData(data);
       console.log(this.url+' loaded');
-      this.decodeSuccess();
     }).catch((err) => {
       console.log(err)
       this.decodeError(err);
     })
+  }
+
+  async readBlob(blob) {
+    let data = await new Response(blob).arrayBuffer();
+    this.decodeData(data);
+  }
+
+  /**
+   * Decode the audio buffer
+   * @param data should be arraybuffer or blob
+   */
+  decodeData(data) {
+    if (data instanceof Blob)
+      return this.readBlob(data);
+
+    this.mallocHEAP(data.byteLength, 1, 'audio'); // resize the heap
+    eval(this.moduleName).HEAPU8.set(new Uint8Array(data), this.audio);
+    let ret=this.sox.openRead(this.audio, this.audioSize);
+    if (ret!=-40026) {
+        throw Error('error in opening');
+    }
+    this.sox.setMaxVal(1);
+    ret=this.sox.read(0); // read all of the audio
+    if (ret!=0) {
+        throw Error('error reading');
+    }
+
+    this.freeHEAP('audio');
+
+    let ch=this.sox.getCols();
+    let N=this.sox.getRows();
+    this.fsIn=this.sox.getFSIn();
+    console.log(''+ch+' channels')
+    console.log(''+N+' frames')
+    console.log('fs='+this.fsIn+' Hz')
+    let Nb = this.mallocHEAP(N*4, ch, 'audioOut'); // resize the heap ch*N 32 bit words
+    this.sox.getAudio(this.audioOut, ch, N);
+    this.audio=[]; // load the audio into the audio array
+    for (var c=0; c<ch; c++) // retrieve the audio channel data
+      this.audio.push(new Float32Array(eval(this.moduleName).HEAPF32.subarray((this.audioOut+c*Nb)>>2, (this.audioOut+c*Nb+Nb)>>2)));
+    this.freeHEAP('audioOut');
+    this.decodeSuccess();
   }
 
   /** Overload this method on the client once successfully decode
