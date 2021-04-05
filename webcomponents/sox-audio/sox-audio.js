@@ -19,7 +19,16 @@ export class SoxAudio extends LibgtkIOStream {
       fsIn: {type: Number}, // The input sample rate
       fsOut: {type: Number}, // The input sample rate
       mimeType: {type: String}, // The mime type for the output audio format
+      frames: {type: Number}, // The default number of frames to read
     };
+  }
+
+  /** constructor
+  */
+  constructor(){
+    super();
+    // Sox has troubles reading from memory files with accurate length and channel numbers
+    this.frames=50000000; // the default number to read in
   }
 
   /** Observed properties are handled here.
@@ -48,8 +57,23 @@ export class SoxAudio extends LibgtkIOStream {
       return;
     }
     fetch(this.url).then((response) => {
-      return response.arrayBuffer();
+      return response.blob();
     }).then((data) => {
+      this.read(data);
+      console.log(this.url+' loaded');
+    }).catch((err) => {
+      console.log(err)
+      this.decodeError(err);
+    })
+  }
+
+  readBlob(blob){
+    blob.arrayBuffer().then((data)=> this.read(data);)
+  }
+
+  read(data){
+      if (data instanceof Blob) // convert to an array buffer if we are given a blob
+         return this.readBlob(data);
       let Nmem = this.mallocHEAP(data.byteLength, 1, 'audio'); // resize the heap
       eval(this.moduleName).HEAPU8.set(new Uint8Array(data), this.audio);
       let ret=this.sox.openRead(this.audio, this.audioSize);
@@ -57,7 +81,7 @@ export class SoxAudio extends LibgtkIOStream {
           throw Error('error in opening');
       }
       this.sox.setMaxVal(1);
-      ret=this.sox.read(0); // read all of the audio
+      ret=this.sox.read(this.frames); // read all of the audio
       if (ret!=0) {
           throw Error('error reading');
       }
@@ -76,12 +100,7 @@ export class SoxAudio extends LibgtkIOStream {
       for (var c=0; c<ch; c++) // retrieve the audio channel data
         this.audio.push(new Float32Array(eval(this.moduleName).HEAPF32.subarray((this.audioOut+c*Nb)>>2, (this.audioOut+c*Nb+Nb)>>2)));
       this.freeHEAP('audioOut');
-      console.log(this.url+' loaded');
       this.decodeSuccess();
-    }).catch((err) => {
-      console.log(err)
-      this.decodeError(err);
-    })
   }
 
   /** Overload this method on the client once successfully decode
@@ -156,6 +175,7 @@ export class SoxAudio extends LibgtkIOStream {
         console.error('SoxAudio::write : error : didn\'t write the correct amount of data when calling sox.write, wrote '+ret+' instead of the desired '+(N*ch)+' smaples.')
         return -2;
       }
+
       return 0;
     }
     console.error('SoxAudio::write : error : Unknwon audio type.');
