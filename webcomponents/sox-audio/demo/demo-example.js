@@ -22,6 +22,7 @@ class DemoExample extends LitElement {
       <input type="button" value="dump audio" @click="${this.dumpAudio}" />
       <input type="button" value="show formats" @click="${this.getFormats}" />
       <input type="button" value="save audio" @click="${this.memWrite}" />
+      <input type="button" value="load blob audio" @click="${this.loadBlob}" />
       <sox-audio @sox-audio-ready=${this.getFormats}>
         SoxAudio loading ...
       </sox-audio>
@@ -86,18 +87,52 @@ class DemoExample extends LitElement {
     this.giveAudioToUser(soxAudio);
   }
 
+  /* create a URL using the memory file in sox
+  */
+  createURL(){
+    var soxAudio = this.shadowRoot.querySelector('sox-audio');
+    if (!soxAudio.audio){
+      console.log('load audio first')
+      return;
+    }
+    let blob = soxAudio.getBlob();
+    let url = window.URL.createObjectURL(blob);
+    return url;
+  }
+
   /** Give the audio file which was written to the user
   */
-  giveAudioToUser(soxAudio){
+  giveAudioToUser(){
     let a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
-    let blob = soxAudio.getBlob();
-    let url = window.URL.createObjectURL(blob);
-    a.href = url;
+    a.href = this.createURL();
     a.download = 'audio.'+this.ext;
     a.click();
-    window.URL.revokeObjectURL(url);
+    window.URL.revokeObjectURL(a.htrf);
+  }
+
+  /* test loading a blob
+  */
+  loadBlob(){
+    this.ext='wav';
+    var soxAudio = this.shadowRoot.querySelector('sox-audio');
+    if (!soxAudio.audio){
+      console.log('load audio first')
+      return;
+    }
+    let ch=soxAudio.audio.length;
+    // find the max value of the audio data
+    let maxVal = -1;
+    for (let c=0; c<ch; c++){
+      let maxV=Math.max.apply(null, soxAudio.audio[c].map(Math.abs));
+      if (maxV>maxVal)
+        maxVal=maxV;
+    }
+    soxAudio.openWrite(soxAudio.fsIn, ch, maxVal, this.ext);
+    soxAudio.write(soxAudio.audio); // write the previously loaded audio to memory disk
+    console.log(this.createURL())
+    soxAudio.url = this.createURL();
   }
 }
 customElements.define('demo-example', DemoExample);
