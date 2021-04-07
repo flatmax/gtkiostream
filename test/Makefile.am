@@ -121,7 +121,7 @@ endif
 endif
 
 if HAVE_LIBWEBSOCKETS
-noinst_PROGRAMS += LibWebSocketsServerTest
+#noinst_PROGRAMS += LibWebSocketsServerTest
 EXTRA_CFLAGS += $(LIBWEBSOCKETS_CFLAGS)
 EXTRA_LIBS += $(LIBWEBSOCKETS_LIBS)
 LibWebSocketsServerTest_SOURCES = LibWebSocketsServerTest.C
