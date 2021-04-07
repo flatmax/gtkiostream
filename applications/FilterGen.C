@@ -22,7 +22,7 @@ using namespace std;
 #include "Sox.H"
 #include "OptionParser.H"
 
-int printUsage(string name, int chCnt, unsigned int N, unsigned int fs) {
+int printUsage(string name, int chCnt, unsigned int N, unsigned int fs, char type) {
     cout<<name<<" : An application to generate filters and save them in audio files."<<endl;
     cout<<"Usage:"<<endl;
     cout<<"\t "<<name<<" [options] outFileName"<<endl;
@@ -30,6 +30,7 @@ int printUsage(string name, int chCnt, unsigned int N, unsigned int fs) {
     cout<<"\t -c : The number of channels : (-c "<<chCnt<<")"<<endl;
     cout<<"\t -N : The number of samples : (-N "<<N<<")"<<endl;
     cout<<"\t -r : The sample rate to use in Hz : (-r "<<fs<<")"<<endl;
+    cout<<"\t -t : Use noise (n) or an impulse (i) :  (type "<<type<<")"<<endl;
     Sox<float> sox;
     vector<string> formats=sox.availableFormats();
     cout<<"The known output file extensions (output file formats) are the following :"<<endl;
@@ -48,33 +49,43 @@ int main(int argc, char *argv[]) {
   int i=0, ret;
   string help;
 
+  char type='i';
+
   if (op.getArg<int>("c", argc, argv, chCnt, i=0)!=0)
       ;
 
   if (op.getArg<unsigned int>("N", argc, argv, N, i=0)!=0)
+      ;
+  if (op.getArg<char>("t", argc, argv, type, i=0)!=0)
       ;
 
   if (op.getArg<int>("r", argc, argv, fs, i=0)!=0)
       ;
 
   if (argc<2 || op.getArg<string>("h", argc, argv, help, i=0)!=0)
-      return printUsage(argv[0], chCnt, N, fs);
+      return printUsage(argv[0], chCnt, N, fs, type);
   if (op.getArg<string>("help", argc, argv, help, i=0)!=0)
-    return printUsage(argv[0], chCnt, N, fs);
+    return printUsage(argv[0], chCnt, N, fs, type);
 
   int res;
-  Sox<int> sox;
   float maxVal=pow(2.,sizeof(int)*8-1);
   cout<<"maxval = "<<maxVal<<endl;
+
+  Eigen::Array<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> filters(N, chCnt);
+  filters.setZero();
+  if (type=='i'){
+    printf("Generating an impulse filter.\n");
+    filters.row(0)=maxVal;
+  } else {
+    printf("Generating a noise filter.\n");
+    filters.setRandom();
+    filters=filters/2;
+  }
+  Sox<int> sox;
   res=sox.openWrite(argv[argc-1], fs, chCnt, maxVal);
   if (res<0)
     return SoxDebug().evaluateError(res,string("when opening the file ")+argv[argc-1]);
   cout<<"opened the file : "<<argv[argc-1]<<" for writing"<<endl;
-
-  cout<<"generating an impulse at time zero in the file."<<endl;
-  Eigen::Array<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> filters(N, chCnt);
-  filters.setZero();
-  filters.row(0)=maxVal;
   if (sox.write(filters)!=N*chCnt)
     cout<<"Error: wrote the wrong number of samples to file"<<endl;
   sox.closeWrite();
