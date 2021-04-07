@@ -33,7 +33,7 @@ public:
     	std::cout<<__func__<<std::endl;
 	}
 
- 	virtual int parseConfig(const char *name, snd_config_t *conf, snd_pcm_stream_t stream, int mode){
+/* 	virtual int parseConfig(const char *name, snd_config_t *conf, snd_pcm_stream_t stream, int mode){
     	//std::cout<<typeid(*this).name()<<'\t'<<__func__<<std::endl;
 
 		if (stream != SND_PCM_STREAM_PLAYBACK) {
@@ -44,19 +44,19 @@ public:
 		}
 
  		return ALSAExternalPlugin::parseConfig(name, conf, stream, mode);
-	}
+	}*/
 
-	virtual int hwParams(snd_pcm_hw_params_t *params){
-		std::cout<<__func__<<std::endl;
-		copyFrom(params);
-		cout<<"extplug.rate "<<extplug.rate<<endl;
-		cout<<"extplug.channels "<<extplug.channels<<endl;
-		cout<<"extplug.slave_channels "<<extplug.slave_channels<<endl;
-		cout<<"format "<<ALSA::Hardware::formatDescription(extplug.format)<<endl;
-		cout<<"slave format "<<ALSA::Hardware::formatDescription(extplug.slave_format)<<endl;
-
-		return 0;
-  }
+	// virtual int hwParams(snd_pcm_hw_params_t *params){
+	// 	std::cout<<__func__<<std::endl;
+	// 	copyFrom(params);
+	// 	cout<<"extplug.rate "<<extplug.rate<<endl;
+	// 	cout<<"extplug.channels "<<extplug.channels<<endl;
+	// 	cout<<"extplug.slave_channels "<<extplug.slave_channels<<endl;
+	// 	cout<<"format "<<ALSA::Hardware::formatDescription(extplug.format)<<endl;
+	// 	cout<<"slave format "<<ALSA::Hardware::formatDescription(extplug.slave_format)<<endl;
+	//
+	// 	return 0;
+  // }
 
 	virtual int specifyHWParams(){
 		//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
@@ -75,20 +75,20 @@ public:
 		return 0;
 	}
 
-	virtual int init(){
-		cout<<__func__<<endl;
-		cout<<"period size "<<getPeriodSize()<<endl;
-		if (getPeriodSize()==0){
-			cout<<"can't have 0 period size, exiting"<<endl;
-			return -1;
-		}
-		cout<<"extplug.rate "<<extplug.rate<<endl;
-		cout<<"extplug.channels "<<extplug.channels<<endl;
-		cout<<"extplug.slave_channels "<<extplug.slave_channels<<endl;
-		cout<<"format "<<ALSA::Hardware::formatDescription(extplug.format)<<endl;
-		cout<<"slave format "<<ALSA::Hardware::formatDescription(extplug.slave_format)<<endl;
-		return 0;
-	}
+	// virtual int init(){
+	// 	cout<<__func__<<endl;
+	// 	cout<<"period size "<<getPeriodSize()<<endl;
+	// 	if (getPeriodSize()==0){
+	// 		cout<<"can't have 0 period size, exiting"<<endl;
+	// 		return -1;
+	// 	}
+	// 	cout<<"extplug.rate "<<extplug.rate<<endl;
+	// 	cout<<"extplug.channels "<<extplug.channels<<endl;
+	// 	cout<<"extplug.slave_channels "<<extplug.slave_channels<<endl;
+	// 	cout<<"format "<<ALSA::Hardware::formatDescription(extplug.format)<<endl;
+	// 	cout<<"slave format "<<ALSA::Hardware::formatDescription(extplug.slave_format)<<endl;
+	// 	return 0;
+	// }
 
 	virtual snd_pcm_sframes_t transfer(const snd_pcm_channel_area_t *dst_areas, snd_pcm_uframes_t dst_offset, const snd_pcm_channel_area_t *src_areas, snd_pcm_uframes_t src_offset, snd_pcm_uframes_t size){
   //   	//std::cout<<typeid(this).name()<<'\t'<<__func__<<std::endl;
@@ -112,6 +112,7 @@ public:
 		Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned, Eigen::Stride<Eigen::Dynamic, Eigen::Dynamic> >
 																						out(dstAddr, size, ch, stride);
 		out=in;
+		printf("size %d\n",size);
   	return size;
 	}
 };

@@ -367,7 +367,7 @@ ALSAControlTest_SOURCES = ALSAControlTest.C
 ALSAControlTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
 ALSAControlTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  $(LDADD)
 
-pkglib_LTLIBRARIES = libasound_module_pcm_ALSAPluginTest.la libasound_module_pcm_ALSAExternalPluginTest.la
+pkglib_LTLIBRARIES = libasound_module_pcm_ALSAExternalPluginTest.la #libasound_module_pcm_ALSAPluginTest.la
 libasound_module_pcm_ALSAPluginTest_la_SOURCES = ALSAPluginTest.C
 libasound_module_pcm_ALSAPluginTest_la_CPPFLAGS = $(EIGEN_CFLAGS)
 libasound_module_pcm_ALSAPluginTest_la_LDFLAGS = -module -avoid-version -export-dynamic -no-undefined
