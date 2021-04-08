@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
     return printUsage(argv[0], chCnt, N, fs, type);
 
   int res;
-  float maxVal=pow(2.,sizeof(int)*8-1);
+  float maxVal=1.;
   cout<<"maxval = "<<maxVal<<endl;
 
   Eigen::Array<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> filters(N, chCnt);
@@ -80,6 +80,7 @@ int main(int argc, char *argv[]) {
     printf("Generating a noise filter.\n");
     filters.setRandom();
     filters=filters/2;
+    maxVal=filters.maxCoeff();
   }
   Sox<int> sox;
   res=sox.openWrite(argv[argc-1], fs, chCnt, maxVal);
