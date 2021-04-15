@@ -1,8 +1,6 @@
 import { LitElement } from 'lit-element';
 import modProm from './libgtkIOStream.js';
-export var libgtkIOStream;
 modProm().then((mod)=>{
-  libgtkIOStream = mod;
   window.libgtkIOStream = mod; // for rendered wasm that delay
   window.dispatchEvent(new CustomEvent('libgtkIOStream::initialised'));
 })
@@ -25,8 +23,6 @@ export class LibgtkIOStream extends LitElement {
     window.addEventListener('libgtkIOStream::initialised', (e)=>{
       this.WASMReady();
     })
-
-    this.moduleName = 'libgtkIOStream';
   }
 
 
@@ -44,8 +40,8 @@ export class LibgtkIOStream extends LitElement {
     // resize memory if required
     if (this[heapName]==null || this[heapName+'Size']!=N){
       if (this[heapName]!=null)
-        eval(this.moduleName)._free(this[heapName]);
-      this[heapName] = eval(this.moduleName)._malloc(N);
+        window.libgtkIOStream._free(this[heapName]);
+      this[heapName] = window.libgtkIOStream._malloc(N);
       this[heapName+'Size']=N;
     }
     return Nb;
@@ -56,7 +52,7 @@ export class LibgtkIOStream extends LitElement {
   */
   freeHEAP(heapName){
     if (this[heapName])
-      eval(this.moduleName)._free(this[heapName]);
+      window.libgtkIOStream._free(this[heapName]);
     if (this[heapName+'Size'])
       this[heapName+'Size']=null;
   }
