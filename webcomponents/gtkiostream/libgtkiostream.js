@@ -3,6 +3,7 @@ import modProm from './libgtkIOStream.js';
 export var libgtkIOStream;
 modProm().then((mod)=>{
   libgtkIOStream = mod;
+  window.libgtkIOStream = mod; // for rendered wasm that delay
   window.dispatchEvent(new CustomEvent('libgtkIOStream::initialised'));
 })
 
