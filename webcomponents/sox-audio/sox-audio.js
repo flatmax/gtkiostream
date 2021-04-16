@@ -42,7 +42,7 @@ export class SoxAudio extends LibgtkIOStream {
   /// When the WASM code is ready initialise the Sox object
   WASMReady(){
     if (!this.sox)
-      this.sox = new window.libgtkIOStream.Sox;
+      this.sox = new this.libgtkIOStream.Sox;
     this.getFormats();
     this.dispatchEvent(new CustomEvent('sox-audio-ready', { detail: {} }));
   }
@@ -75,7 +75,7 @@ export class SoxAudio extends LibgtkIOStream {
       if (data instanceof Blob) // convert to an array buffer if we are given a blob
          return this.readBlob(data);
       let Nmem = this.mallocHEAP(data.byteLength, 1, 'audio'); // resize the heap
-      window.libgtkIOStream.HEAPU8.set(new Uint8Array(data), this.audio);
+      this.libgtkIOStream.HEAPU8.set(new Uint8Array(data), this.audio);
       let ret=this.sox.openRead(this.audio, this.audioSize);
       if (ret!=-40026) {
           throw Error('error in opening');
@@ -98,7 +98,7 @@ export class SoxAudio extends LibgtkIOStream {
       this.sox.getAudio(this.audioOut, ch, N);
       this.audio=[]; // load the audio into the audio array
       for (var c=0; c<ch; c++) // retrieve the audio channel data
-        this.audio.push(new Float32Array(window.libgtkIOStream.HEAPF32.subarray((this.audioOut+c*Nb)>>2, (this.audioOut+c*Nb+Nb)>>2)));
+        this.audio.push(new Float32Array(this.libgtkIOStream.HEAPF32.subarray((this.audioOut+c*Nb)>>2, (this.audioOut+c*Nb+Nb)>>2)));
       this.freeHEAP('audioOut');
       this.decodeSuccess();
   }
@@ -151,7 +151,7 @@ export class SoxAudio extends LibgtkIOStream {
       }
       let N=audio.length;
       let Nb = this.mallocHEAP(N*4, 1, 'audioOut'); // resize the heap ch*N 32 bit words
-      window.libgtkIOStream.HEAPF32.subarray((this.audioOut)>>2, (this.audioOut+Nb)>>2).set(audio);
+      this.libgtkIOStream.HEAPF32.subarray((this.audioOut)>>2, (this.audioOut+Nb)>>2).set(audio);
       let ret=this.sox.write(this.audioOut, N/this.sox.getChCntOut());
       if (ret!=N){
         console.error('SoxAudio::write : error : didn\'t write the correct amount of data when calling sox.write, wrote '+ret+' instead of the desired '+(N*ch)+' smaples.')
@@ -169,7 +169,7 @@ export class SoxAudio extends LibgtkIOStream {
       let Nb = this.mallocHEAP(N*4, ch, 'audioOut'); // resize the heap ch*N 32 bit words
       let n=0;
       for (let c=0; c<ch; c++, n+=N)
-        window.libgtkIOStream.HEAPF32.subarray((this.audioOut+c*Nb)>>2, (this.audioOut+c*Nb+Nb)>>2).set(audio[c]);
+        this.libgtkIOStream.HEAPF32.subarray((this.audioOut+c*Nb)>>2, (this.audioOut+c*Nb+Nb)>>2).set(audio[c]);
       let ret=this.sox.write(this.audioOut, N);
       if (ret!=(ch*N)){
         console.error('SoxAudio::write : error : didn\'t write the correct amount of data when calling sox.write, wrote '+ret+' instead of the desired '+(N*ch)+' smaples.')
@@ -186,7 +186,7 @@ export class SoxAudio extends LibgtkIOStream {
   */
   getBlob(){
     let memPtr=this.sox.getMemFilePtr();
-    let audioF = libgtkIOStream.HEAPU8.subarray(memPtr, memPtr+this.sox.getBufferSize());
+    let audioF = this.libgtkIOStream.HEAPU8.subarray(memPtr, memPtr+this.sox.getBufferSize());
     return new Blob([audioF], {type: this.mimeType});
   }
 
