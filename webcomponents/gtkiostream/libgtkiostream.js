@@ -1,9 +1,5 @@
 import { LitElement } from 'lit-element';
 import modProm from './libgtkIOStream.js';
-modProm().then((mod)=>{
-  window.libgtkIOStream = mod; // for rendered wasm that delay
-  window.dispatchEvent(new CustomEvent('libgtkIOStream::initialised'));
-})
 
 /**
  * `gtkiostream-`
@@ -13,18 +9,23 @@ modProm().then((mod)=>{
  * @polymer
  */
 export class LibgtkIOStream extends LitElement {
+  static get properties() {
+    return {
+      libgtkIOStream: { type: Object }
+    }
+  }
 
-  /** When ready define the moduleName based on the module file name
-  */
-  connectedCallback(){
-    super.connectedCallback();
+  constructor() {
+    super();
+    this.libgtkIOStream = {};
+  }
 
-    // add a method to setup the WASM initalised callback
-    window.addEventListener('libgtkIOStream::initialised', (e)=>{
+  firstUpdated() {
+    modProm().then((mod)=>{
+      this.libgtkIOStream = mod; // for rendered wasm that delay
       this.WASMReady();
     })
   }
-
 
   /** malloc a WASM heap based on an audio matrix size. If the audio buffer
   channel count or frame count is changed, then free and malloc again.
@@ -40,8 +41,8 @@ export class LibgtkIOStream extends LitElement {
     // resize memory if required
     if (this[heapName]==null || this[heapName+'Size']!=N){
       if (this[heapName]!=null)
-        window.libgtkIOStream._free(this[heapName]);
-      this[heapName] = window.libgtkIOStream._malloc(N);
+        this.libgtkIOStream._free(this[heapName]);
+      this[heapName] = this.libgtkIOStream._malloc(N);
       this[heapName+'Size']=N;
     }
     return Nb;
@@ -52,7 +53,7 @@ export class LibgtkIOStream extends LitElement {
   */
   freeHEAP(heapName){
     if (this[heapName])
-      window.libgtkIOStream._free(this[heapName]);
+      this.libgtkIOStream._free(this[heapName]);
     if (this[heapName+'Size'])
       this[heapName+'Size']=null;
   }
