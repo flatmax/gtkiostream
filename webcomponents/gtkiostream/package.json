@@ -1,6 +1,6 @@
 {
   "name": "gtkiostream",
-  "version": "1.9.4",
+  "version": "1.9.5",
   "description": "The gtkiostream WASM modules for nodejs and the browser",
   "main": "libgtkIOStreamNode.js",
   "scripts": {
