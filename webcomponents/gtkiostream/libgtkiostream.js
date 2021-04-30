@@ -17,10 +17,6 @@ export class LibgtkIOStream extends LitElement {
 
   constructor() {
     super();
-    this.libgtkIOStream = {};
-  }
-
-  firstUpdated() {
     modProm().then((mod)=>{
       this.libgtkIOStream = mod; // for rendered wasm that delay
       this.WASMReady();

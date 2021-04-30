@@ -29,6 +29,21 @@ export class SoxAudio extends LibgtkIOStream {
     super();
     // Sox has troubles reading from memory files with accurate length and channel numbers
     this.frames=5000000; // the default number to read in
+
+    // patch for safari: Blob.arrayBuffer is not a function
+    File.prototype.arrayBuffer = File.prototype.arrayBuffer || this.getArrayBuffer;
+    Blob.prototype.arrayBuffer = Blob.prototype.arrayBuffer || this.getArrayBuffer;
+  }
+
+  getArrayBuffer() {
+    // this: File or Blob
+    return new Promise((resolve) => {
+      let fr = new FileReader();
+      fr.onload = () => {
+        resolve(fr.result);
+      };
+      fr.readAsArrayBuffer(this);
+    })
   }
 
   /** Observed properties are handled here.
