@@ -22,7 +22,7 @@ EXTRA_LIBS =
 EXTRA_CFLAGS =
 
 if HAVE_ALSA
-bin_PROGRAMS += LatencyTester ALSAControlMonitor
+bin_PROGRAMS += LatencyTester ALSAControlMonitor ALSACapabilities
 if HAVE_SOX
 bin_PROGRAMS += ALSACapture ALSACaptureSplitter ALSAFullDuplexFile
 endif
@@ -126,6 +126,10 @@ LatencyTester_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIO
 ALSAControlMonitor_SOURCES = ALSAControlMonitor.C
 ALSAControlMonitor_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
 ALSAControlMonitor_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound  -lpthread
+
+ALSACapabilities_SOURCES = ALSACapabilities.C
+ALSACapabilities_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+ALSACapabilities_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound  -lpthread
 
 ALSACapture_SOURCES = ALSACapture.C
 ALSACapture_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
