@@ -187,6 +187,26 @@ namespace ALSA {
 			return ret;
 		}
 
+		void dumpState(){
+			snd_output_t *output = NULL;
+			int err = snd_output_stdio_attach(&output, stdout, 0);
+	    if (err < 0)
+				ALSADebug().evaluateError(err);
+			else
+				snd_pcm_hw_params_dump(hParams, output);
+		}
+
+		/** Print the available formats
+		*/
+		void printAvailableFormats()
+		{
+			fprintf(stdout, "Available formats:\n");
+			for (snd_pcm_format_t format = SND_PCM_FORMAT_S8; format <= SND_PCM_FORMAT_LAST; format=(snd_pcm_format_t)((int)format+1)) {
+				if (snd_pcm_hw_params_test_format(getPCM(), hParams, (snd_pcm_format_t)format) == 0)
+					fprintf(stdout, "- %s\n", snd_pcm_format_name(format));
+			}
+		}
+
 		/** Set the sample type
 		\param format is the sample type string(PCM sample format name (case insensitive))
 		\return >= 0 on success
@@ -248,6 +268,18 @@ namespace ALSA {
 			return mCh;
 		}
 
+		/** Get the minimum number of channels for this device.
+		\return <0 on error, the maximum number of channels this device can drive.
+		*/
+		int getMinChannels(){
+			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
+			unsigned int mCh;
+			int ret=snd_pcm_hw_params_get_channels_min(hParams, &mCh);
+			if (ret<0)
+				return ALSADebug().evaluateError(ret);
+			return mCh;
+		}
+
 		/** Set the sample rate closest to the desired rate.
 		\param rrate The desired sample rate.
 		\param dir The direction to search in (-1,0,1)
@@ -262,7 +294,6 @@ namespace ALSA {
 		}
 
 		/** Get the sample rate
-		\param rate The current sample rate.
 		\param dir The direction to search in (-1,0,1)
 		\return >= 0 on success
 		*/
@@ -271,6 +302,30 @@ namespace ALSA {
 			int err=snd_pcm_hw_params_get_rate(hParams, &rate, &dir);
 			if (err<0)
 				return err;
+			else
+				return rate;
+		}
+
+		/** Get the maximum sample rate
+		\return >= 0 on success
+		*/
+		int getMaxSampleRate() {
+			unsigned int rate;
+			int err=snd_pcm_hw_params_get_rate_max(hParams, &rate, 0);
+			if (err<0)
+				return ALSADebug().evaluateError(err);
+			else
+				return rate;
+		}
+
+		/** Get the minimum sample rate
+		\return >= 0 on success
+		*/
+		int getMinSampleRate() {
+			unsigned int rate;
+			int err=snd_pcm_hw_params_get_rate_min(hParams, &rate, 0);
+			if (err<0)
+				return ALSADebug().evaluateError(err);
 			else
 				return rate;
 		}
@@ -286,6 +341,30 @@ namespace ALSA {
 				return err;
 			else
 				return *p;
+		}
+
+		/** Get the maximum period size
+		\return >= 0 on success
+		*/
+		snd_pcm_uframes_t getMaxPeriodSize() {
+			snd_pcm_uframes_t s;
+			int err=snd_pcm_hw_params_get_period_size_max(hParams, &s, 0);
+			if (err<0)
+				return ALSADebug().evaluateError(err);
+			else
+				return s;
+		}
+
+		/** Get the minimum period size
+		\return >= 0 on success
+		*/
+		snd_pcm_uframes_t getMinPeriodSize() {
+			snd_pcm_uframes_t s;
+			int err=snd_pcm_hw_params_get_period_size_min(hParams, &s, 0);
+			if (err<0)
+				return ALSADebug().evaluateError(err);
+			else
+				return s;
 		}
 
 		/** Get the period size
@@ -325,6 +404,30 @@ namespace ALSA {
 			if ((err = setPeriodSize(&periodSize)) < 0)
 				printf("Unable to set period size %d %s \n",(int)periodSize, snd_strerror(err));
 			return err;
+		}
+
+		/** Get the minimum buffer size
+		\return >= 0 on success
+		*/
+		snd_pcm_uframes_t getMaxBufSize() {
+			snd_pcm_uframes_t s;
+			int err=snd_pcm_hw_params_get_buffer_size_max(hParams, &s);
+			if (err<0)
+				return ALSADebug().evaluateError(err);
+			else
+				return s;
+		}
+
+		/** Get the minimum buffer size
+		\return >= 0 on success
+		*/
+		snd_pcm_uframes_t getMinBufSize() {
+			snd_pcm_uframes_t s;
+			int err=snd_pcm_hw_params_get_buffer_size_min(hParams, &s);
+			if (err<0)
+				return ALSADebug().evaluateError(err);
+			else
+				return s;
 		}
 
 		const char *formatDescription(const snd_pcm_format_t format) const {
