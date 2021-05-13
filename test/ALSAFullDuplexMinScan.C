@@ -46,20 +46,18 @@ class FullDuplexTest : public FullDuplex<int> {
 			return 0;
 		}
 
-		// if (ch7Offset<0) { // only do this once
-			// find the zero columns (for the Audio Injector Octo these are actually -256 not zero)
-			Eigen::Array<int, 1, CH_CNT> mins = inputAudio.colwise().minCoeff();
-			if (mins(0)==mins(CH_CNT-1)==-256)
-				ch7Offset=7;
-			else
-				for(int i=0; i<mins.cols()-1; ++i)
-		    	if(mins(i)==-256 && mins(i+1)==-256){
-						ch7Offset=i;
-						break;
-					}
-					// cout<<mins<<'\t'<<ch7Offset<<'\n';
-					// printf("ch7Offset %d \n",ch7Offset);
-		// }
+		// find the zero columns (for the Audio Injector Octo these are actually -256 not zero)
+		Eigen::Array<int, 1, CH_CNT> mins = inputAudio.colwise().minCoeff();
+		if (mins(0)==mins(CH_CNT-1)==-256)
+			ch7Offset=7;
+		else
+			for(int i=0; i<mins.cols()-1; ++i)
+				if(mins(i)==-256 && mins(i+1)==-256){
+					ch7Offset=i;
+					break;
+				}
+		// cout<<mins<<'\t'<<ch7Offset<<'\n';
+		// printf("ch7Offset %d \n",ch7Offset);
 
 		// if necessary circularly shift audio channels to realign input
 		if (ch7Offset!=6) // when it is 6, it is in the right location so skip that case
