@@ -30,7 +30,7 @@ int FIR<FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName, int whi
   int ret=loadTimeDomainCoefficients(fileName); // load all channels and then select only the one requested
   if (ret<0)
     return ret;
-  if (whichCh>h.cols())
+  if (whichCh>(h.cols()-1))
     return SoxDebug().evaluateError(SOX_COL_BOUNDS_ERROR, " FIR: whichCh is > then the number of channels available in the loaded filter\n");
   loadTimeDomainCoefficients(h.col(whichCh));
   return 0;
