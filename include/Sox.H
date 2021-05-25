@@ -145,12 +145,13 @@ public:
         if (in) { // if the input file has been opened...
             if (count==0) // if we want everything
 #ifndef HAVE_EMSCRIPTEN
-                count = in->signal.length/in->signal.channels;
+                count = in->signal.length;
 #else
                 count = in->signal.length; // emscripten reading afrom memory may not contain the correct variables here - default to a larger number
 #endif
-            Eigen::Array<sox_sample_t, Eigen::Dynamic, Eigen::Dynamic> readData(count*in->signal.channels,1); // generate the necessary data store to read into.
-            size_t readCount=sox_read(in, readData.data(), count*in->signal.channels); // try to read
+            Eigen::Array<sox_sample_t, Eigen::Dynamic, Eigen::Dynamic> readData(count,1); // generate the necessary data store to read into.
+            size_t readCount=sox_read(in, readData.data(), count); // try to read
+
             if (readCount==SOX_EOF) { // if we hit the end of file or have an error
                 retVal=SOX_EOF_OR_ERROR;
                 audioData.resize(0,0);
