@@ -40,6 +40,7 @@ namespace ALSA {
 	#define ALSA_SCHED_PRIORITY_ERROR -16+ALSA_ERROR_OFFSET ///< error when sched. priority is out of bounds
 	#define ALSA_SCHED_POLICY_ERROR -17+ALSA_ERROR_OFFSET ///< error relating to the scheduler priority
 	#define ALSA_MIXER_NO_ENUM_ERROR -18+ALSA_ERROR_OFFSET ///< error this mixer element is not a generic enum
+	#define ALSA_INFO_NOT_OPEN_ERROR -19+ALSA_ERROR_OFFSET ///< error when info pointer is null
 	class ALSADebug : public Debug {
 	public:
 		ALSADebug(void) {
@@ -62,6 +63,7 @@ namespace ALSA {
 			errors[ALSA_SCHED_PRIORITY_ERROR]=std::string("When setting the thread priority.");
 			errors[ALSA_SCHED_POLICY_ERROR]=std::string("When setting the thread policy.");
 			errors[ALSA_MIXER_NO_ENUM_ERROR]=std::string("That mixer element is not an enum control.");
+			errors[ALSA_INFO_NOT_OPEN_ERROR]=std::string("The info structure isn't allocated. Info::getInfo first.");
 
 			#endif
 		}

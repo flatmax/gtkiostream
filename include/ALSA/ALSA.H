@@ -34,6 +34,10 @@ namespace ALSA {
 	#define CONTROL_NOT_OPEN_CHECK_TYPED(ctl, type) {printf("\t\tfunc: %s\n",__func__); CONTROL_NOT_OPEN_CHECK_NO_PRINT(ctl, type)}
 	#define CONTROL_NOT_OPEN_CHECK(ctl) CONTROL_NOT_OPEN_CHECK_TYPED(ctl, int)
 
+	#define INFO_NOT_OPEN_CHECK_NO_PRINT(info, type) {if (!info) return (type)ALSADebug().evaluateError(ALSA_INFO_NOT_OPEN_ERROR);}
+	#define INFO_NOT_OPEN_CHECK_TYPED(info, type) {printf("\t\tfunc: %s\n",__func__); INFO_NOT_OPEN_CHECK_NO_PRINT(info, type)}
+	#define INFO_NOT_OPEN_CHECK(info) INFO_NOT_OPEN_CHECK_TYPED(info, int)
+
 	#define ALSA_DEFAULT_START_FS 48000
 	#define ALSA_DEFAULT_FORMAT SND_PCM_FORMAT_S16_LE
 	#define ALSA_DEFAULT_CHANNELS 2
@@ -49,6 +53,7 @@ namespace ALSA {
 #include <ALSA/FullDuplex.H>
 #include <ALSA/Mixer.H>
 #include <ALSA/Control.H>
+#include <ALSA/Info.H>
 
 namespace ALSA {
 	/** Set the current thread's priority
