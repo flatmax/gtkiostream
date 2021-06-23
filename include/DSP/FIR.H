@@ -20,12 +20,8 @@
 
 #include "gtkiostream_config.h"
 #include "Debug.H"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wignored-attributes"
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/FFT>
-#pragma GCC diagnostic pop
 
 #define FIR_BLOCKSIZE_MISMATCH_ERROR FIR_ERROR_OFFSET-1
 #define FIR_H_EMPTY_ERROR FIR_ERROR_OFFSET-2
