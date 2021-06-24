@@ -43,6 +43,8 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_F77
 
+AX_CXX_COMPILE_STDCXX_11
+
 # check for emscripten compilation
 m4_ifdef([AM_EMSCRIPTEN], [AM_EMSCRIPTEN])
 AM_CONDITIONAL(HAVE_EMSCRIPTEN, test x$emscripten_compiler = xyes)
@@ -187,6 +189,7 @@ fi
 PKG_CHECK_MODULES(EIGEN, eigen3 >= 3.0.0,,AC_MSG_ERROR("Eigen3 is required for NeuralNetworks and Sox support - and possibly others"))
 AC_SUBST(EIGEN_CFLAGS)
 AC_SUBST(EIGEN_LIBS)
+AC_DEFINE([EIGEN_FFTW_DEFAULT],[],[Using the FFTW backen with Eigen FFT])
 
 # sox
 PKG_CHECK_MODULES(SOX, sox,HAVE_SOX="yes", HAVE_SOX="no")
@@ -318,7 +321,7 @@ if test "x$HAVE_JACK" == xyes ; then
 fi
 
 # fftw3
-PKG_CHECK_MODULES([FFTW3], [fftw3],,AC_MSG_ERROR("fftw3 is required for building libgtkIOStream"))
+PKG_CHECK_MODULES([FFTW3], [fftw3, fftw3f],,AC_MSG_ERROR("fftw3 is required for building libgtkIOStream"))
 AC_SUBST(FFTW3_CFLAGS)
 AC_SUBST(FFTW3_LIBS)
 
