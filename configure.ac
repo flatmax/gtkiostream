@@ -43,8 +43,6 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_F77
 
-AX_CXX_COMPILE_STDCXX_11
-
 # check for emscripten compilation
 m4_ifdef([AM_EMSCRIPTEN], [AM_EMSCRIPTEN])
 AM_CONDITIONAL(HAVE_EMSCRIPTEN, test x$emscripten_compiler = xyes)
