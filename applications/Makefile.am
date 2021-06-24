@@ -121,7 +121,7 @@ FilterGen_LDADD = $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS)
 
 LatencyTester_SOURCES = LatencyTester.C
 LatencyTester_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
-LatencyTester_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound
+LatencyTester_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(FFTW3_LIBS) $(EXTRA_LIBS) -lasound
 
 ALSAControlMonitor_SOURCES = ALSAControlMonitor.C
 ALSAControlMonitor_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
