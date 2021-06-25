@@ -94,6 +94,10 @@ typedef unsigned int uint;
 #define HANKEL_ERROR_OFFSET -40700
 #endif
 
+#ifndef TOEPLITZ_ERROR_OFFSET
+#define TOEPLITZ_ERROR_OFFSET -40710
+#endif
+
 #ifndef LIBWEBSOCKETS_ERROR_OFFSET
 #define LIBWEBSOCKETS_ERROR_OFFSET -40800
 #endif
