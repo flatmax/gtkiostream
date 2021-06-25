@@ -70,6 +70,17 @@ class Thread {
     int policy; ///< The thread policy, e.g. SCHED_FIFO
 #endif
 
+protected:
+  /** manually clear the thread - generally not a good idea.
+  */
+  void clearThread(){
+    #ifdef USE_GLIB_THREADS
+                thread=NULL;
+    #else
+                thread=0;
+    #endif
+  }
+
 public:
     /** Constructor
     */
@@ -110,7 +121,6 @@ public:
         int retVal = pthread_cancel(thread);
         if (retVal==ESRCH)
             ThreadDebug().evaluateError(THREAD_NOTFOUND_ERROR, " When trying to stop.");
-            return NULL;
 
         return meetThread();
     }
@@ -217,7 +227,7 @@ public:
         if (thread) {
 #ifdef USE_GLIB_THREADS
             g_thread_join(thread);
-            thread=NULL;
+            clearThread();
 #else
             void *retVal;
             int threadResp=pthread_join(thread, &retVal);
@@ -225,7 +235,7 @@ public:
                 errno=threadResp;
                 perror("Thread::meetThread : Couldn't meet the thread");
             }
-            thread=0;
+            clearThread();
             return retVal;
 #endif
         }
@@ -260,15 +270,26 @@ class ThreadedMethod : public Thread {
     /** The static method which is called to begin the thread.
     */
     static void threadMainStatic(void *data) {
-        static_cast<ThreadedMethod*>(data)->threadMain();
+        static_cast<ThreadedMethod*>(data)->threadMainLocal();
     }
 #else
     /** The static method which is called to begin the thread.
     */
     static void *threadMainStatic(void *data) {
-        return static_cast<ThreadedMethod*>(data)->threadMain();
+      void *ret = static_cast<ThreadedMethod*>(data)->threadMainLocal();
+      return ret;
     }
 #endif
+
+  /** Call the virtual threadMain and then clear the thread so people can test running.
+  \returns void *
+  */
+  void *threadMainLocal(void){
+    void *ret = threadMain();
+    clearThread();
+    return ret;
+  }
+
 public:
     /** The inheriting class implements the thread's main method.
     \return A pointer to a return variable (only used if USE_GLIB_THREADS is not defined = pthread )
