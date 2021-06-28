@@ -110,7 +110,7 @@ public:
         return;
       }
       if (input.cols()!=h.cols() || output.cols() != h.cols()){
-        printf("input.cols() %d output.cols() %d h.cols() %d\n",input.cols(), output.cols(), h.cols());
+        printf("input.cols() %ld output.cols() %ld h.cols() %ld\n",input.cols(), output.cols(), h.cols());
         FIRDebug().evaluateError(FIR_CHANNEL_MISMATCH_ERROR);
         return;
       }
