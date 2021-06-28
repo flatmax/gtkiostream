@@ -26,14 +26,13 @@ m4_define([gtkiostream_version],       [gtkiostream_current_version.gtkiostream_
 
 AC_PREREQ([2.69])
 AC_INIT( gtkIOStream, [gtkiostream_version], [ https://github.com/flatmax/gtkiostream/issues ])
-AM_INIT_AUTOMAKE([dist-xz tar-ustar subdir-objects])
+AM_INIT_AUTOMAKE([dist-xz tar-ustar subdir-objects no-define])
 AC_CONFIG_SRCDIR([include/Box.H])
 AC_CONFIG_HEADERS([gtkiostream_config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_PREFIX_DEFAULT(/usr)
 LT_INIT
 
-#AC_SUBST(VERSION_INFO, 1:0:1)
 AC_SUBST(LT_RELEASE, [gtkiostream_version])
 AC_SUBST(LT_CURRENT, [gtkiostream_current_version:gtkiostream_revision_version:gtkiostream_age_version])
 
@@ -42,6 +41,8 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_F77
+
+AC_DEFINE(GTKIOSTREAM_VERSION, [gtkiostream_version], [gtkIOStream package version number])
 
 # check for emscripten compilation
 m4_ifdef([AM_EMSCRIPTEN], [AM_EMSCRIPTEN])
