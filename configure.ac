@@ -225,8 +225,7 @@ AC_ARG_ENABLE(octave,
 	      AS_HELP_STRING([--enable-octave],
 	      [Enable Octave functionality (default: disable)]),
 	      [OCTAVE=$enableval], [OCTAVE=disable])
-
-if test "x$OCTAVE" = xauto ; then
+if test "x$OCTAVE" = xyes ; then
 
 # Checks for octave
 AC_CHECK_PROG([MKOCTFILE], [mkoctfile], [mkoctfile], [MKOCTFILE="no"])
