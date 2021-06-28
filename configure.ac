@@ -222,9 +222,9 @@ if test "${cross_compiling}" = yes; then
     AC_DEFINE(WE_ARE_CROSS_COMPILING, [], [if cross compiling then don't build some tests])
 fi
 AC_ARG_ENABLE(octave,
-	      AS_HELP_STRING([--disable-octave],
-	      [Disable Octave functionality (default: auto)]),
-	      [OCTAVE=$enableval], [OCTAVE=auto])
+	      AS_HELP_STRING([--enable-octave],
+	      [Enable Octave functionality (default: disable)]),
+	      [OCTAVE=$enableval], [OCTAVE=disable])
 
 if test "x$OCTAVE" = xauto ; then
 
