@@ -60,3 +60,4 @@ ALSAFullDuplexFile
 ALSACapture
 ALSAFullDuplexMinScan
 FilterGen
+ALSACapabilities
