@@ -20,12 +20,8 @@
 
 // Debug
 #include "Debug.H"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wignored-attributes"
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/FFT>
-#pragma GCC diagnostic pop
 #include "gtkiostream_config.h"
 // #define FIR_BLOCKSIZE_MISMATCH_ERROR FIR_ERROR_OFFSET-1
 // #define FIR_H_EMPTY_ERROR FIR_ERROR_OFFSET-2
@@ -50,8 +46,6 @@
 */
 template<typename FP_TYPE>
 class ImpulseBandLimited : public Eigen::Array<FP_TYPE, Eigen::Dynamic, 1> {
-  Eigen::FFT<FP_TYPE> fft; ///< The fast Fourier transform
-
   // using Eigen::Array<FP_TYPE, Eigen::Dynamic, 1>::rows;
   // using Eigen::Array<FP_TYPE, Eigen::Dynamic, 1>::cols;
   // using Eigen::Array<FP_TYPE, Eigen::Dynamic, 1>::block;
