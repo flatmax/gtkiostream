@@ -17,7 +17,7 @@ along with GTK+ IOStream
 
 #include "ALSA/ALSA.H"
 #include <iostream>
-#include <strstream>
+#include <sstream>
 using namespace std;
 using namespace ALSA;
 

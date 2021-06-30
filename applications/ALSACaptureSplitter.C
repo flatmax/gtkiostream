@@ -17,7 +17,7 @@ along with GTK+ IOStream
 
 #include "ALSA/ALSA.H"
 #include <iostream>
-#include <strstream>
+#include <sstream>
 using namespace std;
 using namespace ALSA;
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 
   vector<Sox<int>> sox(chCnt);
   for (int i=0; i<chCnt; i++){
-    ostrstream fn;
+    ostringstream fn;
     fn<<argv[argc-2]<<i<<'.'<<argv[argc-1]<<'\0';
     cout<<"fn = "<<fn.str()<<endl;
     res=sox[i].openWrite(fn.str(), fs, 1, pow(2.,(double)snd_pcm_format_width(format)));

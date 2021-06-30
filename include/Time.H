@@ -23,7 +23,7 @@
 
 #include <glib.h>
 
-#include <strstream>
+#include <sstream>
 using namespace std;
 
 /** Class to specify the timeFormat string for formatted output.
@@ -108,7 +108,7 @@ public:
     }
 
     friend ostream &operator<<(ostream &o, const Time &t){
-        ostrstream oss;
+        ostringstream oss;
 		long double tDD=(long double)t.getSecs()+(long double)t.getUSecs()*1.e-6;
         oss<<tDD<<'\0';
         o<<oss.str();

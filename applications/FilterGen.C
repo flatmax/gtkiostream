@@ -16,7 +16,7 @@ along with GTK+ IOStream
 */
 
 #include <iostream>
-#include <strstream>
+#include <sstream>
 using namespace std;
 
 #include "Sox.H"
