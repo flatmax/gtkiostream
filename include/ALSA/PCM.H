@@ -235,7 +235,7 @@ namespace ALSA {
     }
 
     const char *getStateName(){
-        PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), char *) // check pcm is open
+        PCM_NOT_OPEN_CHECK_STR_NO_PRINT(getPCM(), ALSADebug()) // check pcm is open
         return snd_pcm_state_name(getState());
     }
     /** Returns true if in the prepared state

@@ -25,6 +25,7 @@
 
 namespace ALSA {
 
+	#define PCM_NOT_OPEN_CHECK_STR_NO_PRINT(pcm, dbgClass) {if (!pcm) return dbgClass.errors[ALSA_PCM_NOT_OPEN_ERROR].c_str();}
 	#define PCM_NOT_OPEN_CHECK_NO_PRINT(pcm, type) {if (!pcm) return (type)ALSADebug().evaluateError(ALSA_PCM_NOT_OPEN_ERROR);}
 	#define PCM_NOT_OPEN_CHECK_TYPED(pcm, type) {printf("\t\tfunc: %s\n",__func__); PCM_NOT_OPEN_CHECK_NO_PRINT(pcm, type)}
 	#define PCM_NOT_OPEN_CHECK(pcm) PCM_NOT_OPEN_CHECK_TYPED(pcm, int)
@@ -36,6 +37,7 @@ namespace ALSA {
 
 	#define INFO_NOT_OPEN_CHECK_NO_PRINT(info, type) {if (!info) return (type)ALSADebug().evaluateError(ALSA_INFO_NOT_OPEN_ERROR);}
 	#define INFO_NOT_OPEN_CHECK_TYPED(info, type) {printf("\t\tfunc: %s\n",__func__); INFO_NOT_OPEN_CHECK_NO_PRINT(info, type)}
+	#define INFO_NOT_OPEN_CHECK_STR(info, dbgClass) {printf("\t\tfunc: %s\n",__func__); if (!info) return dbgClass.errors[ALSA_INFO_NOT_OPEN_ERROR].c_str();}
 	#define INFO_NOT_OPEN_CHECK(info) INFO_NOT_OPEN_CHECK_TYPED(info, int)
 
 	#define ALSA_DEFAULT_START_FS 48000

@@ -123,9 +123,9 @@ NOTE: You should use values between -39900 <= val <= -1
 */
 class Debug {
     #define MALLOC_ERROR DEBUG_ERROR_OFFSET-0 ///< Error when trying to allocate memory
-protected:
-    std::map<int, std::string> errors; ///< This will contain a map between error numbers and descriptive std::strings for the errors.
 public:
+    std::map<int, std::string> errors; ///< This will contain a map between error numbers and descriptive std::strings for the errors.
+
     Debug() {
 #ifndef NDEBUG
         errors[NO_ERROR]=std::string("No error. ");

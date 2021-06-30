@@ -82,7 +82,7 @@ namespace ALSA {
 		\returns Short ID string
 		*/
 		const char* getID(){
-			INFO_NOT_OPEN_CHECK_TYPED(info, char*);
+			INFO_NOT_OPEN_CHECK_STR(info, ALSADebug());
 			return snd_pcm_info_get_id(info);
 		}
 
@@ -90,7 +90,7 @@ namespace ALSA {
 		\returns The device name
 		*/
 		const char* getName(){
-			INFO_NOT_OPEN_CHECK_TYPED(info, char*);
+			INFO_NOT_OPEN_CHECK_STR(info, ALSADebug());
 			return snd_pcm_info_get_name(info);
 		}
 
@@ -98,7 +98,7 @@ namespace ALSA {
 		\returns The sub-device name
 		*/
 		const char* getSubDeviceName(){
-			INFO_NOT_OPEN_CHECK_TYPED(info, char*);
+			INFO_NOT_OPEN_CHECK_STR(info, ALSADebug());
 			return snd_pcm_info_get_subdevice_name(info);
 		}
 	};
