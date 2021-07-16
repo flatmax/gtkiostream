@@ -61,3 +61,5 @@ ALSACapture
 ALSAFullDuplexMinScan
 FilterGen
 ALSACapabilities
+webcomponents/dsp/libdsp.js
+webcomponents/dsp/libdspNode.js
