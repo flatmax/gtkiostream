@@ -146,5 +146,22 @@ public:
     \return the number of samples in a channel's filter.
     */
     int getN(){return h.rows();}
+
+#ifdef HAVE_EMSCRIPTEN
+    /** WASM emscripten function to load an FIR filter into the FIR class from javascript, browser or nodejs
+    \param signal The filter buffer as float32array
+    \param samples The number of samples per channel
+    \param channels The number of channels in the filter
+    */
+    void loadTimeDomainCoefficients(intptr_t signal, size_t samples, size_t channels);
+
+    /** WASM emscripten function to apply the FIR filter from javascript, browser or nodejs
+    \param input The input signal as float32array
+    \param output The output signal as float32array
+    \param samples The number of samples per channel
+    \param channels The number of channels in the filter
+    */
+    void filter_js(intptr_t input, intptr_t output, size_t samples, size_t channels);
+#endif
 };
 #endif // FIR_H

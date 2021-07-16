@@ -98,3 +98,36 @@ void FIR<FP_TYPE>::init(unsigned int blockSize){
 
 template class FIR<float>;
 template class FIR<double>;
+
+// #include "gtkiostream_config.h"
+#ifdef HAVE_EMSCRIPTEN
+template<typename FP_TYPE>
+void FIR<FP_TYPE>::loadTimeDomainCoefficients(intptr_t signal, size_t samples, size_t channels){
+  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned >
+                                        h_signal((float*)signal, samples, channels);
+  loadTimeDomainCoefficients(h_signal.cast<FP_TYPE>());
+}
+
+template<typename FP_TYPE>
+void FIR<FP_TYPE>::filter_js(intptr_t input, intptr_t output, size_t samples, size_t channels) {
+  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned >
+                                        in((float*)input, samples, channels);
+  Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>, Eigen::Unaligned >
+                                        out((float*)output, samples, channels);
+  Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> outTemp(samples, channels);
+  filter(in.cast<FP_TYPE>(), outTemp);
+  out = outTemp.template cast<float>();
+}
+
+#include <emscripten/bind.h>
+EMSCRIPTEN_BINDINGS(FIR_ex) {
+emscripten::class_<FIR<double>>("FIR")
+    .constructor() // empty constructor - requires switchData to be called
+    .function("init", &FIR<double>::init)
+    .function("getChannelCnt", &FIR<double>::getChannelCnt)
+    .function("getN", &FIR<double>::getN)
+    .function("loadTimeDomainCoefficients", emscripten::select_overload<void(intptr_t, size_t, size_t)>(&FIR<double>::loadTimeDomainCoefficients), emscripten::allow_raw_pointers())
+    .function("filter", &FIR<double>::filter_js, emscripten::allow_raw_pointers())
+    ;
+}
+#endif
