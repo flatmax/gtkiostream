@@ -1,0 +1,16 @@
+{
+  "name": "libdsp",
+  "version": "1.0.1",
+  "description": "The gtkiostream dsp for nodejs and the browser",
+  "main": "DSP.js",
+  "author": "flatmax",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flatmax/gtkiostream.git"
+  },
+  "bugs": {
+    "url": "https://github.com/flatmax/gtkiostream/issues"
+  },
+  "homepage": "http://shop.audioinjector.net"
+}
