@@ -48,7 +48,7 @@ AC_DEFINE(GTKIOSTREAM_VERSION, [gtkiostream_version], [gtkIOStream package versi
 m4_ifdef([AM_EMSCRIPTEN], [AM_EMSCRIPTEN])
 AM_CONDITIONAL(HAVE_EMSCRIPTEN, test x$emscripten_compiler = xyes)
 if test "x$emscripten_compiler" = xyes; then
-AC_SUBST([AM_CXXFLAGS], ["-s ERROR_ON_UNDEFINED_SYMBOLS=0 -s DEMANGLE_SUPPORT=1 -std=c++11 -O3 -fno-exceptions -s NO_EXIT_RUNTIME=1 "])
+AC_SUBST([AM_CXXFLAGS], ["-s ERROR_ON_UNDEFINED_SYMBOLS=0 -s DEMANGLE_SUPPORT=1 -std=c++11 -O3 -fno-exceptions -s NO_EXIT_RUNTIME=1 -U EIGEN_DEBUG_ASSIGN"])
 AC_DEFINE(HAVE_EMSCRIPTEN, [], [whether building for emsdk])
 fi
 
