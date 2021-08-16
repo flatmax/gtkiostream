@@ -140,7 +140,7 @@ export class SoxAudio extends LibgtkIOStream {
     }
     this.fsOut=Fs
     this._setMimeType(ext);
-    return this.sox.openWrite(Fs, ch, 1.0, ext);
+    return this.sox.openWrite(Fs, ch, maxVal, ext);
   }
 
   /** Set a suitable mime type from the audio file extension
