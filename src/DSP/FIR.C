@@ -63,6 +63,16 @@ int FIR<FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName){
   }
   return ret;
 }
+
+template<typename FP_TYPE>
+int FIR<FP_TYPE>::saveTimeDomainCoefficients(const std::string fileName, double fs){
+  int ret=NO_ERROR;
+  Sox<FP_TYPE> sox; // use sox to try to read the filter from file
+  if (ret=sox.openWrite(fileName, fs, h.cols(), h.array().abs().maxCoeff())<0) // try to open the file
+    return SoxDebug().evaluateError(ret, fileName);
+  ret=sox.write(h);
+  return ret;
+}
 #endif
 #endif
 

@@ -89,6 +89,12 @@ public:
     \return Negative value on error.
     */
     int loadTimeDomainCoefficients(const std::string fileName);
+
+    /** Method to save the time domain coefficients to file.
+    \param fileName the file to write to
+    \param fs The sample rate
+    */
+    int saveTimeDomainCoefficients(const std::string fileName, double fs);
 #endif
 #endif
 
