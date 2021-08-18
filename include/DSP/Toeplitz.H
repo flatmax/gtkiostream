@@ -52,5 +52,20 @@ public:
         this->col(i).bottomRows(N-i)=A.topRows(N-i);
     }
   }
+
+  Toeplitz(const Derived &A, unsigned int M){
+    int err=0;
+    if (A.cols()!=1)
+      err=TOEPLITZ_COLS_ERROR;
+    if (err)
+      ToeplitzDebug().evaluateError(err);
+    else {
+      int N=A.rows();
+      this->resize(N, M);
+      this->setZero();
+      for (int i=0; i<M; i++)
+        this->col(i).bottomRows(N-i)=A.topRows(N-i);
+    }
+  }
 };
 #endif // TOEPLITZ_H
