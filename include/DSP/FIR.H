@@ -169,5 +169,10 @@ public:
     */
     void filter_js(intptr_t input, intptr_t output, size_t samples, size_t channels);
 #endif
+
+    /** Method to return the maximum absolute value filter coefficient.
+    @return The maximum absokute value filter coefficient.
+    */
+    FP_TYPE  getMaxFilterCoeff(){return h.array().abs().maxCoeff();}
 };
 #endif // FIR_H
