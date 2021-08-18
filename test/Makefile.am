@@ -24,7 +24,7 @@ EXTRA_CFLAGS =
 noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest
 noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6 FileWatchThreadedTest
 noinst_PROGRAMS += FileWatchThreadedTest2 FileWatchThreadedTest3
-noinst_PROGRAMS += IIRTest2 HankelTest ToeplitzTest ImpulseBandLimitedTest BandLimiterTest ResamplerTest RealFFTExampleGD IIRSiglution
+noinst_PROGRAMS += IIRTest2 HankelTest ToeplitzTest ImpulseBandLimitedTest BandLimiterTest ResamplerTest RealFFTExampleGD IIRSiglution FIRTest2
 #noinst_PROGRAMS += DSFStreamTest
 if !HAVE_EMSCRIPTEN
 noinst_PROGRAMS += FutexTest FutexVsPThreadTest
@@ -259,6 +259,10 @@ IIRSiglution_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOS
 FIRTest_SOURCES = FIRTest.C
 FIRTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
 FIRTest_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
+
+FIRTest2_SOURCES = FIRTest2.C
+FIRTest2_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
+FIRTest2_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
 
 ResamplerTest_SOURCES = ResamplerTest.C
 ResamplerTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
