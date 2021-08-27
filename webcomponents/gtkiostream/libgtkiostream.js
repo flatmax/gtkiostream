@@ -78,6 +78,7 @@ export class LibgtkIOStream extends LitElement {
   freeHEAP(heapName){
     if (this[heapName])
       this.libgtkIOStream._free(this[heapName]);
+    this[heapName]=null;
     if (this[heapName+'Size'])
       this[heapName+'Size']=null;
   }
