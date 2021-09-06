@@ -22,9 +22,6 @@
 
 #include <Sox.H>
 
-// #include <iostream>
-// using namespace std;
-//
 template<typename FP_TYPE>
 int FIR<FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName, int whichCh){
   int ret=loadTimeDomainCoefficients(fileName); // load all channels and then select only the one requested
