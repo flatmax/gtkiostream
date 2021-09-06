@@ -48,7 +48,9 @@ public:
 
 	virtual int hwParams(snd_pcm_hw_params_t *params){
 		std::cout<<__func__<<std::endl;
-		copyFrom(params);
+		ALSAExternalPlugin::hwParams(params); // to populated various parameters such as the period size
+		cout<<"period size "<<getPeriodSize()<<endl;
+
 		cout<<"extplug.rate "<<extplug.rate<<endl;
 		cout<<"extplug.channels "<<extplug.channels<<endl;
 		cout<<"extplug.slave_channels "<<extplug.slave_channels<<endl;
