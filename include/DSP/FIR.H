@@ -23,6 +23,10 @@
 #include <Eigen/Dense>
 #include <unsupported/Eigen/FFT>
 
+#ifdef DSP_FIR_USE_OMP
+#include <omp.h>
+#endif
+
 #define FIR_BLOCKSIZE_MISMATCH_ERROR FIR_ERROR_OFFSET-1
 #define FIR_H_EMPTY_ERROR FIR_ERROR_OFFSET-2
 #define FIR_CHANNEL_MISMATCH_ERROR FIR_ERROR_OFFSET-3
@@ -56,8 +60,8 @@ class FIR {
   Eigen::Array<typename Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, Eigen::Dynamic> H; ///< The DFT of the FIR coefficients
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> h; ///< the time domain representation of the filter
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> x; ///< the time domain signal for filtering
-  Eigen::Matrix<FP_TYPE, Eigen::Dynamic, 1> yTemp; ///< the time domain signal for filtering
-  Eigen::Array<typename Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, 1> Y; ///< the time domain filter output and also the DFT of one col of x
+  Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> yTemp; ///< the time domain signal for filtering
+  Eigen::Array<typename Eigen::FFT<FP_TYPE>::Complex, Eigen::Dynamic, Eigen::Dynamic> Y; ///< the time domain filter output and also the DFT of one col of x
 
   /** Resets the H matrix once N or h is changed.
   */
@@ -128,17 +132,29 @@ public:
       if (x.cols() != input.cols()){ // resize if necessary
         x.setZero(h.rows(), input.cols());
         y.setZero(h.rows(), input.cols());
+        yTemp.setZero(h.rows(), input.cols());
+        Y.setZero(h.rows(), input.cols());
       }
       y.topRows(y.rows()-N)=y.bottomRows(y.rows()-N); // keep the residual
       y.bottomRows(N).setZero();
 
       x.topRows(N)=input;
-
+#ifdef DSP_FIR_USE_OMP
+      #pragma omp parallel for
+#endif
       for (int i=0; i<x.cols(); i++){ // perform the filter on each column
-        fft.fwd(Y.data(), x.col(i).data(), x.rows()); // find the DFT of X=Z=dft(x) (store in Y)
-        Y*=H.col(i); // convolve X (which is Y) with H
-        fft.inv(yTemp.data(), Y.data(), Y.rows()); // take back to the time domain
-        y.col(i)+=yTemp; // add to the residual
+// #ifdef DSP_FIR_USE_OMP
+//          printf("i=%d thread num %d\n", i, omp_get_thread_num());
+// #endif
+// printf("i=%d\n", i);
+        fft.fwd(Y.col(i).data(), x.col(i).data(), x.rows()); // find the DFT of X=Z=dft(x) (store in Y)
+        // printf("i=%d\n", i);
+        Y.col(i)*=H.col(i); // convolve X (which is Y) with H
+        // printf("i=%d\n", i);
+        fft.inv(yTemp.col(i).data(), Y.col(i).data(), Y.rows()); // take back to the time domain
+        // printf("i=%d\n", i);
+        y.col(i)+=yTemp.col(i); // add to the residual
+        // printf("i=%d\n", i);
       }
       const_cast< Eigen::DenseBase<DerivedOther>& >(output)=y.topRows(N);
     }

@@ -22,6 +22,9 @@
 
 #include <Sox.H>
 
+// #include <iostream>
+// using namespace std;
+
 template<typename FP_TYPE>
 int FIR<FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName, int whichCh){
   int ret=loadTimeDomainCoefficients(fileName); // load all channels and then select only the one requested
@@ -57,6 +60,7 @@ int FIR<FP_TYPE>::loadTimeDomainCoefficients(const std::string fileName){
       else
         loadTimeDomainCoefficients(hNew);
       // }
+      // std::cout<<hNew<<std::endl;
   }
   return ret;
 }
@@ -87,9 +91,9 @@ void FIR<FP_TYPE>::resetDFT(){
   // Find the DFT of h and store in H
   Eigen::Matrix<FP_TYPE, Eigen::Dynamic, Eigen::Dynamic> hNew(h.rows()+N, h.cols());
   x.setZero(hNew.rows(), hNew.cols()); // make the input signal the same length as H
-  yTemp.setZero(hNew.rows(), 1); // make the temporary output buffer the same length as H
+  yTemp.setZero(hNew.rows(), hNew.cols()); // make the temporary output buffer the same length as H
   y.setZero(hNew.rows(), hNew.cols()); // make the temporary output buffer the same length as H
-  Y.setZero(hNew.rows(), 1); // make the DFT of the input signal the same length as H
+  Y.setZero(hNew.rows(), hNew.cols()); // make the DFT of the input signal the same length as H
   hNew.setZero();
   hNew.topRows(h.rows())=h;
   H.setZero(hNew.rows(), hNew.cols());
