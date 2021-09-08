@@ -68,8 +68,10 @@ public:
     if ((ret=snd_pcm_extplug_set_slave_param(&extplug, SND_PCM_EXTPLUG_HW_CHANNELS, 2))!=0)
 			return ALSA::ALSADebug().evaluateError(ret);
 
-		inFormat=SND_PCM_FORMAT_FLOAT_LE;
-		outFormat=SND_PCM_FORMAT_FLOAT_LE;
+			// inFormat=SND_PCM_FORMAT_FLOAT_LE;
+			// outFormat=SND_PCM_FORMAT_FLOAT_LE;
+			inFormat=SND_PCM_FORMAT_S32_LE;
+			outFormat=SND_PCM_FORMAT_S32_LE;
 		if ((ret=snd_pcm_extplug_set_param(&extplug, SND_PCM_EXTPLUG_HW_FORMAT, inFormat))!=0)
       return ALSA::ALSADebug().evaluateError(ret);
     if ((ret=snd_pcm_extplug_set_slave_param(&extplug, SND_PCM_EXTPLUG_HW_FORMAT, outFormat))!=0)

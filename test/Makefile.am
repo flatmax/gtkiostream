@@ -402,7 +402,7 @@ libasound_module_pcm_ALSAPluginTest_la_CPPFLAGS = $(EIGEN_CFLAGS)
 libasound_module_pcm_ALSAPluginTest_la_LDFLAGS = -module -avoid-version -export-dynamic -no-undefined
 libasound_module_pcm_ALSAExternalPluginTest_la_SOURCES = ALSAExternalPluginTest.C
 libasound_module_pcm_ALSAExternalPluginTest_la_CPPFLAGS = $(EIGEN_CFLAGS)
-libasound_module_pcm_ALSAExternalPluginTest_la_LDFLAGS = -module -avoid-version -export-dynamic -no-undefined
+libasound_module_pcm_ALSAExternalPluginTest_la_LDFLAGS = -module -avoid-version -export-dynamic -no-undefined -lasound
 endif
 
 # DSFStreamTest_SOURCES = DSFStreamTest.C
