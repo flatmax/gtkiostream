@@ -48,6 +48,7 @@ class LibgtkIOStream {
     if (this[heapName]==null || this[heapName+'Size']!=N){
       if (this[heapName]!=null)
         libgtkIOStream._free(this[heapName]);
+      this[heapName]=null;
       this[heapName] = libgtkIOStream._malloc(N);
       this[heapName+'Size']=N;
     }
