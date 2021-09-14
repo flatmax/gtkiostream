@@ -100,11 +100,11 @@ int Sox<FP_TYPE_>::openRead(string fileName) {
 #endif
 
 template<typename FP_TYPE_>
-int Sox<FP_TYPE_>::openRead(intptr_t buffer, size_t len){
+int Sox<FP_TYPE_>::openRead(intptr_t buffer, size_t len, const char *fileType){
   bool inputFile=true;
   close(inputFile);
 
-  in = sox_open_mem_read((void*)buffer, len, NULL, NULL, NULL);
+  in = sox_open_mem_read((void*)buffer, len, NULL, NULL, fileType);
   if (!in)
       return SOX_READ_FILE_OPEN_ERROR;
 

@@ -120,8 +120,17 @@ public:
     /** Open a memory pointer for reading
     \param buffer The pointer to the memory block
     \param len The length of the memory block in bytes
+    \param fileType The file type
     */
-    int openRead(intptr_t buffer, size_t len);
+    int openRead(intptr_t buffer, size_t len, const char *fileType);
+
+    /** Open a memory pointer for reading
+    \param buffer The pointer to the memory block
+    \param len The length of the memory block in bytes
+    */
+    int openRead(intptr_t buffer, size_t len){
+      return openRead(buffer, len, NULL);
+    }
 
     /** Find if the input file has clipping
     \return A negative error code on failure, otherwise the number of clipping occurances
