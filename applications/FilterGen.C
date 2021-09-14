@@ -22,15 +22,16 @@ using namespace std;
 #include "Sox.H"
 #include "OptionParser.H"
 
-int printUsage(string name, int chCnt, unsigned int N, unsigned int fs, char type) {
+int printUsage(string name, int chCnt, unsigned int N, unsigned int fs, char type, bool logStep) {
     cout<<name<<" : An application to generate filters and save them in audio files."<<endl;
     cout<<"Usage:"<<endl;
-    cout<<"\t "<<name<<" [options] outFileName"<<endl;
-    cout<<"\t e.g. "<<name<<" [options] /tmp/FIR.wav"<<endl;
-    cout<<"\t -c : The number of channels : (-c "<<chCnt<<")"<<endl;
-    cout<<"\t -N : The number of samples : (-N "<<N<<")"<<endl;
-    cout<<"\t -r : The sample rate to use in Hz : (-r "<<fs<<")"<<endl;
-    cout<<"\t -t : Use noise (n) or an impulse (i) :  (type "<<type<<")"<<endl;
+    cout<<"     "<<name<<" [options] outFileName"<<endl;
+    cout<<"     e.g. "<<name<<" [options] /tmp/FIR.wav"<<endl;
+    cout<<"     -c : The number of channels : (-c "<<chCnt<<")"<<endl;
+    cout<<"     -N : The number of samples : (-N "<<N<<")"<<endl;
+    cout<<"     -r : The sample rate to use in Hz : (-r "<<fs<<")"<<endl;
+    cout<<"     -t : Use noise (n) or an impulse (i) :  (-t "<<type<<")"<<endl;
+    cout<<"     -S : Log2 step filter sizes down every 2 channels (not with -t i) :  (-S "<<logStep<<")"<<endl;
     Sox<float> sox;
     vector<string> formats=sox.availableFormats();
     cout<<"The known output file extensions (output file formats) are the following :"<<endl;
@@ -44,6 +45,7 @@ int main(int argc, char *argv[]) {
   int chCnt=2; // The number of channels to record
   int fs=48000; // The sample rate
   unsigned int N=fs; // The number of samples to use
+  bool logStep=false; // Whether to log step sizes down every 2 channles
 
   OptionParser op;
   int i=0, ret;
@@ -62,10 +64,13 @@ int main(int argc, char *argv[]) {
   if (op.getArg<int>("r", argc, argv, fs, i=0)!=0)
       ;
 
+  if (op.getArg<bool>("S", argc, argv, logStep, i=0)!=0)
+      logStep=true;
+
   if (argc<2 || op.getArg<string>("h", argc, argv, help, i=0)!=0)
-      return printUsage(argv[0], chCnt, N, fs, type);
+      return printUsage(argv[0], chCnt, N, fs, type, logStep);
   if (op.getArg<string>("help", argc, argv, help, i=0)!=0)
-    return printUsage(argv[0], chCnt, N, fs, type);
+    return printUsage(argv[0], chCnt, N, fs, type, logStep);
 
   int res;
   float maxVal=1.;
@@ -82,6 +87,10 @@ int main(int argc, char *argv[]) {
     filters=filters/2;
     maxVal=filters.maxCoeff();
   }
+  if (logStep) // put zeros at the end of filters, halving effective lengths every 2 channels
+    for (int m=2; m<(filters.cols()-1); m+=2)
+        filters.block(filters.rows()/m, m, filters.rows()-filters.rows()/m, 2).setZero();
+
   Sox<int> sox;
   res=sox.openWrite(argv[argc-1], fs, chCnt, maxVal);
   if (res<0)
