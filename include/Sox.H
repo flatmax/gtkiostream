@@ -369,6 +369,24 @@ public:
         return SOX_WRITE_FILE_NOT_OPENED_ERROR;
     }
 
+    /** Get the input audio sample rate.
+    \return the number of bits per sample. 0 for unknown
+    */
+    unsigned int getWordSizeIn(void) {
+        if (in)
+            return in->signal.precision;
+        return 0.;
+    }
+
+    /** Get the output audio sample rate.
+    \return the number of bits per sample. 0 for unknown
+    */
+    unsigned int getWordSizeOut(void) {
+        if (out)
+            return out->signal.precision;
+        return 0.;
+    }
+
     /** Print a list of the available file formats.
     \return A vector containing the available file format names.
     */
