@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
       ;
 
   FullDuplexCard card(deviceName.c_str());
-  card.resetParams();
+  // card.resetParams();
   cout<<"opened the device "<<card.Playback::getDeviceName()<<endl;
   cout<<"\n\n\n\n\n";
   cout<<"Playback channels : ["<<card.Playback::getMinChannels()<<", "<<card.Playback::getMaxChannels()<<"]"<<endl;
