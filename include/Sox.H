@@ -405,6 +405,21 @@ public:
     */
     string printFormats();
 
+    // /* Append a comment to the out of band data for the output file.
+    //  Comment appending doesn't work very well in Sox
+    // \param c The comment to attach.
+    // */
+    // int appendComment(char const *c){
+    //   int retVal=0;
+    //   if (out){
+    //     printf("num comments %ld\n",sox_num_comments(out->oob.comments));
+    //     sox_append_comment(&out->oob.comments, c);
+    //     printf("num comments %ld\n",sox_num_comments(out->oob.comments));
+    //   } else
+    //      retVal=SOX_WRITE_FILE_NOT_OPENED_ERROR;
+    //  return retVal;
+    // }
+
 #ifdef HAVE_EMSCRIPTEN
   /** Emscripten case : Get an audio sample from the audio member variable
   \param r Row number (starting from 0)
