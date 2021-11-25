@@ -45,8 +45,22 @@ namespace ALSA {
 		virtual ~Playback(void){
 		}
 
+		/** Open the audio device for playback.
+		\see Stream::getBlockingState to find out how the audio device was opened.
+		\param devName The name of the device to popen, "default" if not specified.
+		\returns 0 on success, an error otherwise.
+		*/
 		int open(const char *devName="default"){
 			int blockRequest=0; // defailt playback blocking state
+			return open(devName, blockRequest);
+		}
+
+		/** Open the audio device for playback.
+		\param devName The name of the device to popen, "default" if not specified.
+		\param blockRequest 1 for blocking and 0 for nonblocking
+		\returns 0 on success, an error otherwise.
+		*/
+		int open(const char *devName, int blockRequest){
 			int ret=Stream::init(devName, SND_PCM_STREAM_PLAYBACK, blockRequest);
 			if (ret < 0)
 				std::cerr<<"Playback :: Playback : open error: "<< snd_strerror(ret)<<std::endl;
