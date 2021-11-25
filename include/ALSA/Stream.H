@@ -176,6 +176,16 @@ namespace ALSA {
       return snd_pcm_format_width(format);
       return ret;
     }
+
+    /** Find out whether the streamis blocking or now.
+    The blocking state is passed as the pcm open parameter to snd_pcm_open.
+    The blocking state is specified in the open method.
+    \see PCM::open
+    \return The blocking state, 1 for blocking and 0 for nonblocking
+    */
+    int getBlockingState(){
+      return block;
+    }
   };
 }
 #endif //STREAM_H
