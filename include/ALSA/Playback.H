@@ -30,6 +30,12 @@ namespace ALSA {
 		*/
 		virtual bool getLinked(){return 0;}
 	public:
+		Playback(const char *devName, int blocking) : Stream() {
+			int ret=open(devName, blocking);
+			if (ret<0)
+				assert("open error");
+		}
+
 		Playback(const char *devName) : Stream() {
 			int ret=open(devName);
 			if (ret<0)
