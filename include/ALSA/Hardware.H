@@ -448,6 +448,30 @@ namespace ALSA {
 				return ret;
 			return snd_pcm_hw_params_dump(hParams, log);
 		}
+
+		/** Reset the params, then set the format, access, sample rate and channel count.
+		You may still wish to set other parameters after this (\see setBufSize for example).
+		Following the execution of setFARC, call setParams \see setParams to fill the params to the device before running the device.
+		\param format ALSA PCM sample format, \see setFormat
+		\param access ALSA PCM stream sample layout, \see setAccess
+		\param fs The sample rate in Hz
+		\param cnt The number of channels
+		\retrn 0 on success
+		*/
+		int setFARC(snd_pcm_format_t format, snd_pcm_access_t access, unsigned int fs, unsigned int cnt){
+			int res=resetParams();
+			if (res<0) // we don't want defaults so reset and refil the params
+				return ALSADebug().evaluateError(res);
+			if ((res=setFormat(format))<0)
+	    	return ALSADebug().evaluateError(res);
+			if ((res=setAccess(access))<0)
+		    return ALSADebug().evaluateError(res);
+			if ((res=setSampleRate(fs))<0)
+		    return ALSADebug().evaluateError(res);
+			if ((res=setChannels(cnt))<0)
+		    return ALSADebug().evaluateError(res);
+			return 0;
+		}
 	};
 }
 #endif //HARDWARE_H
