@@ -126,20 +126,26 @@ namespace ALSA {
 		@param len The number of frames to write
 		@return NO_ERROR on success an error otherwise
 		*/
-		int writeBuf(char *bufferIn, size_t len){
+		int writeBuf(char *bufferIn, size_t len, bool firstRun=true){
 			PCM_NOT_OPEN_CHECK_NO_PRINT(getPCM(), int) // check pcm is open
 			int bytes_per_frame = getFormatPhysicalWidth() * getChannels()/8;
 
 			int ret=0, ret2;
 			while ((len-=ret) > 0) {
-				if (hasXrun())
+				if (hasXrun()){
 					if (ret2=recover(-EPIPE))
 						return ALSADebug().evaluateError(ret2, "-EPIPE recovering failed\n");
-				if (suspended())
+					firstRun=true;
+				}
+				if (suspended()){
 					if (ret2=recover(-ESTRPIPE))
 						return ALSADebug().evaluateError(ret2, "-ESTRPIPE recovering failed\n");
+					firstRun=true;
+				}
 
 				ret=snd_pcm_writei(getPCM(), (void *)bufferIn, len); // first time through - allow for starting if required
+				if (ret==len & !firstRun) // early exit if we have written everything out and we are running
+					return 0;
 				if (prepared())
 					if ((ret2=start())<0)
 						return ALSADebug().evaluateError(ret2);
@@ -156,6 +162,7 @@ namespace ALSA {
 						ret=0;
 						if (ret2=prepare()<0)
 							return ALSADebug().evaluateError(ret2," post EPIPE, couldn't prepare\n");
+						firstRun=true;
 						continue;
 					}
 					return ALSADebug().evaluateError(ret," in writeBuf main loop, unidentified error.\n");
