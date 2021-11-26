@@ -343,6 +343,18 @@ namespace ALSA {
 				return *p;
 		}
 
+		/** Get the number of periods
+		\return >= 0 on success
+		*/
+		int getPeriods() {
+			unsigned int m;
+			int err=snd_pcm_hw_params_get_periods(hParams, &m, 0);
+			if (err<0)
+				return err;
+			else
+				return m;
+		}
+
 		/** Get the maximum period size
 		\return >= 0 on success
 		*/
