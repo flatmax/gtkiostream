@@ -46,6 +46,9 @@ class FullDuplexTest : public FullDuplex<int> {
 			return 0;
 		}
 
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		// The following ensures that shiftedData contains the input audio WITHOUT channel swapping
+		//
 		// find the zero columns (for the Audio Injector Octo these are actually -256 not zero)
 		Eigen::Array<int, 1, CH_CNT> mins = inputAudio.colwise().minCoeff();
 		if (mins(0)==mins(CH_CNT-1)==-256)
@@ -68,10 +71,21 @@ class FullDuplexTest : public FullDuplex<int> {
 				shiftedData.leftCols(CH_CNT-1)=inputAudio.rightCols(CH_CNT-1);
 				shiftedData.rightCols(1)=inputAudio.leftCols(1);
 			}
-		// mins = shiftedData.colwise().minCoeff();
-		// cout<<mins<<"\n\n\n";
-		// inputAudio=shiftedData;
-		outputAudio=shiftedData; // copy the shifted data out
+
+		//
+		// shiftedData has the correct channel alignment at this point
+		/////////////////////////////////////////////////////////////////////
+
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		// handle channel rotations for output audio.
+		//
+		// TODO : If your algorithm outputs audio, handle your audio data here, performing the necessary steps to
+		//        ensure that channel swapping doesn't exist in your output audio - in a similar way to the input audio.
+		// Question : If you swap the output audio in the opposite direction to the input audio swap above, does this ensure that output audio is always in the correct channel alignment ?
+		//
+		////////////////////////////////////////////////////////////////////
+
+		outputAudio=inputAudio; // copy the shifted data out - assumes that both output and input are equally shifted
 		return 0; // return 0 to continue
 	}
 public:
