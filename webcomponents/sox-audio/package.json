@@ -1,10 +1,10 @@
 {
   "name": "sox-element",
-  "version": "1.9.15",
+  "version": "1.9.16",
   "description": "The gtkiostream sox class as a webcompoenent",
   "main": "sox-audio.js",
   "dependencies": {
-    "gtkiostream": "^1.9.15"
+    "gtkiostream": "^1.9.16"
   },
   "devDependencies": {
     "@webcomponents/webcomponentsjs": "^2.4.3"
