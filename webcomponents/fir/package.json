@@ -1,6 +1,6 @@
 {
   "name": "fir-dsp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "WASM Webcomponent fir- for digital signal processing FIR convolution following open-wc recommendations",
   "author": "flatmax",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "storybook:build": "build-storybook"
   },
   "dependencies": {
-    "libdsp": "1.0.1",
+    "libdsp": "1.0.2",
     "lit": "^2.0.2"
   },
   "devDependencies": {
