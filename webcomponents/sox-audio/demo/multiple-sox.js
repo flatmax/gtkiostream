@@ -1,4 +1,4 @@
-import { html } from 'lit-element';
+import { html } from 'lit';
 import {SoxAudio } from '../sox-audio';
 import './parent-element';
 

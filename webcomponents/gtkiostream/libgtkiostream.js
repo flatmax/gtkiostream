@@ -26,7 +26,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import { LitElement } from 'lit-element';
+import { LitElement } from 'lit';
 import modProm from './libgtkIOStream.js';
 
 /**
