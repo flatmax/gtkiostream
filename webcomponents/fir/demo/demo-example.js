@@ -1,4 +1,4 @@
-import { html } from 'lit-element';
+import { html } from 'lit';
 import { FIR } from '../fir-';
 
 /** Example demo element for testing element loading
