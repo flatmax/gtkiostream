@@ -1,4 +1,3 @@
-import { html } from 'lit-element';
 import { SoxAudio } from '../sox-audio';
 
 class SoxItem extends SoxAudio {
