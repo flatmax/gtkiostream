@@ -25,6 +25,8 @@ using namespace ALSA;
 
 #include "OptionParser.H"
 
+#include <limits>
+
 int printUsage(string name, string devOut, string devIn, int latency) {
     cout<<name<<" : An application to playback an audio file and capture to file."<<endl;
     cout<<"Usage:"<<endl;
@@ -63,7 +65,8 @@ class FullDuplexFile : public FullDuplex<int> {
 			outputAudio.resize(N, ch);
 			inputAudio.setZero();
 		}
-    cout<<"\rinput PCM maxima "<<inputAudio.square().colwise().mean().sqrt()<<'\n'; // print the input audio max coeff
+
+    // cout<<"\rinput PCM maxima "<<inputAudio.maxCoeff()<<'\n'; // print the input audio max coeff
     if ((res=sox.write(inputAudio))!=inputAudio.rows()*inputAudio.cols())
         return SoxDebug().evaluateError(res);
 
@@ -145,7 +148,7 @@ public:
     if ((res=setChannels(ch))<0)
       return ALSADebug().evaluateError(res);
 
-    res=sox.openWrite(name+".capture.wav", sox.getFSIn(), ch, 1.0);
+    res=sox.openWrite(name+".capture.wav", sox.getFSIn(), ch, std::numeric_limits<int>::max());
     return SoxDebug().evaluateError(res);
   }
 
