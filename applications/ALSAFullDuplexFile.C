@@ -25,13 +25,14 @@ using namespace ALSA;
 
 #include "OptionParser.H"
 
-int printUsage(string name, string dev, int latency) {
+int printUsage(string name, string devOut, string devIn, int latency) {
     cout<<name<<" : An application to playback an audio file and capture to file."<<endl;
     cout<<"Usage:"<<endl;
     cout<<"\t "<<name<<" [options] audioFileName"<<endl;
     cout<<"\n\t\t The captured audio will be written to audioFileName.capture.wav"<<endl;
     cout<<"\t e.g. "<<name<<" [options] /tmp/out.wav"<<endl;
-    cout<<"\t -D : The name of the device : (-D "<<dev<<")"<<endl;
+    cout<<"\t -D : The name of the output device : (-D "<<devOut<<")"<<endl;
+    cout<<"\t -C : The name of the input  device : (-C "<<devIn<<")"<<endl;
     Sox<float> sox;
     vector<string> formats=sox.availableFormats();
     cout<<"The known output file extensions (output file formats) are the following :"<<endl;
@@ -41,11 +42,11 @@ int printUsage(string name, string dev, int latency) {
     return 0;
 }
 
-class FullDuplexTest : public FullDuplex<int> {
+class FullDuplexFile : public FullDuplex<int> {
 	int N; ///< The number of frames
 	int ch; ///< The number of channels
 
-  Sox<int> sox; ///< The output audio file
+  Sox<int> sox; ///< The output audio file and the capture file
   Eigen::Array<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> buffer; // audio buffer for sox
 
 	/** Your class must inherit this class and implement the process method.
@@ -56,27 +57,66 @@ class FullDuplexTest : public FullDuplex<int> {
 	*/
 	int process(){
     int res=0;
-		if (inputAudio.rows()!=N || inputAudio.cols()!=ch){
+		if (inputAudio.rows()!=N || inputAudio.cols()!=ch || outputAudio.rows()!=N || outputAudio.cols()!=ch){
+      cout<<"FulleDuplexTest::process : resetting block sizes to "<<N<<", "<<ch<<endl;
 			inputAudio.resize(N, ch);
 			outputAudio.resize(N, ch);
 			inputAudio.setZero();
 		}
-		if ((res=sox.read(outputAudio, N))<0)
-		  if (outputAudio.rows()==0) // end of the file.
-		    return 1; // indicate end of file exit
+    cout<<"\rinput PCM maxima "<<inputAudio.square().colwise().mean().sqrt()<<'\n'; // print the input audio max coeff
+    if ((res=sox.write(inputAudio))!=inputAudio.rows()*inputAudio.cols())
+        return SoxDebug().evaluateError(res);
 
-		cout<<"\rinput PCM maxima "<<inputAudio.square().colwise().mean().sqrt()<<'\n'; // print the input audio max coeff
+    // printf("process : inputAudio.rows = %ld, outputAudio.rows = %ld\n", inputAudio.rows(), outputAudio.rows());
+		if ((res=sox.read(outputAudio, N))<0)
+      return SoxDebug().evaluateError(res);
+	  if (outputAudio.rows()!=N) // end of the file. output audio end will be truncated
+	    return 1; // indicate end of file exit
 
 		return 0; // return 0 to continue
+	}
+
+  /** Overload the link method
+	*/
+	int link(){
+		int ret = FullDuplex<int>::link();
+		if (ret<0)
+			printf("Linking failed. Continuing ...\n");
+		return 0;
+	}
+
+	/** Overload the link method
+	*/
+	int unLink(){
+		int ret = FullDuplex<int>::unLink();
+		if (ret<0)
+			printf("Unlinking failed. Continuing ...\n");
+		return 0;
 	}
 public:
   /** Specify the device name and the desired latency
   \param devName The device name, e.g. hw:0 or plughw:0
   \param latency The number of frames to buffer. For example 4096
   */
-	FullDuplexTest(const char*devName, int latency) : FullDuplex(devName){
-		ch=2; // use this static number of input and output channels.
-		N=latency;
+	FullDuplexFile(const char*devName, int latency) : FullDuplex(devName){
+    init(latency);
+  }
+
+  /** Specify the device names and the desired latency
+  \param devNameOut The device name, e.g. hw:0 or plughw:0
+  \param devNameIn The device name, e.g. hw:0 or plughw:0
+  \param latency The number of frames to buffer. For example 4096
+  */
+	FullDuplexFile(const char*devNameOut, const char*devNameIn, int latency) : FullDuplex(devNameOut, devNameIn){
+    init(latency);
+  }
+
+  /** initialise
+  \param latency The number of frames to buffer. For example 4096
+  */
+  void init(int latency){
+		ch=-1; // use this static number of input and output channels.
+    N=latency;
 		inputAudio.resize(0,0); // force zero size to ensure resice on the first process.
 		outputAudio.resize(0,0);
 	}
@@ -88,7 +128,7 @@ public:
   int openFile(string name){
     int res=sox.openRead(name);
     if (res<0 && res!=SOX_READ_MAXSCALE_ERROR)
-    return SoxDebug().evaluateError(res);
+      return SoxDebug().evaluateError(res);
 
     unsigned int fs;
     if (sox.getFSIn()!=Playback::getSampleRate()){
@@ -102,27 +142,40 @@ public:
 
     ch=sox.getChCntIn();
     cout<<"setting ALSA channels to " <<ch<<endl;
-    return 0;
+    if ((res=setChannels(ch))<0)
+      return ALSADebug().evaluateError(res);
+
+    res=sox.openWrite(name+".capture.wav", sox.getFSIn(), ch, 1.0);
+    return SoxDebug().evaluateError(res);
+  }
+
+  int closeFile(){
+    int res=sox.closeWrite();
+    return SoxDebug().evaluateError(res);
   }
 };
 
 int main(int argc, char *argv[]) {
-  string deviceName="hw:0";
+  string deviceNameOut="default";
+  string deviceNameIn="default";
   int latency=8192;
 
   OptionParser op;
   int i=0, ret;
   string help;
-  if (argc<2 || op.getArg<string>("h", argc, argv, help, i=0)!=0)
-      return printUsage(argv[0], deviceName, latency);
-  if (op.getArg<string>("help", argc, argv, help, i=0)!=0)
-    return printUsage(argv[0], deviceName, latency);
-
-  if (op.getArg<string>("D", argc, argv, deviceName, i=0)!=0)
+  if (op.getArg<string>("D", argc, argv, deviceNameOut, i=0)!=0)
+      ;
+  if (op.getArg<string>("C", argc, argv, deviceNameIn, i=0)!=0)
       ;
 
-  FullDuplexTest fullDuplex(deviceName.c_str(), latency);
-  cout<<"opened the device "<<fullDuplex.Playback::getDeviceName()<<endl;
+  if (argc<2 || op.getArg<string>("h", argc, argv, help, i=0)!=0)
+      return printUsage(argv[0], deviceNameOut, deviceNameIn, latency);
+  if (op.getArg<string>("help", argc, argv, help, i=0)!=0)
+    return printUsage(argv[0], deviceNameOut, deviceNameIn, latency);
+
+  FullDuplexFile fullDuplex(deviceNameOut.c_str(), deviceNameIn.c_str(), latency);
+  cout<<"opened the output device "<<fullDuplex.Playback::getDeviceName()<<endl;
+  cout<<"opened the input  device "<<fullDuplex.Capture::getDeviceName()<<endl;
   cout<<"channels max "<<fullDuplex.Playback::getMaxChannels()<<endl;
 
   int res;
@@ -135,10 +188,10 @@ int main(int argc, char *argv[]) {
   if ((res=fullDuplex.setAccess(SND_PCM_ACCESS_RW_INTERLEAVED))<0)
     return ALSADebug().evaluateError(res);
 
-  if ((res=fullDuplex.openFile(argv[1]))<0)
+  snd_pcm_uframes_t pSize=latency;
+  if ((res=fullDuplex.Playback::setPeriodSize(&pSize))<0)
     return ALSADebug().evaluateError(res);
-
-  if ((res=fullDuplex.setBufSize(latency))<0)
+  if ((res=fullDuplex.openFile(argv[argc-1]))<0)
     return ALSADebug().evaluateError(res);
 
   cout<<"latency = "<<(float)latency/(float)fullDuplex.Playback::getSampleRate()<<" s"<<endl;
@@ -146,12 +199,17 @@ int main(int argc, char *argv[]) {
 
   snd_pcm_format_t format;
   fullDuplex.Playback::getFormat(format);
-  cout<<"format "<<fullDuplex.Playback::getFormatName(format)<<endl;
-  cout<<"channels "<<fullDuplex.Playback::getChannels()<<endl;
-  snd_pcm_uframes_t pSize;
-  fullDuplex.Playback::getPeriodSize(&pSize);
-  cout<<"period size "<<pSize<<endl;
+  cout<<"Playback format "<<fullDuplex.Playback::getFormatName(format)<<endl;
+  fullDuplex.Capture::getFormat(format);
+  cout<<"Capture format "<<fullDuplex.Capture::getFormatName(format)<<endl;
+  cout<<"Playback channels "<<fullDuplex.Playback::getChannels()<<endl;
+  cout<<"Capture  channels "<<fullDuplex.Capture::getChannels()<<endl;
+  cout<<"Playback sample rate"<<fullDuplex.Playback::getSampleRate()<<endl;
+  cout<<"Capture sample rate"<<fullDuplex.Capture::getSampleRate()<<endl;
 
+  cout<<"calling go"<<endl;
   res=fullDuplex.go(); // start the full duplex read/write/process going.
+
+  fullDuplex.closeFile();
 	return ALSADebug().evaluateError(res);
 }
