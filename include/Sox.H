@@ -154,6 +154,8 @@ public:
 #else
                 count = in->signal.length; // emscripten reading afrom memory may not contain the correct variables here - default to a larger number
 #endif
+            // else
+             count *= in->signal.channels;
             Eigen::Array<sox_sample_t, Eigen::Dynamic, Eigen::Dynamic> readData(count,1); // generate the necessary data store to read into.
             size_t readCount=sox_read(in, readData.data(), count); // try to read
 
