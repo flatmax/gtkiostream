@@ -134,8 +134,10 @@ protected:
 			if (ret<0)
 				return ALSADebug().evaluateError(ALSA_YOUR_PROCESS_FN_ERROR);
 
-			if (inputAudio.rows()!=outputAudio.rows()) // check for frames mismatch
+			if (inputAudio.rows()!=outputAudio.rows()) {// check for frames mismatch
+				printf("inputAudio.rows = %ld, outputAudio.rows = %ld\n", inputAudio.rows(), outputAudio.rows());
 				return ALSADebug().evaluateError(ALSA_FRAME_MISMATCH_ERROR, "Your process method didn't initialise the inputAudio and outputAudio member variables with the same number of frames.");
+			}
 			if (inputAudio.cols()==0 || outputAudio.cols()==0) // check for no channels
 				return ALSADebug().evaluateError(ALSA_NO_CHANNELS_ERROR, "Your process method didn't initialise the inputAudio and outputAudio member variables with any channels.");
 
