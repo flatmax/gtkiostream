@@ -21,15 +21,21 @@
 const fs = require('fs');
 
 var libgtkIOStream = require('./libgtkIOStreamNode');
+var wasmCompiled = false;
 libgtkIOStream().then((mod)=>{
   console.log('wasm compiled')
   libgtkIOStream = mod;
+  wasmCompiled = true;
 });
 
 class LibgtkIOStream {
 
   constructor(){
     this.sox = new libgtkIOStream.Sox;
+  }
+
+  static moduleReady() {
+    return wasmCompiled
   }
 
   /** Taken from : https://github.com/flatmax/WASMAudio
