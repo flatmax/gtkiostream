@@ -22,7 +22,7 @@ EXTRA_LIBS =
 EXTRA_CFLAGS =
 
 if HAVE_ALSA
-bin_PROGRAMS += LatencyTester ALSAControlMonitor ALSACapabilities
+bin_PROGRAMS += LatencyTester ALSAControlMonitor ALSACapabilities ALSAFullDuplex
 if HAVE_SOX
 bin_PROGRAMS += ALSACapture ALSACaptureSplitter ALSAFullDuplexFile
 endif
@@ -142,6 +142,10 @@ ALSACaptureSplitter_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/li
 ALSAFullDuplexFile_SOURCES = ALSAFullDuplexFile.C
 ALSAFullDuplexFile_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
 ALSAFullDuplexFile_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound  -lpthread
+
+ALSAFullDuplex_SOURCES = ALSAFullDuplex.C
+ALSAFullDuplex_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+ALSAFullDuplex_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS) -lasound  -lpthread
 
 #AM_CPPFLAGS             = -I$(top_srcdir)/include $(GTKDATABOX_CFLAGS)
 #LDADD                   = $(GTKDATABOX_LIBS)
