@@ -24,7 +24,7 @@ EXTRA_CFLAGS =
 noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest
 noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6 FileWatchThreadedTest
 noinst_PROGRAMS += FileWatchThreadedTest2 FileWatchThreadedTest3
-noinst_PROGRAMS += IIRTest2 HankelTest ToeplitzTest ImpulseBandLimitedTest BandLimiterTest ResamplerTest RealFFTExampleGD IIRSiglution FIRTest2 FIRTestOMP
+noinst_PROGRAMS += IIRTest2 HankelTest ToeplitzTest ImpulseBandLimitedTest BandLimiterTest ResamplerTest RealFFTExampleGD IIRSiglution FIRTestOMP
 #noinst_PROGRAMS += DSFStreamTest
 if !HAVE_EMSCRIPTEN
 noinst_PROGRAMS += FutexTest FutexVsPThreadTest
@@ -107,7 +107,7 @@ EXTRA_CFLAGS += $(SOX_CFLAGS)
 EXTRA_LIBS += $(SOX_LIBS)
 else
 if NOT_MINGW_SYSTEM
-noinst_PROGRAMS += IIOMMapTest IIOTest IIOQueueTest SoxTest SoxTest2 SoxTest3 SoxReadTest
+noinst_PROGRAMS += IIOMMapTest IIOTest IIOQueueTest SoxTest SoxTest2 SoxTest3 SoxReadTest FIRTest2
 EXTRA_CFLAGS += $(SOX_CFLAGS)
 EXTRA_LIBS += $(SOX_LIBS)
 endif
