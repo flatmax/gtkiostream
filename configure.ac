@@ -343,6 +343,15 @@ fi
 #    AC_DEFINE(HAVE_OCTAVE, [], [whether to build in Octave support])
 #fi
 
+AM_CONDITIONAL(HAVE_OPENMP, false)
+if test "x$OPENMP_CFLAGS" == x ; then
+	AC_MSG_WARN([OpenMP not found])
+else
+	AC_MSG_WARN([OpenMP found])
+	AM_CONDITIONAL(HAVE_OPENMP, true)
+	AC_DEFINE(HAVE_OPENMP, [], [whether OpenMP is present])
+fi
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_INLINE
 

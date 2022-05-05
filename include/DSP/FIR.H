@@ -24,7 +24,11 @@
 #include <unsupported/Eigen/FFT>
 
 #ifdef DSP_FIR_USE_OMP
+#ifdef HAVE_OPENMP
 #include <omp.h>
+#else
+#error OPENMP requested, but you openMP wasn not detected on your system
+#endif
 #endif
 
 #define FIR_BLOCKSIZE_MISMATCH_ERROR FIR_ERROR_OFFSET-1
