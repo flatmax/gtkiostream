@@ -65,8 +65,10 @@ class FileWatchThreaded : public ThreadedMethod {
             modified(reinterpret_cast<struct inotify_event *>(p)->name); // call the modified function
           if (reinterpret_cast<struct inotify_event *>(p)->mask & IN_CLOSE_WRITE)
             closeWrite(reinterpret_cast<struct inotify_event *>(p)->name); // call the modified function
+          if (reinterpret_cast<struct inotify_event *>(p)->mask & IN_ATTRIB)
+            attribChange(reinterpret_cast<struct inotify_event *>(p)->name); // call the modified function
             // Other unhandled events which can be added ...
-            // IN_ACCESS, IN_ATTRIB, IN_CLOSE_NOWRITE, IN_CREATE, IN_DELETE, IN_DELETE_SELF,IN_IGNORED
+            // IN_ACCESS, IN_CLOSE_NOWRITE, IN_CREATE, IN_DELETE, IN_DELETE_SELF,IN_IGNORED
             // IN_ISDIR, IN_MOVE_SELF, IN_MOVED_FROM, IN_MOVED_TO, IN_OPEN, IN_Q_OVERFLOW, IN_UNMOUNT
         }
       }
@@ -76,8 +78,7 @@ class FileWatchThreaded : public ThreadedMethod {
     /** Overload this function to deal with IN_MODIFY events
     \param name When watching a directory, the file name modified is given here
     */
-    virtual void modified(char *name){
-    }
+    virtual void modified(char *name){}
 
     /** Overload this function to deal with IN_CLOSE_WRITE events
     \param name When watching a directory, the file name modified is given here
@@ -85,6 +86,11 @@ class FileWatchThreaded : public ThreadedMethod {
     virtual void closeWrite(char *name){
       // printf("FileWatchThreaded::close write\n");
     }
+
+    /** Overload this function to deal with IN_ATTRIB events
+    \param name When watching a directory, the file name modified is given here
+    */
+    virtual void attribChange(char *name){}
 public:
   /// Constructor
   FileWatchThreaded(){
