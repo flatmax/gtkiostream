@@ -61,12 +61,15 @@ class FileWatchThreaded : public ThreadedMethod {
           break;
         }
         for (char *p = (char*)eventBuf; p < eventBuf + numRead; p += sizeof(struct inotify_event) + reinterpret_cast<struct inotify_event *>(p)->len) {
+          // printf("event %s\n",reinterpret_cast<struct inotify_event *>(p)->name);
           if (reinterpret_cast<struct inotify_event *>(p)->mask & IN_MODIFY)
-            modified(reinterpret_cast<struct inotify_event *>(p)->name); // call the modified function
+            modified(reinterpret_cast<struct inotify_event *>(p)->name);
           if (reinterpret_cast<struct inotify_event *>(p)->mask & IN_CLOSE_WRITE)
-            closeWrite(reinterpret_cast<struct inotify_event *>(p)->name); // call the modified function
+            closeWrite(reinterpret_cast<struct inotify_event *>(p)->name);
           if (reinterpret_cast<struct inotify_event *>(p)->mask & IN_ATTRIB)
-            attribChange(reinterpret_cast<struct inotify_event *>(p)->name); // call the modified function
+            attribChange(reinterpret_cast<struct inotify_event *>(p)->name, reinterpret_cast<struct inotify_event *>(p)->wd);
+          if (reinterpret_cast<struct inotify_event *>(p)->mask & IN_DELETE_SELF)
+            deleteSelf(reinterpret_cast<struct inotify_event *>(p)->name);
             // Other unhandled events which can be added ...
             // IN_ACCESS, IN_CLOSE_NOWRITE, IN_CREATE, IN_DELETE, IN_DELETE_SELF,IN_IGNORED
             // IN_ISDIR, IN_MOVE_SELF, IN_MOVED_FROM, IN_MOVED_TO, IN_OPEN, IN_Q_OVERFLOW, IN_UNMOUNT
@@ -89,8 +92,14 @@ class FileWatchThreaded : public ThreadedMethod {
 
     /** Overload this function to deal with IN_ATTRIB events
     \param name When watching a directory, the file name modified is given here
+    \param wd The watch descriptor
     */
-    virtual void attribChange(char *name){}
+    virtual void attribChange(char *name, int wd){}
+
+    /** Overload this function to deal with IN_ATTRIB events
+    \param name When watching a directory, the file name modified is given here
+    */
+    virtual void deleteSelf(char *name){}
 public:
   /// Constructor
   FileWatchThreaded(){
