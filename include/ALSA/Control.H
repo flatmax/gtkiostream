@@ -37,6 +37,8 @@ namespace ALSA {
       unsigned short revents;
       snd_ctl_poll_descriptors_revents(ctl, &fds, 1, &revents);
       if (revents & POLLIN){
+        snd_mixer_handle_events(handle);
+
         snd_ctl_event_t *event;
         snd_ctl_event_alloca(&event);
         int err = snd_ctl_read(ctl, event);
