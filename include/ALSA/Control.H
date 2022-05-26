@@ -46,6 +46,10 @@ namespace ALSA {
 		      return 0;
         std::string elemName(snd_ctl_event_elem_get_name(event));
         MixerElement *me=getElement(elemName.substr(0, elemName.find(' ')));
+        if (me==NULL) {
+          ALSADebug().evaluateError(ALSA_MIXER_NO_ELEMENT_ERROR, "Control::processEvent : element is null\n");
+          return 0;
+        }
         return processEvent(*me);
       }
 

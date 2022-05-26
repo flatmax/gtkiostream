@@ -182,9 +182,12 @@ namespace ALSA {
     /** Given a mixer element name, return the index of the element in the mixerElements
     */
     int getElementIndex(std::string name){
-      for (int i=0; i<mixerElements.size(); i++)
+      if (mixerElements.size()==0)
+        return ALSADebug().evaluateError(ALSA_MIXER_FIND_ELEMENT_ERROR, " element count is 0, have you called Mixer::scanMixer() ?\n");
+      for (int i=0; i<mixerElements.size(); i++){
         if (name.compare(mixerElements[i].name)==0)
           return i;
+      }
       return -1;
     }
 
