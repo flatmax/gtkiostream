@@ -117,6 +117,17 @@ namespace ALSA {
       //   printf("snd_mixer_selem_is_enum_playback %s\n", name);
       // if (snd_mixer_selem_is_enum_capture(elem))
       //   printf("snd_mixer_selem_is_enum_capture %s\n", name);
+      refresh();
+    }
+
+    /** Refresh the state of the mixer element
+    */
+    void refresh(){
+      playbackVolumes.clear();
+      captureVolumes.clear();
+      playbackEnums.clear();
+      captureEnums.clear();
+      enums.clear();
 
       unsigned long chMask=1;
       for (int i=0; i<SND_MIXER_SCHN_LAST; i++)

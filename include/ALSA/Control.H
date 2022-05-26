@@ -50,6 +50,7 @@ namespace ALSA {
           ALSADebug().evaluateError(ALSA_MIXER_NO_ELEMENT_ERROR, "Control::processEvent : element is null\n");
           return 0;
         }
+        me->refresh();
         return processEvent(*me);
       }
 
