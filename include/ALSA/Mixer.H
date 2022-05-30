@@ -32,6 +32,7 @@ namespace ALSA {
   \endcode
   */
   class Mixer {
+  protected:
     snd_mixer_t *handle;
     std::vector<MixerElement> mixerElements; ///< The vector of all mixer elements
 
@@ -89,7 +90,7 @@ namespace ALSA {
     /** register the simple mixer element class
     \return 0 on success, otherwise the error.
     */
-    int registerMixer(){
+    virtual int registerMixer(){
       MIXER_NOT_OPEN_CHECK(handle)
       int err;
       if ((err = snd_mixer_selem_register(handle, NULL, NULL)) < 0) {
@@ -102,7 +103,7 @@ namespace ALSA {
     /** load the mixer elements
     \return 0 on success, otherwise the error.
     */
-    int load(){
+    virtual int load(){
       MIXER_NOT_OPEN_CHECK(handle)
       int err;
       if ((err = snd_mixer_load(handle)) < 0) {
@@ -135,7 +136,7 @@ namespace ALSA {
     /** Scan the mixer to find capabilites and available controls.
     Upon completion, all playback and capture mixer elements are populated
     */
-    void scanMixer(){
+    virtual void scanMixer(){
       if (!handle)
         ALSADebug().evaluateError(ALSA_MIXER_NOT_OPEN_ERROR);
       else {
