@@ -47,10 +47,14 @@ namespace ALSA {
         if (snd_ctl_event_get_type(event) != SND_CTL_EVENT_ELEM)
 		      return 0;
         std::string elemName(snd_ctl_event_elem_get_name(event));
-        MixerElement *me=getElement(elemName.substr(0, elemName.find(' ')));
-        if (me==NULL) {
-          ALSADebug().evaluateError(ALSA_MIXER_NO_ELEMENT_ERROR, "Control::processEvent : element is null\n");
-          return 0;
+        MixerElement *me=getElement(elemName); // try to get the element by its full name first
+        if (me==NULL){ // that didn't work ? Then try to get the element using its shortened name
+          me=getElement(elemName.substr(0, elemName.find(' ')));
+          if (me==NULL) {
+            std::cout<<"Control::processPollEvents : got element name "<<elemName<<std::endl;
+            ALSADebug().evaluateError(ALSA_MIXER_NO_ELEMENT_ERROR, "Control::processEvent : element is null\n");
+            return 0;
+          }
         }
         me->refresh();
         return processEvent(*me);
@@ -62,6 +66,7 @@ namespace ALSA {
 
     /** Overloadable event which is called once a mixer element is changed.
     \param me The mixer element which is altered.
+    \return <0 to stop the thread processing and let it exit.
     */
     virtual int processEvent(MixerElement &me){
       std::cout<<me<<std::endl;
