@@ -131,7 +131,10 @@ class LibWebSockets {
   VIRTUALFN(void, clientWriteable)
   VIRTUALFN2(void, clientReceive, void *, in, size_t, len)
   VIRTUALFN(void, serverWriteable)
-  VIRTUALFN2(void, receive, void *, in, size_t, len)
+  /** Receive virtual function - overload this method to receive messages
+  \returns !=0 to request a clientWriteable or serverWriteable callback
+  */
+  VIRTUALFN2INT(int, receive, void *, in, size_t, len)
 
   static int callback(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len){
     LibWebSockets *lws = static_cast<LibWebSockets *>(lws_context_user(lws_get_context(wsi)));
@@ -157,7 +160,8 @@ class LibWebSockets {
       lws->serverWriteable();
       break;
     case LWS_CALLBACK_RECEIVE:
-      lws->receive(in, len);
+      if (lws->receive(in, len)!=0)
+        lws_callback_on_writable(wsi);
       break;
   	default:
   		break;
