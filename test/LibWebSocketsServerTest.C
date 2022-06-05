@@ -17,9 +17,47 @@ along with GTK+ IOStream
 */
 
 #include "LibWebSockets.H"
+#include <strstream>
+using namespace std;
+
+class LWSTest : public LibWebSockets {
+	string msgData;
+
+	int receive(void *in, size_t len){
+			printf("LWSTest::receive\n");
+			string msgC((char*)in,len);
+		  cout<<msgC<<endl;
+			return 1;
+	}
+
+	void serverWriteable(){
+			printf("LWSTest::serverWritable\n");
+
+			// int flags = lws_write_ws_flags(LWS_WRITE_TEXT, 1, 1);
+			//
+			// /* notice we allowed for LWS_PRE in the payload already */
+			// int m = lws_write(wsi, ((unsigned char *)msgData.c_str()) +
+			// 				LWS_PRE, msdData.size()-LWS_PRE, flags);
+			// if (m < (int)msdData.size()-LWS_PRE) {
+			// 	lwsl_err("ERROR %d writing to ws socket\n", m);
+			// 	return -1;
+			// }
+			//
+			// lwsl_user(" wrote %d: flags: 0x%x first: %d final %d\n",
+			// 		m, flags, pmsg->first, pmsg->final);
+	}
+
+public:
+	LWSTest(int port=0) : LibWebSockets(port) {
+		msgData="";
+		for (int n=0; n<LWS_PRE; n++)
+			msgData+=' ';
+		msgData+="Server says hello!";
+	}
+};
 
 int main(int argc, char *argv[]) {
-	LibWebSockets lws(10001);
+	LWSTest lws(10001);
 	printf("LibWebSockets::LibWebSockets\n");
 
 	lws.run();
