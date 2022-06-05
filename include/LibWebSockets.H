@@ -113,12 +113,15 @@ class LibWebSockets {
   // #define VIRTUALFNNAME(name) name##_static
   // callback functions which take no arguments
 	#define VIRTUALFNDEF(retType, name) virtual retType VIRTUALFNNAME(name) ()
-	#define VIRTUALFNBODY(name) {std::cout<<__func__<<std::endl;}
+	#define VIRTUALFNBODY(name) {lwsl_notice("LibWebSockets::%s\n",__func__);}
 	#define VIRTUALFN(retType, name) VIRTUALFNDEF(retType, name) VIRTUALFNBODY(name)
   // callback functions which take two variables as inputs typically void * and int
-  #define VIRTUALFNDEF2(retType, name, arg1_type, arg1, arg2_type, arg2) static retType VIRTUALFNNAME(name) (arg1_type arg1, arg2_type arg2)
-	#define VIRTUALFNBODY2(name, arg1, arg2) {std::cout<<__func__<<std::endl; std::cout<<arg1<<std::endl; std::cout<<arg2<<std::endl;}
-	#define VIRTUALFN2(retType, name, arg1_type, arg1, arg2_type, arg2) VIRTUALFNDEF2(retType, name, arg1_type, arg1, arg2_type, arg2) VIRTUALFNBODY2(name, arg1, arg2)
+  #define VIRTUALFNDEF2(retType, name, arg1_type, arg1, arg2_type, arg2) virtual retType VIRTUALFNNAME(name) (arg1_type arg1, arg2_type arg2)
+	#define VIRTUALFNBODY2(name, arg1, arg2) {lwsl_notice("LibWebSockets::%s\n",__func__); std::cout<<"arg1: "<<arg1<<"\targ2: "<<arg2<<std::endl;}
+  #define VIRTUALFN2(retType, name, arg1_type, arg1, arg2_type, arg2) VIRTUALFNDEF2(retType, name, arg1_type, arg1, arg2_type, arg2) VIRTUALFNBODY2(name, arg1, arg2)
+
+  #define VIRTUALFNBODY2INT(name, arg1, arg2) {lwsl_notice("LibWebSockets::%s\n",__func__); std::cout<<"arg1: "<<arg1<<"\targ2: "<<arg2<<std::endl; return 0;}
+  #define VIRTUALFN2INT(retType, name, arg1_type, arg1, arg2_type, arg2) VIRTUALFNDEF2(retType, name, arg1_type, arg1, arg2_type, arg2) VIRTUALFNBODY2INT(name, arg1, arg2)
 
   // Define the default virtualisable callback functions
 
@@ -176,6 +179,9 @@ public:
     decommission();
   }
 
+  /** run the libwebsockets service handler.
+  \returns 0 once done
+  */
   virtual int run(){
     while ((lws_service(context, 0) >= 0) && !interrupted)
       ;
