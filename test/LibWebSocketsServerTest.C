@@ -30,21 +30,24 @@ class LWSTest : public LibWebSockets {
 			return 1;
 	}
 
-	void serverWriteable(){
+	void serverWriteable(struct lws *wsi){
 			printf("LWSTest::serverWritable\n");
 
-			// int flags = lws_write_ws_flags(LWS_WRITE_TEXT, 1, 1);
-			//
-			// /* notice we allowed for LWS_PRE in the payload already */
-			// int m = lws_write(wsi, ((unsigned char *)msgData.c_str()) +
-			// 				LWS_PRE, msdData.size()-LWS_PRE, flags);
-			// if (m < (int)msdData.size()-LWS_PRE) {
-			// 	lwsl_err("ERROR %d writing to ws socket\n", m);
-			// 	return -1;
-			// }
-			//
-			// lwsl_user(" wrote %d: flags: 0x%x first: %d final %d\n",
-			// 		m, flags, pmsg->first, pmsg->final);
+			int flags = lws_write_ws_flags(LWS_WRITE_TEXT, 1, 1);
+
+			string msgData;
+			for (int i=0; i<LWS_PRE; i++)
+				msgData+=' ';
+				msgData+="Hi from the terminal";
+			/* notice we allowed for LWS_PRE in the payload already */
+			int m = lws_write(wsi, ((unsigned char *)msgData.c_str()) +
+							LWS_PRE, msgData.size()-LWS_PRE, (lws_write_protocol)flags);
+			if (m < (int)msgData.size()-LWS_PRE) {
+				lwsl_err("ERROR %d writing to ws socket\n", m);
+				// return -1;
+			} else
+				lwsl_user(" wrote %d: flags: 0x%x\n",
+						m, flags);
 	}
 
 public:

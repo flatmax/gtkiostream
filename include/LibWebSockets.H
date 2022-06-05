@@ -130,7 +130,7 @@ class LibWebSockets {
   VIRTUALFN2(void, rawRxFile, void *, in, size_t, len)
   VIRTUALFN(void, clientWriteable)
   VIRTUALFN2(void, clientReceive, void *, in, size_t, len)
-  VIRTUALFN(void, serverWriteable)
+  virtual void serverWriteable(struct lws *wsi)=0;
   /** Receive virtual function - overload this method to receive messages
   \returns !=0 to request a clientWriteable or serverWriteable callback
   */
@@ -157,7 +157,7 @@ class LibWebSockets {
       lws->clientReceive(in, len);
       break;
     case LWS_CALLBACK_SERVER_WRITEABLE:
-      lws->serverWriteable();
+      lws->serverWriteable(wsi);
       break;
     case LWS_CALLBACK_RECEIVE:
       if (lws->receive(in, len)!=0)

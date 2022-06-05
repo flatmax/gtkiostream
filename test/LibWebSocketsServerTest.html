@@ -15,13 +15,14 @@
                ws.onopen = function() {
 
                   // Web Socket is connected, send data using send()
-                  ws.send("Message to send");
+                  ws.send("Hi from the browser");
                   console.log("Message is sent...");
                };
 
                ws.onmessage = function (evt) {
                   var received_msg = evt.data;
                   console.log("Message is received...");
+                  console.log(evt.data)
                };
 
                ws.onclose = function() {
