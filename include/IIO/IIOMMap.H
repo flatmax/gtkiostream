@@ -70,7 +70,7 @@ class MMappedBlocks {
     \return Returns <0 on error.
     */
     int allocate() {
-        cout<<__func__<<endl;
+        std::cout<<__func__<<std::endl;
         int ret = ioctl(fd, IIO_BLOCK_ALLOC_IOCTL, &req);
         if (ret < 0) {
             perror("Failed to allocate memory blocks");
@@ -82,7 +82,7 @@ class MMappedBlocks {
     /** Deallocate kernel space memory.
     */
     void deAllocate() {
-        cout<<__func__<<endl;
+        std::cout<<__func__<<std::endl;
         ioctl(fd, IIO_BLOCK_FREE_IOCTL, 0);
     }
 
@@ -90,25 +90,25 @@ class MMappedBlocks {
     \return Returns !=0 on error.
     */
     int memoryMap() {
-        cout<<__func__<<endl;
-        std::cout << "MMappedBlocks::memoryMap resizing blocks "<<req.count<<endl;
+        std::cout<<__func__<<std::endl;
+        std::cout << "MMappedBlocks::memoryMap resizing blocks "<<req.count<<std::endl;
         blocks.resize(req.count);
         for (uint i = 0; i < req.count; i++) {
-            std::cout << "MMappedBlocks::memoryMap query i="<<i<<endl;
+            std::cout << "MMappedBlocks::memoryMap query i="<<i<<std::endl;
             blocks[i].block.id = i;
             if (ioctl(fd, IIO_BLOCK_QUERY_IOCTL, &blocks[i].block)!=0) {
                 perror("Failed to query block");
                 return IIODebug().evaluateError(IIOMMAP_QUERY_ERROR);
             }
 
-            std::cout << "MMappedBlocks::memoryMap mapping"<<endl;
+            std::cout << "MMappedBlocks::memoryMap mapping"<<std::endl;
             blocks[i].addr = (unsigned short *)mmap(0, blocks[i].block.size, PROT_READ, MAP_SHARED, fd, blocks[i].block.data.offset);
             if (blocks[i].addr == MAP_FAILED) {
                 perror("Failed to mmap block");
                 return IIODebug().evaluateError(IIOMMAP_MMAP_ERROR);
             }
 
-            std::cout << "MMappedBlocks::memoryMap enqueueing "<<endl;
+            std::cout << "MMappedBlocks::memoryMap enqueueing "<<std::endl;
             if (ioctl(fd, IIO_BLOCK_ENQUEUE_IOCTL, &blocks[i].block)!=0) {
                 perror("Failed to enqueue block");
                 return IIODebug().evaluateError(IIOMMAP_ENQUEUE_ERROR);
@@ -122,13 +122,13 @@ class MMappedBlocks {
     /** unmap memory blocks.
     */
     void memoryUnmap() {
-        cout<<__func__<<endl;
+        std::cout<<__func__<<std::endl;
         for (uint i = 0; i < req.count; i++)
             munmap(blocks[i].addr, blocks[i].block.size);
         blocks.resize(0);
     }
 public:
-    vector<struct block> blocks; ///< The block information and address.
+    std::vector<struct block> blocks; ///< The block information and address.
 
     /** Constructor.
     */
@@ -184,7 +184,7 @@ public:
 };
 
 class IIOMMap : public IIO {
-    vector<MMappedBlocks> mMappedBlocks; ///< The memory mapped blocks.
+    std::vector<MMappedBlocks> mMappedBlocks; ///< The memory mapped blocks.
 public:
     IIOMMap() {} ///< Constructor
 
@@ -210,16 +210,16 @@ public:
             return IIODebug().evaluateError(IIO_NODEVICES_ERROR);
         int ret=NO_ERROR;
         for (unsigned int i=0; i<getDeviceCnt(); i++) {
-            std::cout << "opening device "<<i<<endl;
+            std::cout << "opening device "<<i<<std::endl;
             if ((ret=operator[](i).open(O_RDWR))!=NO_ERROR) {
-                ostringstream deviceDetail;
+                std::ostringstream deviceDetail;
                 deviceDetail<<" Device "<<i;
                 IIODebug().evaluateError(ret, deviceDetail.str());
                 break;
             }
         }
 
-        std::cout << "mmapping"<<endl;
+        std::cout << "mmapping"<<std::endl;
         if (ret==NO_ERROR) // init the memory mapped buffers
             resizeMMapBlocks(count, sizeIn);
 
@@ -239,9 +239,9 @@ public:
     int resizeMMapBlocks(int count, int sizeIn) {
         int ret=NO_ERROR;
         mMappedBlocks.resize(IIO::size());
-        std::cout << "mMappedBlocks resized"<<endl;
+        std::cout << "mMappedBlocks resized"<<std::endl;
         for (unsigned int i=0; i<getDeviceCnt(); i++) {
-            std::cout << "resetting mmapped blocks "<<i<<endl;
+            std::cout << "resetting mmapped blocks "<<i<<std::endl;
             int ret=mMappedBlocks[i].reset(operator[](i).getFD(), count, sizeIn*operator[](i).getChCnt()*operator[](i).getChFrameSize());
             if (ret!=NO_ERROR)
                 break;
@@ -269,12 +269,12 @@ public:
         if (mMappedBlocks.size()<=0)
             return IIODebug().evaluateError(IIOMMAP_NOINIT_ERROR);
         if (sizeof(TYPE)!=operator[](0).getChFrameSize()) {
-            ostringstream msg;
+            std::ostringstream msg;
             msg<<"The provided array type has "<<sizeof(TYPE)<<" bytes per sample, where as the IIO devices have "<<getChFrameSize()<<" bytes per sample\n";
             return IIODebug().evaluateError(IIO_ARRAY_FRAME_MISMATCH_ERROR, msg.str());
         }
         if (array.rows()!=N*operator[](0).getChCnt() && array.cols()>getDeviceCnt()) {
-            ostringstream msg;
+            std::ostringstream msg;
             msg<<"The provided array is not shaped correctly, size=("<<array.rows()<<", "<<array.cols()<<") but size=(N*device ch cnt, device cnt) is required, where size=("<<N*getChCnt()<<", "<<getDeviceCnt()<<")\n";
             return IIODebug().evaluateError(IIO_ARRAY_SIZE_MISMATCH_ERROR, msg.str());
         }
@@ -284,14 +284,14 @@ public:
         for (int i=0; i <array.cols(); i++) { // read N samples from each device which is requested
             int ret = ioctl(operator[](i).getFD(), IIO_BLOCK_DEQUEUE_IOCTL, &block);
             if (ret!=0) {
-                ostringstream msg;
-                msg<<"Couldn't dequeue a mmaped block from device "<<i<<endl;
+                std::ostringstream msg;
+                msg<<"Couldn't dequeue a mmaped block from device "<<i<<std::endl;
                 return IIODebug().evaluateError(IIODEVICE_READ_ERROR, msg.str());
             }
             int bytesPerFrame=operator[](i).getChFrameSize()*operator[](i).getChCnt();
             uint bytesToRead=N*bytesPerFrame;
             if (bytesToRead!=block.size) {
-                ostringstream msg;
+                std::ostringstream msg;
                 msg<<"The mmapped block has a size="<<block.size<<" and the input array requires size="<<bytesToRead<<"\n";
                 return IIODebug().evaluateError(IIOMMAP_BLOCK_SIZE_MISMATCH_ERROR, msg.str());
             }
@@ -303,8 +303,8 @@ public:
 
             ret = ioctl(operator[](i).getFD(), IIO_BLOCK_ENQUEUE_IOCTL, &block);
             if (ret!=0) {
-                ostringstream msg;
-                msg<<"Couldn't enqueue the mmaped block to device "<<i<<endl;
+                std::ostringstream msg;
+                msg<<"Couldn't enqueue the mmaped block to device "<<i<<std::endl;
                 return IIODebug().evaluateError(IIODEVICE_READ_ERROR, msg.str());
             }
         }
