@@ -66,7 +66,7 @@ install some prerequisites : g++ make automake libtool pkg-config
 
 For Debian based systems,
 
-    sudo apt install libeigen3-dev libfftw3-dev libsox-dev libasound2-dev #libjack-dev liboctave-dev
+    sudo apt install libeigen3-dev libfftw3-dev libsox-dev libasound2-dev libtool #libjack-dev liboctave-dev
 
 For Fedora Linux, you might want to do, in addition:
 
