@@ -20,7 +20,7 @@
 # Process this file with autoconf to produce a configure script.
 
 m4_define([gtkiostream_current_version], [1]) # ++ if API added (age++), removed, or changed (age=0)
-m4_define([gtkiostream_revision_version], [7]) # ++ if API same but src code change
+m4_define([gtkiostream_revision_version], [8]) # ++ if API same but src code change
 m4_define([gtkiostream_age_version], [0]) # ++ if API added since last release, if API removed or changed then age=0
 m4_define([gtkiostream_version],       [gtkiostream_current_version.gtkiostream_revision_version.gtkiostream_age_version])
 
