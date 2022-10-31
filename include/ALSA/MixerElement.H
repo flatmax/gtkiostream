@@ -30,7 +30,7 @@ namespace ALSA {
   public:
     std::string name; ///< The mixer element name
     snd_mixer_elem_t *elem; ///< The pointer to the element
-    unsigned int index; ///< The mixer element index
+    int index; ///< The mixer element index
     bool hasCommonVolume; ///< element has only one volume control for both playback and capture
     bool isPlaybackMono; ///< 0 if no control is present, 1 if it's present
     bool hasPlaybackVolume; ///< 0 if no control is present, 1 if it's present

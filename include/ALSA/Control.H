@@ -51,9 +51,13 @@ namespace ALSA {
         if (me==NULL){ // that didn't work ? Then try to get the element using its shortened name
           me=getElement(elemName.substr(0, elemName.find(' ')));
           if (me==NULL) {
-            std::cout<<"Control::processPollEvents : got element name "<<elemName<<std::endl;
             ALSADebug().evaluateError(ALSA_MIXER_NO_ELEMENT_ERROR, "Control::processEvent : element is null\n");
-            return 0;
+            MixerElement mixE;
+            mixE.name = snd_ctl_event_elem_get_name(event);
+            mixE.index = -1;
+            std::cout<<"Control::processPollEvents : sending through the event as a dummy with the original name "<<mixE.name<<std::endl;
+            std::cout<<"Control::processPollEvents : sending through the event as a dummy with index =  "<<mixE.index<<std::endl;
+            return processEvent(mixE);
           }
         }
         me->refresh();
