@@ -109,7 +109,7 @@ namespace ALSA {
     /** Free the control pointer.
     \return 0 on success, otherwise the error.
     */
-    int detach(){
+    virtual int detach(){
       if (running()) // if the thread is running
         stop(); // stop the polling thread
       if (ctl)
