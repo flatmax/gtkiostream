@@ -97,6 +97,7 @@ public:
     /** Destructor
     */
     virtual ~Thread(void) {
+      if (thread)
 #ifdef USE_GLIB_THREADS
         g_thread_join(thread);
         thread=NULL;
