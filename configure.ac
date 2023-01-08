@@ -146,6 +146,10 @@ fi
 PKG_CHECK_MODULES([GTK], [gtkdatabox], HAVE_GTK="yes", HAVE_GTK="no")
 AM_CONDITIONAL(HAVE_GTKDATABOX, test x$HAVE_GTK = xyes)
 AM_CONDITIONAL(HAVE_GTK, test x$HAVE_GTK = xyes)
+AC_ARG_ENABLE(gtk, AS_HELP_STRING([--enable-gtk],
+	      [Enable gtk functionality (default: disable)]), [GTK=$enableval], [GTK=disable])
+if test "x$GTK" = xyes ; then
+
 PKG_CHECK_MODULES([GTK3], [gtk+-3.0], HAVE_GTK3="yes", HAVE_GTK3="no")
 PKG_CHECK_MODULES([GTK2], [gtk+-2.0], HAVE_GTK2="yes", HAVE_GTK2="no")
 AM_CONDITIONAL(HAVE_GTK2, test x$HAVE_GTK2 = xyes)
@@ -183,6 +187,12 @@ if test "x$HAVE_GTK" == xyes ; then
     AC_DEFINE(HAVE_GTK2, [], [whether to build components relying on GTK])
 fi
 fi
+fi
+else
+HAVE_GTK3="no"
+HAVE_GTK2="no"
+AM_CONDITIONAL(HAVE_GTK2, test x$HAVE_GTK2 = xyes)
+AM_CONDITIONAL(HAVE_GTK3, test x$HAVE_GTK3 = xyes)
 fi
 
 # Checks for header files.
