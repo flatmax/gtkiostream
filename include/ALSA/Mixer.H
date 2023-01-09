@@ -133,6 +133,13 @@ namespace ALSA {
       return err;
     }
 
+    /** Adds an element to the vector of mixerElements
+    \param elem the alsa element
+    */
+    virtual void addElem(snd_mixer_elem_t *elem){
+        mixerElements.push_back(MixerElement(elem));
+    }
+
     /** Scan the mixer to find capabilites and available controls.
     Upon completion, all playback and capture mixer elements are populated
     */
@@ -141,9 +148,8 @@ namespace ALSA {
         ALSADebug().evaluateError(ALSA_MIXER_NOT_OPEN_ERROR);
       else {
         mixerElements.resize(0);
-        for (snd_mixer_elem_t *elem = snd_mixer_first_elem(handle); elem; elem = snd_mixer_elem_next(elem)){
-          mixerElements.push_back(MixerElement(elem));
-        }
+        for (snd_mixer_elem_t *elem = snd_mixer_first_elem(handle); elem; elem = snd_mixer_elem_next(elem))
+          addElem(elem);
       }
     }
 
