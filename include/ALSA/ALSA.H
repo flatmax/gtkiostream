@@ -54,6 +54,7 @@ namespace ALSA {
 #include <ALSA/Capture.H>
 #include <ALSA/FullDuplex.H>
 #include <ALSA/Mixer.H>
+#include <ALSA/MixerEvents.H>
 #include <ALSA/Control.H>
 #include <ALSA/Info.H>
 
