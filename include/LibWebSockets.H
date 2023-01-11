@@ -18,6 +18,7 @@
 #ifndef LIBWEBSOCKETS_H
 #define LIBWEBSOCKETS_H
 #include <libwebsockets.h>
+#include <signal.h>
 #include "Debug.H"
 
 #include <string>
