@@ -298,7 +298,7 @@ public:
 
             TYPE *dataSrc=mMappedBlocks[i].blocks[block.id].addr;
             TYPE *dataDest=(unsigned short *)array.col(i).data();
-            for (int j=0; j<N*operator[](i).getChCnt(); j++)
+            for (uint j=0; j<N*operator[](i).getChCnt(); j++)
                 dataDest[j]=dataSrc[j];
 
             ret = ioctl(operator[](i).getFD(), IIO_BLOCK_ENQUEUE_IOCTL, &block);
