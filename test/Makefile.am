@@ -363,7 +363,7 @@ BitStreamTest6_LDADD = $(top_builddir)/src/libgtkIOStream.la $(LDADD) $(FFTW3_LI
 ## $(FFTW3_LIBS)
 
 if HAVE_ALSA
-noinst_PROGRAMS += ALSAMixerTest ALSAControlTest ALSAThreadPriorityTest
+noinst_PROGRAMS += ALSAMixerTest ALSAControlTest ALSAThreadPriorityTest ALSAMixerEventsTest
 if HAVE_SOX
 noinst_PROGRAMS += ALSAPlaybackTest ALSACaptureTest ALSAFullDuplexTest ALSAFullDuplexMinScan ALSAInfoTest
 endif
@@ -395,6 +395,10 @@ ALSAFullDuplexMinScan_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)
 ALSAMixerTest_SOURCES = ALSAMixerTest.C
 ALSAMixerTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
 ALSAMixerTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  $(LDADD)
+
+ALSAMixerEventsTest_SOURCES = ALSAMixerEventsTest.C
+ALSAMixerEventsTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
+ALSAMixerEventsTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  $(LDADD)
 
 ALSAControlTest_SOURCES = ALSAControlTest.C
 ALSAControlTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
