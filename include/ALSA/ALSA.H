@@ -93,5 +93,21 @@ namespace ALSA {
 
 		return 0;
 	}
+
+	/** Set the current thread's priority
+	\param priority <0 implies maximum priority, otherwise must be between sched_get_priority_max and sched_get_priority_min
+	\return 0 on success, error code otherwise
+	*/
+	static int getThreadPriority(void){
+		int ret;
+		pthread_t thisThread = pthread_self(); // get the current thread
+		struct sched_param origParams, params;
+		int origPolicy;
+
+		if ((ret = pthread_getschedparam(thisThread, &origPolicy, &origParams))!=0)
+			return ALSA::ALSADebug().evaluateError(ret, "when trying to pthread_getschedparam\n");
+		printf("ALSA::Stream::changeThreadPriority : Current thread policy %d and priority %d\n", origPolicy, origParams.sched_priority);
+		return origParams.sched_priority;
+	}
 }
 #endif // ALSA_H
