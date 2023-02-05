@@ -31,5 +31,11 @@ int main(int argc, char *argv[]){
 #ifdef HAVE_SOX
   ibl.saveToFile("/tmp/test.wav", fs);
 #endif
+  if (ret>0)
+    return ret;
+  ret = ibl.generateImpulseShift(s, fs, fi, fa);
+#ifdef HAVE_SOX
+  ibl.saveToFile("/tmp/testShifted.wav", fs);
+#endif
   return ret;
 }

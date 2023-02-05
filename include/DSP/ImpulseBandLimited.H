@@ -61,6 +61,15 @@ public:
   */
   int generateImpulse(float s, float fs, float fi, float fa);
 
+  /** Generate the band limited impulse response and circularly shift it.
+  \param s The duration in seconds
+  \param fs The sample rate in Hz
+  \param fi The minimum frequency to keep (lower bound)
+  \param fa The maximum frequency to keep (upper bound)
+  \return Negative value on error and the current impulse state is left unchanged.
+  */
+  int generateImpulseShift(float s, float fs, float fi, float fa);
+
 #ifdef HAVE_SOX
     /** Save the impulse to file
     \param fileName The name of the file to load the time domain coefficients from

@@ -36,6 +36,21 @@ int ImpulseBandLimited<FP_TYPE>::saveToFile(const std::string fileName, float fs
 #endif
 
 template<typename FP_TYPE>
+int ImpulseBandLimited<FP_TYPE>::generateImpulseShift(float s, float fs, float fi, float fa){
+  int ret=generateImpulse(s, fs, fi, fa);
+  if (ret<0)
+    return ret;
+  // circularly shift the impulse response
+  Eigen::Array<FP_TYPE, Eigen::Dynamic, 1> shifted(this->rows(), this->cols());
+  int Nb = (int)ceil((double)this->rows()/2.);
+  int Nt = (int)floor((double)this->rows()/2.);
+  shifted.topRows(Nt) = this->bottomRows(Nt);
+  shifted.bottomRows(Nb) = this->topRows(Nb);
+  *static_cast<Eigen::Array<FP_TYPE, Eigen::Dynamic, 1>*>(this) = shifted;
+  return 0;
+}
+
+template<typename FP_TYPE>
 int ImpulseBandLimited<FP_TYPE>::generateImpulse(float s, float fs, float fi, float fa){
   if (s<=0. || fs<=0. || fi<0. || fa>fs/2.)
     return Debug().evaluateError(EINVAL, "Duration is incorrect, ensure s>0");
