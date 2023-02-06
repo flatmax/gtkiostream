@@ -17,11 +17,7 @@
 #ifndef ALSA_H
 #define ALSA_H
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wignored-attributes"
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
-#pragma GCC diagnostic pop
 
 namespace ALSA {
 

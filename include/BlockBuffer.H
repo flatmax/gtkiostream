@@ -19,11 +19,7 @@
 
 #include <queue>
 #include <Thread.H>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wignored-attributes"
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
-#pragma GCC diagnostic pop
 
 #define BLOCK_BUFFER_DEFAULT_COUNT 3
 
