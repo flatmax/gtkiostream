@@ -20,7 +20,12 @@ AUTOMAKE_OPTIONS = foreign subdir-objects
 SUBDIRS = src api include
 
 if !HAVE_EMSCRIPTEN
-SUBDIRS += applications test
+SUBDIRS += applications
+
+if HAVE_TESTS
+SUBDIRS += test
+endif
+
 endif
 
 ACLOCAL_AMFLAGS = -I m4
