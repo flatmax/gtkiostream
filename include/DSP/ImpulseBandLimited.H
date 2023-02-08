@@ -50,6 +50,16 @@ class ImpulseBandLimited : public Eigen::Array<FP_TYPE, Eigen::Dynamic, 1> {
   // using Eigen::Array<FP_TYPE, Eigen::Dynamic, 1>::cols;
   // using Eigen::Array<FP_TYPE, Eigen::Dynamic, 1>::block;
 
+protected:
+  /** Before entering setMag, the amplitude in the DFT domain is unity everywhere.
+  This method zeros bands which we don't want power in.
+  \param X The unity DFT domain impulse response of a perfect impulse
+  \param fs The sample rate in Hz
+  \param fi The minimum frequency to keep (lower bound)
+  \param fa The maximum frequency to keep (upper bound)
+  */
+  virtual void setMag(const Eigen::Array<typename Eigen::FFT<double>::Complex, Eigen::Dynamic, 1> &X, float fs, float fi, float fa);
+
 public:
 
   /** Generate the band limited impulse response.
@@ -59,7 +69,7 @@ public:
   \param fa The maximum frequency to keep (upper bound)
   \return Negative value on error and the current impulse state is left unchanged.
   */
-  int generateImpulse(float s, float fs, float fi, float fa);
+  virtual int generateImpulse(float s, float fs, float fi, float fa);
 
   /** Generate the band limited impulse response and circularly shift it.
   \param s The duration in seconds
@@ -68,7 +78,7 @@ public:
   \param fa The maximum frequency to keep (upper bound)
   \return Negative value on error and the current impulse state is left unchanged.
   */
-  int generateImpulseShift(float s, float fs, float fi, float fa);
+  virtual int generateImpulseShift(float s, float fs, float fi, float fa);
 
 #ifdef HAVE_SOX
     /** Save the impulse to file

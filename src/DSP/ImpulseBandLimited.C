@@ -18,6 +18,8 @@
 #include "DSP/ImpulseBandLimited.H"
 #include <limits>
 
+using namespace Eigen;
+
 #ifdef HAVE_SOX
 #include <Sox.H>
 
@@ -41,13 +43,29 @@ int ImpulseBandLimited<FP_TYPE>::generateImpulseShift(float s, float fs, float f
   if (ret<0)
     return ret;
   // circularly shift the impulse response
-  Eigen::Array<FP_TYPE, Eigen::Dynamic, 1> shifted(this->rows(), this->cols());
+  Array<FP_TYPE, Dynamic, 1> shifted(this->rows(), this->cols());
   int Nb = (int)ceil((double)this->rows()/2.);
   int Nt = (int)floor((double)this->rows()/2.);
   shifted.topRows(Nt) = this->bottomRows(Nt);
   shifted.bottomRows(Nb) = this->topRows(Nb);
-  *static_cast<Eigen::Array<FP_TYPE, Eigen::Dynamic, 1>*>(this) = shifted;
+  *static_cast<Array<FP_TYPE, Dynamic, 1>*>(this) = shifted;
   return 0;
+}
+
+template<typename FP_TYPE>
+void ImpulseBandLimited<FP_TYPE>::setMag(Array<typename FFT<double>::Complex, Dynamic, 1> const &X, float fs, float fi, float fa){
+  // zero out of band data
+  int N=X.rows(); // the number of samples
+  int cnt=(int)(fi/(fs/(float)N));
+  if (cnt>0)
+    const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).block(0,0,cnt,1).setZero(); // low freq
+  int start=(N-(int)(fi/(fs/(float)N))+1);
+  cnt=(N-1)-start+1;
+  if (cnt>0)
+    const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).block(start,0,cnt,1).setZero(); // high freq
+  start=(int)(fa/(fs/(float)N))+1;
+  cnt=(int)((fs-fa)/(fs/(float)N))-1-start+1;
+  const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).block(start,0,cnt,1).setZero(); // mid freq
 }
 
 template<typename FP_TYPE>
@@ -61,29 +79,19 @@ int ImpulseBandLimited<FP_TYPE>::generateImpulse(float s, float fs, float fi, fl
   if (fa>fs/2. || fa<0)
     return Debug().evaluateError(EINVAL, "Maximum frequency is incorrect, ensure fs/2>=fa>=0");
   int N=round(s*fs); // the number of samples'
-  Eigen::Array<double, Eigen::Dynamic, 1> x(N,1);
+  Array<double, Dynamic, 1> x(N,1);
   x.setZero(); // initialise the impulse
   x(0,0)=1.;
-  Eigen::Array<typename Eigen::FFT<double>::Complex, Eigen::Dynamic, 1> X(x.rows(), 1); // The DFT of the x
-  Eigen::FFT<double> fft; // The fast Fourier transform
+  Array<typename FFT<double>::Complex, Dynamic, 1> X(x.rows(), 1); // The DFT of the x
+  FFT<double> fft; // The fast Fourier transform
   fft.fwd(X.data(), x.data(), x.rows()); // find the DFT of x
 
-  // zero out of band data
-  int cnt=(int)(fi/(fs/(float)N));
-  if (cnt>0)
-    X.block(0,0,cnt,1).setZero(); // low freq
-  int start=(N-(int)(fi/(fs/(float)N))+1);
-  cnt=(N-1)-start+1;
-  if (cnt>0)
-    X.block(start,0,cnt,1).setZero(); // high freq
-  start=(int)(fa/(fs/(float)N))+1;
-  cnt=(int)((fs-fa)/(fs/(float)N))-1-start+1;
-  X.block(start,0,cnt,1).setZero(); // mid freq
+  setMag(X, fs, fi, fa); // adjust the magnitude
 
   fft.inv(x.data(), X.data(), X.rows()); // find the iDFT of X
   if (0. == (double)((FP_TYPE)0.1)) // scale if necessary (i.e. FP_TYPE is not a floating point type)
     x*=std::numeric_limits<FP_TYPE>::max();
-  *(Eigen::Array<FP_TYPE, Eigen::Dynamic, 1>*)this=x.cast<FP_TYPE>(); // copy over
+  *(Array<FP_TYPE, Dynamic, 1>*)this=x.cast<FP_TYPE>(); // copy over
   return 0;
 }
 
