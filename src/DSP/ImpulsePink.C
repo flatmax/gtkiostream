@@ -28,12 +28,12 @@ void ImpulsePink<FP_TYPE>::setMag(Array<typename FFT<double>::Complex, Dynamic, 
   int N=X.rows(); // the number of samples
   int No2 = (int)ceil((float)N/2.);
   Array<double, Dynamic, 1> sf=Array<double, Dynamic, 1>::LinSpaced(No2,1.,(double)No2);
-  std::cout<<"XOrig=["<<X<<"];"<<std::endl;
+  // std::cout<<"XOrig=["<<X<<"];"<<std::endl;
   sf=sf.sqrt();
   const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).topRows(No2)/=sf;
   No2 = (int)floor((float)N/2.);
   const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).bottomRows(No2)*=sf.topRows(No2).colwise().reverse();
-  std::cout<<"XFinal=["<<X<<"];"<<std::endl;
+  // std::cout<<"XFinal=["<<X<<"];"<<std::endl;
 }
 
 template class ImpulsePink<short int>;
