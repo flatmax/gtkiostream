@@ -42,6 +42,9 @@ namespace ALSA {
 	#define ALSA_MIXER_NO_ENUM_ERROR -18+ALSA_ERROR_OFFSET ///< error this mixer element is not a generic enum
 	#define ALSA_INFO_NOT_OPEN_ERROR -19+ALSA_ERROR_OFFSET ///< error when info pointer is null
 	#define ALSA_MIXER_NO_ELEMENT_ERROR -20+ALSA_ERROR_OFFSET ///< error the specified mixer element is null
+	#define ALSA_CONFIG_NOT_OPEN_ERROR -21+ALSA_ERROR_OFFSET ///< error when the config file isn't open
+	#define ALSA_UNHANDLED_TYPE -22+ALSA_ERROR_OFFSET ///< error when trying to handle an unknown type
+
 	class ALSADebug : public Debug {
 	public:
 		ALSADebug(void) {
@@ -66,6 +69,8 @@ namespace ALSA {
 			errors[ALSA_MIXER_NO_ENUM_ERROR]=std::string("That mixer element is not an enum control.");
 			errors[ALSA_INFO_NOT_OPEN_ERROR]=std::string("The info structure isn't allocated. Info::getInfo first.");
 			errors[ALSA_MIXER_NO_ELEMENT_ERROR]=std::string("The mixer element was null or incorrectly specified.");
+			errors[ALSA_CONFIG_NOT_OPEN_ERROR]=std::string("The config file couldn't be opened or wasn't open.");
+			errors[ALSA_UNHANDLED_TYPE]=std::string("The type found was not handleable.");
 
 			#endif
 		}

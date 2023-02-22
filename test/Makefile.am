@@ -367,7 +367,7 @@ BitStreamTest6_LDADD = $(top_builddir)/src/libgtkIOStream.la $(LDADD) $(FFTW3_LI
 ## $(FFTW3_LIBS)
 
 if HAVE_ALSA
-noinst_PROGRAMS += ALSAMixerTest ALSAControlTest ALSAThreadPriorityTest ALSAMixerEventsTest
+noinst_PROGRAMS += ALSAMixerTest ALSAControlTest ALSAConfigTest ALSAThreadPriorityTest ALSAMixerEventsTest
 if HAVE_SOX
 noinst_PROGRAMS += ALSAPlaybackTest ALSACaptureTest ALSAFullDuplexTest ALSAFullDuplexMinScan ALSAInfoTest
 endif
@@ -407,6 +407,10 @@ ALSAMixerEventsTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  
 ALSAControlTest_SOURCES = ALSAControlTest.C
 ALSAControlTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
 ALSAControlTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  $(LDADD)
+
+ALSAConfigTest_SOURCES = ALSAConfigTest.C
+ALSAConfigTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(ALSA_CFLAGS) $(EIGEN_CFLAGS)
+ALSAConfigTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(ALSA_LIBS)  $(LDADD)
 
 pkglib_LTLIBRARIES = libasound_module_pcm_ALSAPluginTest.la libasound_module_pcm_ALSAExternalPluginTest.la
 libasound_module_pcm_ALSAPluginTest_la_SOURCES = ALSAPluginTest.C

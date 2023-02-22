@@ -41,7 +41,7 @@ nobase_oldinclude_HEADERS = mffm/BST.H mffm/HeapTreeType.H mffm/HeapTree.H mffm/
                             AudioMask/MooreSpread.H AudioMask/AudioMaskCommon.H \
                             IIO/IIO.H IIO/IIODevice.H IIO/IIOChannel.H IIO/IIOThreaded.H IIO/IIOThreadedQ.H IIO/IIOMMap.H posixForMicrosoft/dirent.h \
                             ALSA/ALSA.H ALSA/ALSAExternalPlugin.H ALSA/FullDuplex.H ALSA/PCM.H ALSA/Software.H \
-														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H  \
+														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H  ALSA/Config.H \
                             ALSA/Mixer.H ALSA/MixerElement.H ALSA/ALSADebug.H ALSA/Control.H ALSA/MixerElementTypes.H ALSA/Info.H ALSA/MixerEvents.H
 nobase_oldinclude_HEADERS += DSP/IIR.H DSP/IIRCascade.H DSP/FIR.H DSP/Decomposition.H DSP/OverlapAdd.H DSP/ImpulseBandLimited.H DSP/Hankel.H DSP/Toeplitz.H \
 														 DSP/Resampler.H DSP/BandLimiter.H DSP/ImpulsePink.H

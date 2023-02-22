@@ -31,6 +31,10 @@ namespace ALSA {
 	#define CONTROL_NOT_OPEN_CHECK_TYPED(ctl, type) {printf("\t\tfunc: %s\n",__func__); CONTROL_NOT_OPEN_CHECK_NO_PRINT(ctl, type)}
 	#define CONTROL_NOT_OPEN_CHECK(ctl) CONTROL_NOT_OPEN_CHECK_TYPED(ctl, int)
 
+	#define CFG_NOT_OPEN_CHECK_NO_PRINT(ctl, type) {if (!ctl) return (type)ALSADebug().evaluateError(ALSA_CONFIG_NOT_OPEN_ERROR);}
+	#define CFG_NOT_OPEN_CHECK_TYPED(ctl, type) {printf("\t\tfunc: %s\n",__func__); CFG_NOT_OPEN_CHECK_NO_PRINT(ctl, type)}
+	#define CFG_NOT_OPEN_CHECK(ctl) CFG_NOT_OPEN_CHECK_TYPED(ctl, int)
+
 	#define INFO_NOT_OPEN_CHECK_NO_PRINT(info, type) {if (!info) return (type)ALSADebug().evaluateError(ALSA_INFO_NOT_OPEN_ERROR);}
 	#define INFO_NOT_OPEN_CHECK_TYPED(info, type) {printf("\t\tfunc: %s\n",__func__); INFO_NOT_OPEN_CHECK_NO_PRINT(info, type)}
 	#define INFO_NOT_OPEN_CHECK_STR(info, dbgClass) {printf("\t\tfunc: %s\n",__func__); if (!info) return dbgClass.errors[ALSA_INFO_NOT_OPEN_ERROR].c_str();}
@@ -52,6 +56,7 @@ namespace ALSA {
 #include <ALSA/Mixer.H>
 #include <ALSA/MixerEvents.H>
 #include <ALSA/Control.H>
+#include <ALSA/Config.H>
 #include <ALSA/Info.H>
 
 namespace ALSA {
