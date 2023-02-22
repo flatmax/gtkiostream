@@ -19,7 +19,7 @@
 
 using namespace Eigen;
 
-#include <iostream>
+// #include <iostream>
 
 template<typename FP_TYPE>
 void ImpulsePink<FP_TYPE>::setMag(Array<typename FFT<double>::Complex, Dynamic, 1> const &X, float fs, float fi, float fa){

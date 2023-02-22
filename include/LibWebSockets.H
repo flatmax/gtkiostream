@@ -22,7 +22,7 @@
 #include "Debug.H"
 
 #include <string>
-#include <iostream>
+//#include <iostream>
 
 #define LIBWEBSOCKETS_CREATECONTEXT_ERROR LIBWEBSOCKETS_ERROR_OFFSET-1
 
