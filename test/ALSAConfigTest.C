@@ -47,9 +47,17 @@ int main(int argc, char *argv[]) {
 
 	key="pcm.dmixOut.slave";
 	err=config.search<int>(key, vali);
-	if (err)
-		return err;
-	cout<<"key "<<key<<" val="<<vali<<endl;
+	if (!err){
+		cout<<"this should be an error but isn't"<<endl;
+		return -1;
+	}
+
+	Config config2;
+	err=config2.search<string>(key, vals);
+	if (!err){
+		cout<<"this should be an error but isn't"<<endl;
+		return -1;
+	}
 
 	return err;
 }
