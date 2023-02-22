@@ -21,26 +21,36 @@
 #include <sstream>
 
 namespace ALSA {
+  /** A class to get keys from ALSA configuration files such as alsa.conf and .asoundrc files.
+  */
   class Config {
     snd_config_t *cfg; ///< The config pointer
 
-    void close(){
+    /** If cfg is valid, delete it and set it to null.
+    */
+    void destroy(){
       if (cfg)
         snd_config_delete(cfg);
       cfg=NULL;
     }
 
   public:
+    /// Constructor
     Config(){
       cfg=NULL;
     }
 
+    /// Destructor
     virtual ~Config(){
-      close();
+      destroy();
     }
 
+    /** load and parse an ALSA configuration file
+    \param file The filename (fully pathed) to load
+    \return 0 on success.
+    */
     int load(std::string file){
-      close();
+      destroy();
       int ret=snd_config_top(&cfg);
       if (ret)
         return ALSADebug().evaluateError(ret," When attempting to open the file.\n");
@@ -85,7 +95,7 @@ namespace ALSA {
     */
     template<typename TYPE>
     int search(std::string key, TYPE &ret){
-      CFG_NOT_OPEN_CHECK_NO_PRINT(cfg, int) // check config is open
+      CFG_NOT_OPEN_CHECK_NO_PRINT(cfg,int) // check config is open
       std::stringstream errMsg;
       snd_config_t *conf;
       int err=snd_config_search(cfg, key.c_str(), &conf);
