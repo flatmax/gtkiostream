@@ -20,8 +20,8 @@
 
 #include "ImpulseBandLimited.H"
 
-/** Class to implement a bandlimited impulse. The impulse is held in the inherited Eigen::Array
-\example ImpulseBandLimitedTest.C
+/** Class to implement bandlimited pink noise. The response is held in the inherited Eigen::Array
+\example ImpulsePinkTest.C
 */
 template<typename FP_TYPE>
 class ImpulsePink : public ImpulseBandLimited<FP_TYPE> {
