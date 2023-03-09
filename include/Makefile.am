@@ -44,7 +44,7 @@ nobase_oldinclude_HEADERS = mffm/BST.H mffm/HeapTreeType.H mffm/HeapTree.H mffm/
 														ALSA/Capture.H ALSA/Hardware.H ALSA/Playback.H ALSA/Stream.H  ALSA/Config.H \
                             ALSA/Mixer.H ALSA/MixerElement.H ALSA/ALSADebug.H ALSA/Control.H ALSA/MixerElementTypes.H ALSA/Info.H ALSA/MixerEvents.H
 nobase_oldinclude_HEADERS += DSP/IIR.H DSP/IIRCascade.H DSP/FIR.H DSP/Decomposition.H DSP/OverlapAdd.H DSP/ImpulseBandLimited.H DSP/Hankel.H DSP/Toeplitz.H \
-														 DSP/Resampler.H DSP/BandLimiter.H DSP/ImpulsePink.H
+														 DSP/Resampler.H DSP/BandLimiter.H DSP/ImpulsePink.H DSP/ImpulsePinkInv.H
 nobase_oldinclude_HEADERS += xpm/play.xpm
 
 EXTRA_DIST = Examples.H

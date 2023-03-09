@@ -24,7 +24,7 @@ EXTRA_CFLAGS =
 noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest
 noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6 FileWatchThreadedTest
 noinst_PROGRAMS += FileWatchThreadedTest2 FileWatchThreadedTest3
-noinst_PROGRAMS += IIRTest2 HankelTest ToeplitzTest ImpulseBandLimitedTest ImpulsePinkTest BandLimiterTest ResamplerTest RealFFTExampleGD IIRSiglution
+noinst_PROGRAMS += IIRTest2 HankelTest ToeplitzTest ImpulseBandLimitedTest ImpulsePinkTest ImpulsePinkInvTest BandLimiterTest ResamplerTest RealFFTExampleGD IIRSiglution
 #noinst_PROGRAMS += DSFStreamTest
 if !HAVE_EMSCRIPTEN
 noinst_PROGRAMS += FutexTest FutexVsPThreadTest
@@ -284,6 +284,10 @@ ImpulseBandLimitedTest_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src
 ImpulsePinkTest_SOURCES = ImpulsePinkTest.C
 ImpulsePinkTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
 ImpulsePinkTest_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
+
+ImpulsePinkInvTest_SOURCES = ImpulsePinkInvTest.C
+ImpulsePinkInvTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
+ImpulsePinkInvTest_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
 
 BandLimiterTest_SOURCES = BandLimiterTest.C
 BandLimiterTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
