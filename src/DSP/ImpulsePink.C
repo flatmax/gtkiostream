@@ -32,7 +32,8 @@ void ImpulsePink<FP_TYPE>::setMag(Array<typename FFT<double>::Complex, Dynamic, 
   sf=sf.sqrt();
   const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).topRows(No2)/=sf;
   No2 = (int)floor((float)N/2.);
-  const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).bottomRows(No2)*=sf.topRows(No2).colwise().reverse();
+  // sf=Array<double, Dynamic, 1>::LinSpaced(No2,1.,(double)No2);
+  const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).bottomRows(No2)/=sf.topRows(No2).colwise().reverse();
   // std::cout<<"XFinal=["<<X<<"];"<<std::endl;
 }
 

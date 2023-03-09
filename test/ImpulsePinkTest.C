@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
   float fi=100.;
   float fa=10000.;
 
-  ImpulsePink<int> ip;
+  ImpulsePink<float> ip;
   int ret = ip.generateImpulse(s, fs, fi, fa);
 #ifdef HAVE_SOX
   ip.saveToFile("/tmp/test.wav", fs);
