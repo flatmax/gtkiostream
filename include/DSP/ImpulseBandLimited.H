@@ -61,6 +61,10 @@ protected:
   virtual void setMag(const Eigen::Array<typename Eigen::FFT<double>::Complex, Eigen::Dynamic, 1> &X, float fs, float fi, float fa);
 
 public:
+  /// Empty constructor (some embedded builds fail without this present)
+  ImpulseBandLimited(){}
+  /// Empty destructor
+  virtual ~ImpulseBandLimited(){}
 
   /** Generate the band limited impulse response.
   \param s The duration in seconds
