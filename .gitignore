@@ -66,3 +66,4 @@ webcomponents/dsp/libdspNode.js
 ALSAFullDuplex
 FIRTestOMP
 ALSAMixerEvents
+settings.json
