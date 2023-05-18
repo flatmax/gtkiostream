@@ -27,7 +27,7 @@
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #else
-#error OPENMP requested, but you openMP wasn not detected on your system
+#error OPENMP requested, but openMP was not detected on your system
 #endif
 #endif
 
