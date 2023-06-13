@@ -30,7 +30,7 @@ int printUsage(string name, int chCnt, unsigned int N, unsigned int fs, char typ
     cout<<"     -c : The number of channels : (-c "<<chCnt<<")"<<endl;
     cout<<"     -N : The number of samples : (-N "<<N<<")"<<endl;
     cout<<"     -r : The sample rate to use in Hz : (-r "<<fs<<")"<<endl;
-    cout<<"     -t : Use noise (n) or an impulse (i) :  (-t "<<type<<")"<<endl;
+    cout<<"     -t : Use noise (n) or an impulse (i) or an imulse with (h) hushed very low level noise :  (-t "<<type<<")"<<endl;
     cout<<"     -S : Log2 step filter sizes down every 2 channels (not with -t i) :  (-S "<<logStep<<")"<<endl;
     Sox<float> sox;
     vector<string> formats=sox.availableFormats();
@@ -78,14 +78,28 @@ int main(int argc, char *argv[]) {
 
   Eigen::Array<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> filters(N, chCnt);
   filters.setZero();
-  if (type=='i'){
-    printf("Generating an impulse filter.\n");
-    filters.row(0)=maxVal;
-  } else {
-    printf("Generating a noise filter.\n");
-    filters.setRandom();
-    filters=filters/2;
-    maxVal=filters.maxCoeff();
+  switch (type){
+    case 'i':
+      printf("Generating an impulse filter.\n");
+      filters.row(0)=maxVal;
+      break;
+    case 'h':
+      printf("Generating an impulse filter with a very low level hushed noise.\n");
+      filters.setRandom();
+      filters=filters/(int)pow(2.,24.);
+      filters.row(0)=(int)pow(2.,31.);
+      maxVal=filters.maxCoeff();
+      break;
+    case 'n':
+      printf("Generating a noise filter.\n");
+      filters.setRandom();
+      filters=filters/2;
+      maxVal=filters.maxCoeff();
+      break;
+    default:
+      printf("Unknown filter type %c.\n", type);
+      return -1;
+      break;
   }
   if (logStep) // put zeros at the end of filters, halving effective lengths every 2 channels
     for (int m=2; m<(filters.cols()-1); m+=2)

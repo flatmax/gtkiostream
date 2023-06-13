@@ -22,6 +22,7 @@ using namespace std;
 using namespace ALSA;
 
 int main(int argc, char *argv[]) {
+
 	if (argc<2){
     cout<<"Usage:\n"<<argv[0]<<" alsa.conf or .asoundrc or oher alsa config file path/name"<<endl;
     return -1;
@@ -33,10 +34,19 @@ int main(int argc, char *argv[]) {
 
 	string vals;
 	string key("pcm.fir32.type");
+	err=config.keyExists(key);
+	if (err)
+		return err;
+	cout<<"key "<<key<<" exists"<<endl;
 	err=config.search<string>(key, vals);
 	if (err)
 		return err;
 	cout<<"key "<<key<<" val="<<vals<<endl;
+
+	key="thisDoesntExist";
+	err=config.keyExists(key);
+	if (err)
+		cout<<"key "<<key<<" doesn't exist"<<endl;
 
 	key="pcm.dmixOut.slave.period_size";
 	int vali;

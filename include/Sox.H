@@ -45,6 +45,8 @@ using namespace std;
 
 #include "gtkiostream_config.h"
 
+#include <sys/sysinfo.h>
+
 /** Debug class for Sox
 */
 class SoxDebug : virtual public Debug {
@@ -154,8 +156,13 @@ public:
 #else
                 count = in->signal.length; // emscripten reading afrom memory may not contain the correct variables here - default to a larger number
 #endif
-            // else
-             count *= in->signal.channels;
+            struct sysinfo info;
+            if (sysinfo(&info) != 0) // estimate the free ram
+                return retVal;
+            unsigned long freeRam = info.freeram * info.mem_unit;
+            if (count*sizeof(sox_sample_t) > freeRam)
+                count=freeRam/sizeof(sox_sample_t)/4/in->signal.channels; // allow 1/5th of the available ram as a maximum
+            count *= in->signal.channels;
             Eigen::Array<sox_sample_t, Eigen::Dynamic, Eigen::Dynamic> readData(count,1); // generate the necessary data store to read into.
             size_t readCount=sox_read(in, readData.data(), count); // try to read
 

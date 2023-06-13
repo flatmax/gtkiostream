@@ -134,6 +134,20 @@ namespace ALSA {
       arg>>ret;
       return 0;
     }
+
+    /** Check if a key exists
+    */
+    int keyExists(std::string key){
+      CFG_NOT_OPEN_CHECK_NO_PRINT(cfg,int) // check config is open
+      std::stringstream errMsg;
+      snd_config_t *conf;
+      int err=snd_config_search(cfg, key.c_str(), &conf);
+      if (err){
+        errMsg<<"Couldn't find a configuration matching the key : "<<key<<'\n';
+        return ALSADebug().evaluateError(err, errMsg.str());
+      }
+      return 0;
+    }
   };
 }
 #endif // ALSACONFIG_H_

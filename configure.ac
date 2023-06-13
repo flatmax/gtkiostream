@@ -44,8 +44,6 @@ AC_PROG_F77
 
 AC_DEFINE(GTKIOSTREAM_VERSION, [gtkiostream_version], [gtkIOStream package version number])
 
-AC_OPENMP
-
 # check for emscripten compilation
 m4_ifdef([AM_EMSCRIPTEN], [AM_EMSCRIPTEN])
 AM_CONDITIONAL(HAVE_EMSCRIPTEN, test x$emscripten_compiler = xyes)
@@ -353,8 +351,9 @@ fi
 #    AC_DEFINE(HAVE_OCTAVE, [], [whether to build in Octave support])
 #fi
 
+AC_OPENMP
 AM_CONDITIONAL(HAVE_OPENMP, false)
-if test "x$OPENMP_CFLAGS" == x ; then
+if test "x$OPENMP_CXXFLAGS" == "x" ; then
 	AC_MSG_WARN([OpenMP not found])
 else
 	AC_MSG_WARN([OpenMP found])
