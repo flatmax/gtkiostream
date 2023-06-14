@@ -17,9 +17,7 @@ along with GTK+ IOStream
 */
 
 #include "ALSA/ALSA.H"
-#include <alsa/asoundlib.h>
 #include <iostream>
-#include <string>
 using namespace std;
 
 using namespace ALSA;
@@ -118,7 +116,7 @@ int main(int argc, char *argv[]) {
 
   string deviceNameOut="default";
   string deviceNameIn="default";
-  string formatStr="S16_LE";
+  string formatStr="S32_LE";
 	int latency=2048;
 	int fs=48000; // The sample rate
 	cout<<"latency = "<<(float)latency/(float)fs<<" s"<<endl;
