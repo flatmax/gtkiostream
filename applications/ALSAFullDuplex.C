@@ -26,7 +26,7 @@ using namespace ALSA;
 
 #include "OptionParser.H"
 
-int printUsage(string name, string devOut, string devIn, int latency) {
+int printUsage(string name, string devOut, string devIn, int latency, int fs, string formatStr) {
     cout<<name<<" : An application to playback an audio file and capture to file."<<endl;
     cout<<"Usage:"<<endl;
     cout<<"\t "<<name<<" [options]"<<endl;
@@ -34,8 +34,17 @@ int printUsage(string name, string devOut, string devIn, int latency) {
     cout<<"\t e.g. "<<name<<" [options] /tmp/out.wav"<<endl;
     cout<<"\t -D : The name of the output device : (-D "<<devOut<<")"<<endl;
     cout<<"\t -C : The name of the input  device : (-C "<<devIn<<")"<<endl;
-    cout<<"\t -R : The sample rate to operate at : (default 48000)"<<endl;
-    cout<<"\t -f : The sample format to use : (default S32_LE)"<<endl;
+    cout<<"\t -r : The sample rate to operate at : (-r " << fs << ")" <<endl;
+    cout<<"\t -f : The sample format to use : (-f " << formatStr << ")"<<endl;
+
+    ALSA::Playback pb;
+    if(devOut!="default"){
+      pb.open(devOut.c_str());
+    } else {
+      pb.open();
+    }
+    pb.printAvailableFormats();
+
     return 0;
 }
 
@@ -109,6 +118,7 @@ int main(int argc, char *argv[]) {
 
   string deviceNameOut="default";
   string deviceNameIn="default";
+  string formatStr="S16_LE";
 	int latency=2048;
 	int fs=48000; // The sample rate
 	cout<<"latency = "<<(float)latency/(float)fs<<" s"<<endl;
@@ -118,13 +128,15 @@ int main(int argc, char *argv[]) {
       ;
   if (op.getArg<string>("C", argc, argv, deviceNameIn, i=0)!=0)
       ;
-  if (op.getArg<int>("R", argc, argv, fs, i=0)!=0)
+  if (op.getArg<int>("r", argc, argv, fs, i=0)!=0)
+      ;
+  if (op.getArg<string>("f", argc, argv, formatStr, i=0)!=0)
       ;
 
   if (argc<2 || op.getArg<string>("h", argc, argv, help, i=0)!=0)
-      return printUsage(argv[0], deviceNameOut, deviceNameIn, latency);
+    return printUsage(argv[0], deviceNameOut, deviceNameIn, latency, fs, formatStr);
   if (op.getArg<string>("help", argc, argv, help, i=0)!=0)
-    return printUsage(argv[0], deviceNameOut, deviceNameIn, latency);
+    return printUsage(argv[0], deviceNameOut, deviceNameIn, latency, fs, formatStr);
 
 
   cout<<"opening the playback device "<<deviceNameOut<<endl;
@@ -139,14 +151,7 @@ int main(int argc, char *argv[]) {
 	if (res<0)
 		return res;
 
-  string formatStr;
-	snd_pcm_format_t format=SND_PCM_FORMAT_S32_LE;
-
-  if (op.getArg<string>("f", argc, argv, formatStr, i=0)!=0){
-     format = snd_pcm_format_value(formatStr.c_str());
-  }
-
-	if ((res=fullDuplex.setFormat(format))<0)
+	if ((res=fullDuplex.setFormat(formatStr))<0)
 		return res;
 
 	res=fullDuplex.setAccess(SND_PCM_ACCESS_RW_INTERLEAVED);
