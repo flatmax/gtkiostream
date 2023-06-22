@@ -198,7 +198,7 @@ fi
 PKG_CHECK_MODULES(EIGEN, eigen3 >= 3.0.0,,AC_MSG_ERROR("Eigen3 is required for NeuralNetworks and Sox support - and possibly others"))
 AC_SUBST(EIGEN_CFLAGS)
 AC_SUBST(EIGEN_LIBS)
-AC_DEFINE([EIGEN_FFTW_DEFAULT],[],[Using the FFTW backen with Eigen FFT])
+AC_DEFINE([EIGEN_FFTW_DEFAULT],[],[Using the FFTW backend with Eigen FFT])
 
 # sox
 PKG_CHECK_MODULES(SOX, sox,HAVE_SOX="yes", HAVE_SOX="no")
