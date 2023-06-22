@@ -58,8 +58,10 @@ int BandLimiter<FP_TYPE>::HPBandlimit(float fi, float fs){
 }
 
 
+#ifndef EIGEN_FFTW_DEFAULT
 template class BandLimiter<short int>;
 template class BandLimiter<int>;
 // template class BandLimiter<unsigned int>;
+#endif
 template class BandLimiter<float>;
 template class BandLimiter<double>;

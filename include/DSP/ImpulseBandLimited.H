@@ -20,9 +20,9 @@
 
 // Debug
 #include "Debug.H"
+#include "gtkiostream_config.h" // inlude config.h first as it defines EIGEN_FFTW_DEFAULT
 #include <Eigen/Dense>
 #include <unsupported/Eigen/FFT>
-#include "gtkiostream_config.h"
 // #define FIR_BLOCKSIZE_MISMATCH_ERROR FIR_ERROR_OFFSET-1
 // #define FIR_H_EMPTY_ERROR FIR_ERROR_OFFSET-2
 // #define FIR_CHANNEL_MISMATCH_ERROR FIR_ERROR_OFFSET-3

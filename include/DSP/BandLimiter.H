@@ -20,9 +20,9 @@
 
 // Debug
 #include "Debug.H"
+#include "gtkiostream_config.h"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/FFT>
-#include "gtkiostream_config.h"
 
 /** Class to band limit a signal
 \example BandLimiterTest.C
