@@ -117,7 +117,7 @@ HexToSox_LDADD = $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS)
 
 FilterGen_SOURCES = FilterGen.C
 FilterGen_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
-FilterGen_LDADD = $(top_builddir)/src/libgtkIOStream.la $(EXTRA_LIBS)
+FilterGen_LDADD = $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libdsp.la $(EXTRA_LIBS)
 
 LatencyTester_SOURCES = LatencyTester.C
 LatencyTester_CPPFLAGS = -I$(top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
