@@ -160,7 +160,7 @@ public:
             if (sysinfo(&info) != 0) // estimate the free ram
                 return retVal;
             unsigned long freeRam = info.freeram * info.mem_unit;
-            if (count*sizeof(sox_sample_t) > freeRam)
+            if (count==0 | ( count*sizeof(sox_sample_t) > freeRam ))
                 count=freeRam/sizeof(sox_sample_t)/4/in->signal.channels; // allow 1/5th of the available ram as a maximum
             count *= in->signal.channels;
             Eigen::Array<sox_sample_t, Eigen::Dynamic, Eigen::Dynamic> readData(count,1); // generate the necessary data store to read into.

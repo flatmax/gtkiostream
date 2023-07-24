@@ -111,7 +111,7 @@ EXTRA_CFLAGS += $(SOX_CFLAGS)
 EXTRA_LIBS += $(SOX_LIBS)
 else
 if NOT_MINGW_SYSTEM
-noinst_PROGRAMS += IIOMMapTest IIOTest IIOQueueTest SoxTest SoxTest2 SoxTest3 SoxReadTest FIRTest2
+noinst_PROGRAMS += IIOMMapTest IIOTest IIOQueueTest SoxTest SoxTest2 SoxTest3 SoxTest4 SoxReadTest FIRTest2
 EXTRA_CFLAGS += $(SOX_CFLAGS)
 EXTRA_LIBS += $(SOX_LIBS)
 endif
@@ -320,6 +320,10 @@ SoxTest2_LDADD = $(top_builddir)/src/libgtkIOStream.la $(LDADD)
 SoxTest3_SOURCES = SoxTest3.C
 SoxTest3_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
 SoxTest3_LDADD = $(top_builddir)/src/libgtkIOStream.la $(LDADD)
+
+SoxTest4_SOURCES = SoxTest4.C
+SoxTest4_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+SoxTest4_LDADD = $(top_builddir)/src/libgtkIOStream.la $(LDADD)
 
 SoxReadTest_SOURCES = SoxReadTest.C
 SoxReadTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
