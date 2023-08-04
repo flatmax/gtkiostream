@@ -101,7 +101,7 @@ namespace ALSA {
       int err=snd_config_search(cfg, key.c_str(), &conf);
       if (err){
         errMsg<<"Couldn't find a configuration matching the key : "<<key<<'\n';
-        return ALSADebug().evaluateError(err, errMsg.str());
+        return ALSADebug().evaluateError(-EINVAL, errMsg.str());
       }
       std::stringstream arg;
       switch (snd_config_get_type(conf)){
