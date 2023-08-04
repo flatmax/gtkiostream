@@ -31,11 +31,11 @@ int main(int argc, char *argv[]) {
 
 	int err=0;
 	Config config;
-	if ((err=config.load(argv[1]))<0)
+	if ((err=config.load(argv[2]))<0)
 		return err;
 
 	string vals;
-	string key(argv[2]);
+	string key(argv[1]);
 	err=config.search<string>(key, vals);
 	if (err)
 		return err;
