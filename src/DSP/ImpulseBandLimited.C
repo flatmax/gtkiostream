@@ -65,7 +65,8 @@ void ImpulseBandLimited<FP_TYPE>::setMag(Array<typename FFT<double>::Complex, Dy
     const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).block(start,0,cnt,1).setZero(); // high freq
   start=(int)(fa/(fs/(float)N))+1;
   cnt=(int)((fs-fa)/(fs/(float)N))-1-start+1;
-  const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).block(start,0,cnt,1).setZero(); // mid freq
+  if (cnt>0)
+    const_cast< Array<typename FFT<double>::Complex, Dynamic, 1>& >(X).block(start,0,cnt,1).setZero(); // mid freq
 }
 
 template<typename FP_TYPE>

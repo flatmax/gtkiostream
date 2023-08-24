@@ -34,8 +34,16 @@ int main(int argc, char *argv[]){
   if (ret>0)
     return ret;
   ret = ibl.generateImpulseShift(s, fs, fi, fa);
+  if (ret<0)
+    return ret;
 #ifdef HAVE_SOX
   ibl.saveToFile("/tmp/testShifted.wav", fs);
+#endif
+  ret = ibl.generateImpulseShift(s, fs, fi, fs/2.);
+  if (ret<0)
+    return ret;
+#ifdef HAVE_SOX
+  ibl.saveToFile("/tmp/testShiftedFSO2.wav", fs);
 #endif
   return ret;
 }
