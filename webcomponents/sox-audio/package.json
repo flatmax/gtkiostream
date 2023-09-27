@@ -3,11 +3,17 @@
   "version": "1.9.18",
   "description": "The gtkiostream sox class as a webcompoenent",
   "main": "sox-audio.js",
+  "scripts": {
+    "start": "web-dev-server"
+  },
   "dependencies": {
-    "gtkiostream": "^1.9.18"
+    "gtkiostream": "^1.9.18",
+    "lit": "^2.0.2"
   },
   "devDependencies": {
-    "@webcomponents/webcomponentsjs": "^2.4.3"
+    "@web/dev-server": "^0.1.18",
+    "@webcomponents/webcomponentsjs": "^2.4.3",
+    "http-server": "^14.1.1"
   },
   "repository": {
     "type": "git",

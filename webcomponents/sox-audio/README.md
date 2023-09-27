@@ -72,11 +72,5 @@ npm i
 ### Viewing Your Element
 
 ```
-$ polymer serve
-```
-
-### Running Tests
-
-```
-$ polymer test
+npm start
 ```
