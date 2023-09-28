@@ -108,7 +108,7 @@ export class LibgtkIOStream extends LitElement {
     if (typeof window === 'undefined'){ // nodejs
       // ok
     } else {  // browser
-      console.log('use the sox-audio element in the browser');
+      console.log('use the sox-element webcomponent in the browser');
     }
 
     if (!this.sox)
@@ -124,7 +124,7 @@ export class LibgtkIOStream extends LitElement {
     if (typeof window === 'undefined'){ // nodejs
       // ok
     } else {  // browser
-      console.log('use the sox-audio element in the browser');
+      console.log('use the sox-element webcomponent in the browser');
     }
 
     if (!this.sox)
@@ -169,7 +169,7 @@ export class LibgtkIOStream extends LitElement {
     if (typeof window === 'undefined'){ // nodejs
       // ok
     } else {  // browser
-      console.log('use the sox-audio element in the browser');
+      console.log('use the sox-element webcomponent in the browser');
     }
 
     if (!this.sox)
