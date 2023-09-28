@@ -32,3 +32,6 @@ const { dirname } = await import("path");
 globalThis.__dirname = dirname(import.meta.url);
 const { createRequire } = await import("module");
 globalThis.require = createRequire(import.meta.url);
+
+import fs from 'fs';
+globalThis.fs = fs;
