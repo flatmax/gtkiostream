@@ -33,9 +33,7 @@ import { LitElement } from 'lit';
 
 if (typeof window === 'undefined'){ // nodejs
   await import("./DynamicImport.js");
-  // console.log('nodejs')
 } else {  // browser
-  // console.log('browser')
 }
 
 /**
@@ -103,10 +101,7 @@ export class LibgtkIOStream extends LitElement {
 
 export default LibgtkIOStream
 
-// if (typeof module !== 'undefined' && typeof module.exports !== 'undefined'){
 if (typeof window === 'undefined'){ // nodejs
-  // console.log('export nodejs module')
-} else {
-  // console.log('export browser module')
+} else { // browser
   window.customElements.define('libgtkiostream-', LibgtkIOStream);
 }
