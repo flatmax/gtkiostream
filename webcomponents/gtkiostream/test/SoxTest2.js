@@ -16,39 +16,21 @@
    along with GTK+ IOStream
  */
 
-var fs = require('fs');
-var libgtkIOStream = require('./libgtkIOStreamNode');
-libgtkIOStream().then((Module)=>{
-  libgtkIOStream = Module;
+ // NOTE : This is for testing the wasm system, in the browser you should use sox-audio for sox audio read/write
 
-  /** Taken from : https://github.com/flatmax/WASMAudio
-  malloc a WASM heap based on an audio matrix size. If the audio buffer
-  channel count or frame count is changed, then free and malloc again.
-  We remember size here to check if the heap frame count is different.
-  \param byteLength The number of bytes in each channel
-  \param chCnt The number of channels
-  \param heapName For example 'inBufs'
-  */
-  function mallocHEAP(byteLength, chCnt, heapName){
-    let Nb=byteLength; // number of bytes
-    let M=chCnt; // number of channels
-    let N=M*Nb; // total byte count
-    // resize memory if required
-    if (this[heapName]==null || this[heapName+'Size']!=N){
-      if (this[heapName]!=null)
-        libgtkIOStream._free(this[heapName]);
-      this[heapName] = libgtkIOStream._malloc(N);
-      this[heapName+'Size']=N;
-    }
-    return Nb;
-  }
+import fs from 'fs';
+import LibgtkIOStream  from '../LibgtkIOStream.js';
+
+let libgtkIOStream = new LibgtkIOStream();
+
+libgtkIOStream.wasmReady.then(()=>{
 
   let data = fs.readFileSync('clippedAudio.wav');
-  let Nmem = mallocHEAP(data.length, 1, 'audio'); // resize the heap
-  libgtkIOStream.HEAPU8.set(data, audio);
-  let Sox = new libgtkIOStream.Sox;
+  let Nmem = libgtkIOStream.mallocHEAP(data.length, 1, 'audio'); // resize the heap
+  libgtkIOStream.libgtkIOStream.HEAPU8.set(data, libgtkIOStream.audio);
+  let Sox = new libgtkIOStream.libgtkIOStream.Sox;
   let formats=Sox.printFormats();
-  let ret=Sox.openRead(audio, audioSize);
+  let ret=Sox.openRead(libgtkIOStream.audio, libgtkIOStream.audioSize);
   if (ret!=-40026) {
       throw Error('error in opening');
   }
