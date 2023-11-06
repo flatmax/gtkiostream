@@ -30,6 +30,7 @@ typedef float FP_TYPE;
 #define DEFAULT_FBANK_CNT 50 ///< The default number of auditory filters.
 
 #include <fstream>
+#include <strstream>
 
 void printUsage(const char *str){
     cerr<<"Usage: "<<str<<" -h or --help"<<endl;
@@ -43,6 +44,15 @@ void printUsage(const char *str){
     cerr<<"\n\t In the audio and mask, the channels are interleaved as rows, M rows per window, where M is the channel count."<<endl;
     cerr<<"\n Author : Matt Flax <flatmax@flatmax.org>"<<endl;
     exit(0);
+}
+
+std::string replaceAll(std::string str, const std::string& from, const std::string& to) {
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
+    }
+    return str;
 }
 
 int main(int argc, char *argv[]){
@@ -85,7 +95,6 @@ int main(int argc, char *argv[]){
     double fs=sox.getFSIn();
     AudioMasker masker(fs, DEFAULT_FBANK_CNT);
 
-    string fileNameOut;
     cout<<"output file = "<<(fileName+'.'+argv[argc-1]+".mask.dat")<<endl;
     ofstream maskOut((fileName+'.'+argv[argc-1]+".mask.dat").c_str());
     if (!maskOut){
@@ -150,20 +159,60 @@ int main(int argc, char *argv[]){
     maskOut.close();
     sox.closeRead();
 
-    cout<<"Please run the following .m file to see the output "<<endl;
-    cout<<"function view"<<endl;
-    cout<<"fs="<<fs<<";"<<endl;
-    cout<<"load /tmp/11.Neutral.44k.wav."<<windowSize<<".audio.dat"<<endl;
-    cout<<"load /tmp/11.Neutral.44k.wav."<<windowSize<<".f.dat"<<endl;
-    cout<<"load /tmp/11.Neutral.44k.wav."<<windowSize<<".mask.dat"<<endl;
-    cout<<"[M,Nm]=size(X11_Neutral_44k_wav_"<<windowSize<<"_mask);"<<endl;
-    cout<<"[M,N]=size(X11_Neutral_44k_wav_"<<windowSize<<"_audio);"<<endl;
-    cout<<"f=linspace(0,fs,N);"<<endl;
-    cout<<"for i=1:M"<<endl;
-    cout<<"    loglog(f, abs(fft(X11_Neutral_44k_wav_"<<windowSize<<"_audio(i,:)))); hold on"<<endl;
-    cout<<"    loglog(X11_Neutral_44k_wav_"<<windowSize<<"_f, X11_Neutral_44k_wav_"<<windowSize<<"_mask(i,:), 'r'); hold off"<<endl;
-    cout<<"    legend('audio','mask'); xlabel('f (Hz)'); ylabel('amplitude');"<<endl;
-    cout<<"    pause"<<endl;
-    cout<<"end"<<endl;
+    ofstream viewM("viewLocal.m");
+    viewM<<"function viewLocal"<<endl;
+    viewM<<"fs="<<fs<<";"<<endl;
+    viewM<<"load "<<fileName<<"."<<windowSize<<".audio.dat"<<endl;
+    viewM<<"load "<<fileName<<"."<<windowSize<<".f.dat"<<endl;
+    viewM<<"load "<<fileName<<"."<<windowSize<<".mask.dat"<<endl;
+    string nu = replaceAll(fileName,".","_");
+    ostrstream name; name<<nu<<"_"<<windowSize;
+    viewM<<"x="<<name.str()<<"_audio';"<<endl;
+    viewM<<"xMask="<<name.str()<<"_mask';"<<endl;
+    viewM<<"fMask="<<name.str()<<"_f';"<<endl;
+
+    viewM<<"X=fft(x);\n\
+[M,Nm]=size(xMask);\n\
+[N,M]=size(x);\n\
+f=linspace(0,fs,N+1); f(end)=[];\n\
+\n\
+if 0 % use this to look at block by block output\n\
+for m=1:M\n\
+    semilogx(f, 20*log10(abs(X(:,m)))); hold on\n\
+    semilogx(fMask, 20*log10(xMask(:,m)), 'r'); hold off\n\
+    legend('audio','mask'); xlabel('f (Hz)'); ylabel('amplitude');\n\
+    pause\n\
+end\n\
+end\n\
+\n\
+XMasked=X;\n\
+Xi=min(min(abs(XMasked)));\n\
+for m=1:M\n\
+	thresh=interp1([0; fMask;  fs/2],[0; xMask(:,m); 0],f,'pchip')';\n\
+	XMasked(find(abs(X(:,m))<thresh),m)=Xi;\n\
+end\n\
+\n\
+% plot surfaces of the masked and unmasked audio\n\
+clf\n\
+[xg,yg]=meshgrid(1:M,f(1:N/2));\n\
+ax(1)=subplot(211);\n\
+surf(xg, yg, 20*log10(abs(X(1:N/2,:))),'edgecolor','none');\n\
+set(gca,'yscale','log')\n\
+view(0,90);\n\
+axis tight\n\
+ylabel('f (Hz)')\n\
+title('audio unmasked')\n\
+ax(2)=subplot(212);\n\
+surf(xg, yg, 20*log10(abs(XMasked(1:N/2,:))),'edgecolor','none');\n\
+set(gca,'yscale','log')\n\
+view(0,90);\n\
+axis tight\n\
+xlabel('time block')\n\
+ylabel('f (Hz)')\n\
+title('audio masked')\n\
+end\n\
+"<<endl;
+
+    cout<<"please run the script view.m in octave or Matlab"<<endl;
     return ret;
 }
