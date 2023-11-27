@@ -159,7 +159,7 @@ export class LibgtkIOStream extends LitElement {
     return audio;
   }
 
-  /** wreite audio data to file
+  /** write audio data to file
   @param data is an array of Float32Array
   @param _fs is the sample rate
   @param name is the file name without the extension
@@ -193,9 +193,13 @@ export class LibgtkIOStream extends LitElement {
         console.log('writeAudio only can handle Float32Array or Array[Float32Array, ...] inputs for data.');
         return -1;
     }
+    let maxVal=0;
+    for (let n=0; n<audio.length; n++)
+      if (Math.abs(audio[n])>maxVal)
+        maxVal=Math.abs(audio[n]);
 
     // open the audio memory file for writing
-    let ret=this.sox.openWrite(_fs, ch, 1.0, ext);
+    let ret=this.sox.openWrite(_fs, ch, maxVal, ext);
     if (ret)
         return ret;
 
@@ -212,6 +216,7 @@ export class LibgtkIOStream extends LitElement {
     let memPtr=this.sox.getMemFilePtr();
     let audioF = this.libgtkIOStream.HEAPU8.subarray(memPtr, memPtr+this.sox.getBufferSize());
     fs.writeFileSync(name+'.'+ext, audioF, 'binary');
+    fs.writeFileSync(name+'.'+ext + '.max', '' + maxVal);
     return 0;
   }
 
