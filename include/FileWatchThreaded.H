@@ -53,6 +53,32 @@ class FileWatchThreaded : public ThreadedMethod {
 
     std::map<std::string, int> pathFds; ///< This will contain a map between watch file descriptors and file/dir names
 
+    /** Overload this function to deal with IN_MODIFY events
+    \param name When watching a directory, the file name modified is given here
+    */
+    virtual void modified(char *name){}
+
+    /** Overload this function to deal with IN_CLOSE_WRITE events
+    \param name When watching a directory, the file name modified is given here
+    */
+    virtual void closeWrite(char *name){
+      // printf("FileWatchThreaded::close write\n");
+    }
+
+    /** Overload this function to deal with IN_ATTRIB events
+    \param name When watching a directory, the file name modified is given here
+    \param wd The watch descriptor
+    */
+    virtual void attribChange(char *name, int wd){}
+
+    /** Overload this function to deal with IN_ATTRIB events
+    \param name When watching a directory, the file name modified is given here
+    */
+    virtual void deleteSelf(char *name){}
+
+protected:
+    /** The file watching thread.
+    */
     virtual void *threadMain(void){
       while (int numRead = read(fd, eventBuf, BUF_SIZE)) {
         if (numRead == 0 | numRead == -1){
@@ -77,29 +103,6 @@ class FileWatchThreaded : public ThreadedMethod {
       }
       return NULL;
     }
-
-    /** Overload this function to deal with IN_MODIFY events
-    \param name When watching a directory, the file name modified is given here
-    */
-    virtual void modified(char *name){}
-
-    /** Overload this function to deal with IN_CLOSE_WRITE events
-    \param name When watching a directory, the file name modified is given here
-    */
-    virtual void closeWrite(char *name){
-      // printf("FileWatchThreaded::close write\n");
-    }
-
-    /** Overload this function to deal with IN_ATTRIB events
-    \param name When watching a directory, the file name modified is given here
-    \param wd The watch descriptor
-    */
-    virtual void attribChange(char *name, int wd){}
-
-    /** Overload this function to deal with IN_ATTRIB events
-    \param name When watching a directory, the file name modified is given here
-    */
-    virtual void deleteSelf(char *name){}
 public:
   /// Constructor
   FileWatchThreaded(){
