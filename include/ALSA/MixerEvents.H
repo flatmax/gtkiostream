@@ -28,12 +28,14 @@ namespace ALSA {
 
     void *threadMain(void){
       int ret=0;
+      mixerEventsStarting();
       while (ret>=0) {
         int res = snd_mixer_wait(handle, -1);
         if (res >= 0)
           ret = snd_mixer_handle_events(handle);
       }
       ALSADebug().evaluateError(ret); // print the error before returning
+
       return NULL;
     }
 
@@ -61,10 +63,14 @@ protected:
   \return 0 on success
   */
   virtual int handleValueEvents(MixerElement &me) {
-    std::cout<<me<<std::endl;
+    // std::cout<<me<<std::endl;
     std::cout<<"MixerEvents::"<<__func__<<" not overriden."<<std::endl;
     return 0;
   }
+
+  /** Overloadable method called when threadMain is called.
+  */
+  virtual void mixerEventsStarting(){}
 public:
 
     /** load the mixer elements then run the event catching thread

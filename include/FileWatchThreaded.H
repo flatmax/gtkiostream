@@ -80,6 +80,7 @@ protected:
     /** The file watching thread.
     */
     virtual void *threadMain(void){
+      fileWatchThreadedStarting();
       while (int numRead = read(fd, eventBuf, BUF_SIZE)) {
         if (numRead == 0 | numRead == -1){
           printf("FileWatchThreaded::threadMain : read() from inotify fd returned %d !\n",numRead);
@@ -103,6 +104,10 @@ protected:
       }
       return NULL;
     }
+
+    /** Overloadable method called when threadMain is called.
+    */
+    virtual void fileWatchThreadedStarting(){}
 public:
   /// Constructor
   FileWatchThreaded(){
