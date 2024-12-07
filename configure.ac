@@ -66,6 +66,11 @@ fi
 # Checks for documentation
 AM_CONDITIONAL([HAVE_DOXYGEN],[test -n "$DOXYGEN"])AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([api/Doxyfile])])
 
+AC_ARG_ENABLE(tests, AS_HELP_STRING([--disable-tests],
+	      [Disable tests (default: enabled)]),
+	      [TESTS=$enableval], [TESTS=yes])
+AM_CONDITIONAL([HAVE_TESTS],[test "x$TESTS" = xyes])
+
 #check whether this is a cygwin system
 AM_CONDITIONAL(CYGWIN, test "$build_os" = "cygwin")
 
