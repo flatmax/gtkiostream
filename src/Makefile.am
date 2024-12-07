@@ -98,23 +98,23 @@ if HAVE_EMSCRIPTEN
 all-local: libgtkIOStream.la libfft.la libdsp.la
 
 	@echo binding libdsp
-	@emcc --bind -s WASM=0 --memory-init-file 0 -s ALLOW_MEMORY_GROWTH=1 --llvm-opts 1 -s MODULARIZE=1 -s EXPORT_NAME="'libdsp'" $(AM_CXXFLAGS) .libs/libdsp.so $(FFTW3_LIBS) $(SOX_LIBS) -o .libs/libdsp.js
+	@emcc --bind -s WASM=0 -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s EXPORT_NAME="'libdsp'" $(AM_CXXFLAGS) .libs/libdsp.so $(FFTW3_LIBS) $(SOX_LIBS) -o .libs/libdsp.js
 	mv .libs/libdsp.js .libs/libdspNode.js
-	@emcc --bind -s WASM=1 --memory-init-file 0 -s ALLOW_MEMORY_GROWTH=1 --llvm-opts 1 -s MODULARIZE=1 -s EXPORT_NAME="'libdsp'" -s EXPORT_ES6=1 -s SINGLE_FILE=1 -s "BINARYEN_METHOD='native-wasm'" $(AM_CXXFLAGS) .libs/libdsp.so $(FFTW3_LIBS) $(SOX_LIBS) -o .libs/libdsp.js
+	@emcc --bind -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s EXPORT_NAME="'libdsp'" -s EXPORT_ES6=1 -s SINGLE_FILE=1 -s "BINARYEN_METHOD='native-wasm'" $(AM_CXXFLAGS) .libs/libdsp.so $(FFTW3_LIBS) $(SOX_LIBS) -o .libs/libdsp.js
 	cp .libs/libdspNode.js .libs/libdsp.js ../webcomponents/dsp
 
 	@echo binding libgtkIOStream
-	@emcc --bind -s ALLOW_MEMORY_GROWTH=1 --llvm-opts 1 -s MODULARIZE=1 -s EXPORT_NAME="'libgtkIOStream'" -s WASM=0 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
+	@emcc --bind -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s EXPORT_NAME="'libgtkIOStream'" -s WASM=0 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
 	mv .libs/libgtkIOStream.js .libs/libgtkIOStreamNode.js
-	@emcc --bind --llvm-opts 1 --memory-init-file 0 -s EXPORT_ES6=1 -s MODULARIZE=1 -s EXPORT_NAME="'libgtkIOStream'" -s SINGLE_FILE=1 -s "BINARYEN_METHOD='native-wasm'" -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
+	@emcc --bind -s EXPORT_ES6=1 -s MODULARIZE=1 -s EXPORT_NAME="'libgtkIOStream'" -s SINGLE_FILE=1 -s "BINARYEN_METHOD='native-wasm'" -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 $(AM_CXXFLAGS) .libs/libgtkIOStream.so $(SOX_LIBS) -o .libs/libgtkIOStream.js
 
 	cp .libs/libgtkIOStreamNode.js .libs/libgtkIOStream.js ../webcomponents/gtkiostream
 	cp ../test/testVectors/11.Neutral.44k.wav ../js/SoxTest.js ../webcomponents/gtkiostream/test
 
 	@echo binding libfft
-	@emcc --bind -s ALLOW_MEMORY_GROWTH=1 --llvm-opts 1 -s WASM=0 --memory-init-file 0 $(AM_CXXFLAGS) .libs/libfft.so $(FFTW3_LIBS) -o .libs/libfft.js
+	@emcc --bind -s ALLOW_MEMORY_GROWTH=1 -s WASM=0 $(AM_CXXFLAGS) .libs/libfft.so $(FFTW3_LIBS) -o .libs/libfft.js
 	mv .libs/libfft.js .libs/libfftNode.js
-	@emcc --bind --llvm-opts 1 --memory-init-file 0 -s "MODULARIZE=1" -s EXPORT_NAME="'libfft'" -s "BINARYEN_METHOD='native-wasm'" -s "WASM=1" -s ALLOW_MEMORY_GROWTH=1 $(AM_CXXFLAGS) .libs/libfft.so $(FFTW3_LIBS) -o .libs/libfft.js
+	@emcc --bind -s "MODULARIZE=1" -s EXPORT_NAME="'libfft'" -s "BINARYEN_METHOD='native-wasm'" -s "WASM=1" -s ALLOW_MEMORY_GROWTH=1 $(AM_CXXFLAGS) .libs/libfft.so $(FFTW3_LIBS) -o .libs/libfft.js
 
 install-exec-hook:
 	cp .libs/libfft.js .libs/libfft.wasm .libs/libgtkIOStream.js $(DESTDIR)$(libdir) #.libs/libfft.node
