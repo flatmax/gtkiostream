@@ -1,4 +1,4 @@
-function ddat=errPlot(varargin)
+function [ddat, ax]=errPlot(varargin)
 % varargin{1}
 dat=[];
 datStr={};
@@ -33,6 +33,9 @@ if size(dat,2)>1
 	title(['RMS err ' num2str(rms(ddat),'%.1e ') ' effective RMS err ' num2str(rms(ddat)/rms(dat(:,1)),'%.1e ')])
 end
 ylabel('error');
+if freqPlot
+	xlabel('f (Hz)');
+end
 linkaxes(ax,'x');
 end
 
