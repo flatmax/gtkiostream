@@ -42,12 +42,12 @@ public:
      */
     template <typename Derived>
     inline void process(const Eigen::MatrixBase<Derived>& x, Eigen::MatrixBase<Derived> const & yOut) {
-        static double dcA = (double)1.; // - 10*std::numeric_limits<double>::lowest(); 
+        static double dcA = 1. - .01;
         static Eigen::Matrix<double, 1, Eigen::Dynamic> prevX = Eigen::Matrix<double, Eigen::Dynamic, 1>::Zero(x.cols());
         static Eigen::Matrix<double, 1, Eigen::Dynamic> prevY = Eigen::Matrix<double, Eigen::Dynamic, 1>::Zero(x.cols());
 
-        // yLocal = x - dcA * prevX + dcA * prevY;
-        yLocal = x - prevX;
+        yLocal = x - prevX + dcA * prevY;
+        // yLocal = x - prevX; // A single zero rolls in too slowly with F
         dcBypass = x - yLocal;
         prevX = x;
         prevY = yLocal; 
