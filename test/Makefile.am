@@ -21,7 +21,7 @@
 EXTRA_LIBS =
 EXTRA_CFLAGS =
 
-noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest
+noinst_PROGRAMS = OptionParserTest DirectoryScannerTest DirectoryScannerMkDirTest NeuralNetworkTest ThreadTest BlockBufferTest DCBlockerTest
 noinst_PROGRAMS += BitStreamTest BitStreamTest2 BitStreamTest3 BitStreamTest4 BitStreamTest5 BitStreamTest6 FileWatchThreadedTest
 noinst_PROGRAMS += FileWatchThreadedTest2 FileWatchThreadedTest3
 noinst_PROGRAMS += IIRTest2 HankelTest ToeplitzTest ImpulseBandLimitedTest ImpulsePinkTest ImpulsePinkInvTest BandLimiterTest ResamplerTest RealFFTExampleGD IIRSiglution
@@ -304,6 +304,10 @@ ToeplitzTest_LDADD = $(top_builddir)/src/libdsp.la $(top_builddir)/src/libgtkIOS
 IIRCascadeTest_SOURCES = IIRCascadeTest.C
 IIRCascadeTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(FFTW3_CFLAGS) $(EXTRA_CFLAGS)
 IIRCascadeTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(top_builddir)/src/libAudioMask.la $(top_builddir)/src/libdsp.la $(top_builddir)/src/libfft.la $(FFTW3_LIBS) $(EXTRA_LIBS)
+
+DCBlockerTest_SOURCES = DCBlockerTest.C
+DCBlockerTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) $(EXTRA_CFLAGS)
+DCBlockerTest_LDADD = $(top_builddir)/src/libgtkIOStream.la $(LDADD)
 
 BlockBufferTest_SOURCES = BlockBufferTest.C
 BlockBufferTest_CPPFLAGS = -I$(abs_top_srcdir)/include $(EIGEN_CFLAGS) -fpermissive $(EXTRA_CFLAGS)
